@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+/* ── Design tokens da Lena ─────────────────────────────────────────────── */
+@theme {
+  /* Paleta */
+  --color-terracota: #d9613a;
+  --color-terracota-dark: #b54e2e;
+  --color-terracota-soft: #f4d6c8;
+  --color-creme: #fbf3e7;
+  --color-creme-soft: #fffdfa;
+  --color-creme-edge: #f0e2ce;
+  --color-salvia: #4e9e78;
+  --color-salvia-soft: #d6ecde;
+  --color-cafe: #241b15;
+  --color-cafe-soft: #5b4a3a;
+  --color-cafe-muted: #897866;
+  --color-ambar: #f2a93c;
+  --color-ameia: #8a5a9c;
+
+  /* Tipografia */
+  --font-display: "Bricolage Grotesque", system-ui, -apple-system, sans-serif;
+  --font-sans: "Hanken Grotesk", system-ui, -apple-system, sans-serif;
+
+  /* Radius e sombras */
+  --radius-card: 18px;
+  --radius-pill: 999px;
+  --shadow-card: 0 18px 44px -26px rgba(36, 27, 21, 0.3);
+  --shadow-card-hover: 0 22px 52px -22px rgba(36, 27, 21, 0.34);
+}
+
+/* ── Reset/base ────────────────────────────────────────────────────────── */
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--color-creme);
+  color: var(--color-cafe);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Pulse simples para placeholders */
+@keyframes lena-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+.animate-pulse-soft {
+  animation: lena-pulse 1.4s ease-in-out infinite;
+}
