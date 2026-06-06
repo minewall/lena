@@ -5,6 +5,18 @@ Itens deferidos para retomar depois.
 ## Próximo passo combinado
 - [ ] Após validar demanda (10+ interessados via `/interesse.html`), partir para o sistema funcional.
 
+## Central da Lena — em andamento (2026-06-06)
+- [x] **E1** — fundação (monorepo, @lena/shared, Supabase lena-uno, scaffold da Central com magic link)
+- [x] **E2** — cérebro da Lena (tenant_brains/services/faqs + UI em `/cerebro`)
+- [ ] **E3** — WhatsApp adapter + Cloud API (próximo; depende do checklist Meta)
+- [ ] **E4** — inbox + handoff humano
+- [ ] **E5** — motor IA ligado no WhatsApp real
+- [ ] **E6** — agenda básica (Google Calendar)
+- [ ] **E7** — relatórios essenciais
+- [ ] **E8** — Painel Averse (super-admin) com dados reais
+- [ ] **Refactor pós-MVP:** mover webhook do WhatsApp de `https://<projeto>.supabase.co/functions/v1/wa-webhook` para domínio próprio (sugerido: `wa.lena.ia.br` via Cloudflare Worker proxy). Razão: independência do project ref, URL limpa em logs Meta. Não bloqueia E3.
+- [ ] **Verificação Meta Business:** ajustar contrato social via Contabilizei (incluir e-mail e telefone) e completar Business Verification — destrava Embedded Signup multi-tenant. Não bloqueia piloto.
+
 ## Deferido — discutir em breve
 - [x] **Lena v0.5 — automação inicial** → ver `automacao/` (esqueleto pronto p/ piloto, 2026-06-01)
   - [x] Prompt-base (system instruction) para Claude/GPT → `automacao/prompt-base.md`
