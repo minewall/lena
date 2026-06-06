@@ -21,6 +21,10 @@
     "./wa": {
       "types": "./dist/wa/index.d.ts",
       "import": "./dist/wa/index.js"
+    },
+    "./db": {
+      "types": "./dist/db/index.d.ts",
+      "import": "./dist/db/index.js"
     }
   },
   "scripts": {
