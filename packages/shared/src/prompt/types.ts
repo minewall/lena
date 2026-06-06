@@ -1,0 +1,16 @@
+export type Tone = "Acolhedor" | "Profissional" | "Descontraído";
+
+export interface BrainService {
+  n?: string;
+  p?: string;
+}
+
+export interface TenantBrain {
+  name?: string;
+  segment?: string;
+  hours?: string;
+  services?: BrainService[];
+  promo?: string;
+  extras?: string;
+  tone?: Tone | string;
+}

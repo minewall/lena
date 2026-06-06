@@ -1,47 +1,26 @@
 // ============================================================================
 // Lena — Cloudflare Pages Function (proxy seguro)
-// Local no projeto do site:  functions/api/lena.js
-// Rota gerada automaticamente:  POST /api/lena   (mesma origem, sem CORS)
+// Rota: POST /api/lena   (mesma origem, sem CORS)
+//
+// O system prompt e os tons agora vivem em @lena/shared (packages/shared),
+// para garantir paridade entre demo do site e Lena de produção (Central).
+// O texto produzido por buildDemoSystem é idêntico ao da versão anterior
+// — paridade verificada por packages/shared/test/parity.mjs.
 //
 // Configurar no painel do Cloudflare Pages (Settings):
-//   - Secret  ANTHROPIC_API_KEY   = sua chave de console.anthropic.com
-//   - (opcional) KV binding LENA_KV  para o rate limit por IP
+//   - Secret  ANTHROPIC_API_KEY   = chave de console.anthropic.com
+//   - (opcional) KV binding LENA_KV   para o rate limit por IP
+//   - Build command:  npm install && npm run build:shared
+//   - Build output:   lena-site
 // ============================================================================
+
+import { buildDemoSystem } from "@lena/shared/prompt";
 
 const MODEL = "claude-sonnet-4-6";
 const MAX_MESSAGES = 24;     // teto de mensagens por conversa
 const MAX_CHARS = 1500;      // teto de caracteres por mensagem
 const MAX_TOKENS = 600;      // teto de resposta (controla custo)
 const RATE_LIMIT = 40;       // mensagens por IP por hora (só se LENA_KV existir)
-
-const TONES = {
-  Acolhedor: "calorosa, próxima e simpática",
-  Profissional: "elegante, profissional e cordial",
-  Descontraído: "leve, descontraída e jovem",
-};
-
-function buildSystem(cfg) {
-  const tone = TONES[cfg.tone] || TONES.Acolhedor;
-  const svc = (cfg.services || [])
-    .filter((s) => s && s.n && String(s.n).trim())
-    .map((s) => `${s.n} (${String(s.p || "").trim() || "sob consulta"})`)
-    .join("; ") || "não detalhados";
-  return `Você é a Lena, a recepcionista virtual com IA do negócio "${cfg.name || "o negócio"}", um(a) ${cfg.segment || "negócio de serviço"}. Você atende os clientes pelo WhatsApp e é ótima no que faz: resolve, não enrola.
-Seu tom é ${tone}. Responda em português do Brasil, breve e natural (1 a 3 frases), no máximo 1 emoji.
-
-Use EXCLUSIVAMENTE estas informações do negócio:
-- Horário de funcionamento: ${cfg.hours || "não informado"}
-- Serviços e valores: ${svc}
-- Promoção atual: ${String(cfg.promo || "").trim() || "nenhuma no momento"}
-- Outras informações: ${String(cfg.extras || "").trim() || "—"}
-
-Como você age:
-- Responda com segurança usando as informações acima. Seja proativa e resolvedora, como uma recepcionista experiente.
-- Se faltar um detalhe que não está acima, NÃO responda "vou confirmar com a equipe": dê o contexto típico que ajuda, faça UMA pergunta rápida e conduza para um agendamento.
-- Só envolva um humano em casos realmente fora do alcance (reclamações sérias, questões médicas ou clínicas, situações sensíveis).
-- Conduza a conversa para agendar sempre que fizer sentido. Se houver promoção, cite quando fizer sentido.
-Você está atendendo um possível cliente numa demonstração no site. Mostre o seu melhor: prestativa, resolvedora e simpática.`;
-}
 
 function json(obj, status = 200) {
   return new Response(JSON.stringify(obj), {
@@ -90,7 +69,7 @@ export async function onRequestPost(context) {
       body: JSON.stringify({
         model: MODEL,
         max_tokens: MAX_TOKENS,
-        system: buildSystem(cfg),
+        system: buildDemoSystem(cfg),
         messages,
       }),
     });
