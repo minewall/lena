@@ -2,6 +2,11 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthGate } from "./components/AuthGate";
 import { Layout } from "./components/Layout";
 import { AuthCallback } from "./pages/AuthCallback";
+import { CerebroLayout } from "./pages/Cerebro/Layout";
+import { CerebroDados } from "./pages/Cerebro/Dados";
+import { CerebroFaq } from "./pages/Cerebro/Faq";
+import { CerebroServicos } from "./pages/Cerebro/Servicos";
+import { CerebroTom } from "./pages/Cerebro/Tom";
 import { CreateTenant } from "./pages/CreateTenant";
 import { Dashboard } from "./pages/Dashboard";
 import { Login } from "./pages/Login";
@@ -31,7 +36,12 @@ export function App() {
         >
           <Route index element={<Dashboard />} />
           <Route path="/criar-tenant" element={<CreateTenant />} />
-          <Route path="/cerebro" element={<Placeholder title="Cérebro da Lena" />} />
+          <Route path="/cerebro" element={<CerebroLayout />}>
+            <Route index element={<CerebroDados />} />
+            <Route path="tom" element={<CerebroTom />} />
+            <Route path="servicos" element={<CerebroServicos />} />
+            <Route path="faq" element={<CerebroFaq />} />
+          </Route>
           <Route path="/conversas" element={<Placeholder title="Conversas" />} />
           <Route path="/agenda" element={<Placeholder title="Agenda" />} />
           <Route
