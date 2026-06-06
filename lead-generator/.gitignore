@@ -1,0 +1,10 @@
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+data/*.html
+data/raw/
+logs/*.log
+exports/*.csv
+reports/*.html
+.venv/

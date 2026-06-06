@@ -1,0 +1,33 @@
+{
+  "name": "@lena/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./prompt": {
+      "types": "./dist/prompt/index.d.ts",
+      "import": "./dist/prompt/index.js"
+    },
+    "./tones": {
+      "types": "./dist/tones/index.d.ts",
+      "import": "./dist/tones/index.js"
+    },
+    "./wa": {
+      "types": "./dist/wa/index.d.ts",
+      "import": "./dist/wa/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -p tsconfig.json --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  }
+}

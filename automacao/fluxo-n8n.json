@@ -1,0 +1,154 @@
+{
+  "name": "Lena v0.5 — WhatsApp → IA → Resposta",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lena-webhook",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "webhook-in",
+      "name": "Webhook (mensagem recebida)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [200, 400],
+      "webhookId": "lena-webhook",
+      "notes": "Configure aqui o webhook do provedor (WhatsApp Cloud API, Z-API ou 360dialog). Espera: { telefone, nome, texto }."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normaliza o payload de qualquer provedor para um formato único\nconst b = $json.body || $json;\nconst telefone = b.telefone || b.from || b.phone || b.sender || '';\nconst texto = (b.texto || b.text || b.message || b.body || '').toString().trim();\nconst nome = b.nome || b.senderName || b.pushName || '';\n\n// Gatilhos diretos (não precisam de IA)\nconst t = texto.toLowerCase();\nconst optout = /\\b(parar|sair|stop|cancelar inscri)/.test(t);\nconst pedeHumano = /\\b(atendente|humano|falar com algu|pessoa|reclama)/.test(t);\n\nreturn [{ json: { telefone, texto, nome, optout, pedeHumano } }];"
+      },
+      "id": "normalize",
+      "name": "Normalizar payload",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            { "value1": "={{ $json.pedeHumano }}", "value2": true }
+          ]
+        }
+      },
+      "id": "if-humano",
+      "name": "Pediu humano?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [680, 400],
+      "notes": "Atalho de handoff sem chamar a IA. Os demais gatilhos de transferência ficam no tool 'transferir_humano' decidido pela IA."
+    },
+    {
+      "parameters": {
+        "url": "https://api.anthropic.com/v1/messages",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-api-key", "value": "={{ $env.ANTHROPIC_API_KEY }}" },
+            { "name": "anthropic-version", "value": "2023-06-01" },
+            { "name": "content-type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"claude-sonnet-4-6\",\n  \"max_tokens\": 600,\n  \"system\": [{\"type\":\"text\",\"text\": $env.LENA_SYSTEM_PROMPT, \"cache_control\":{\"type\":\"ephemeral\"}}],\n  \"messages\": [{\"role\":\"user\",\"content\": $json.texto }]\n}",
+        "options": {}
+      },
+      "id": "llm",
+      "name": "Lena (Claude)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [920, 480],
+      "notes": "Prompt-base completo vai em $env.LENA_SYSTEM_PROMPT (ver prompt-base.md). prompt_caching reduz custo a cada turno. Para conversa multi-turno, montar o array messages com o histórico (ver README §Estado)."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extrai o texto de resposta da Lena e detecta tool calls (handoff)\nconst r = $json;\nlet resposta = '';\nlet transferir = false;\nlet resumo = '';\ntry {\n  for (const block of (r.content || [])) {\n    if (block.type === 'text') resposta += block.text;\n    if (block.type === 'tool_use' && block.name === 'transferir_humano') {\n      transferir = true;\n      resumo = (block.input && block.input.resumo) || '';\n    }\n  }\n} catch (e) { resposta = 'Tive um probleminha aqui. Vou te passar pra equipe 😊'; transferir = true; }\nif (!resposta) resposta = 'Só um instante…';\nreturn [{ json: { ...$json, resposta, transferir, resumo } }];"
+      },
+      "id": "parse-llm",
+      "name": "Interpretar resposta IA",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1160, 480]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            { "value1": "={{ $json.transferir }}", "value2": true }
+          ]
+        }
+      },
+      "id": "if-transferir",
+      "name": "IA pediu transferir?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1400, 480]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.WA_SEND_URL }}",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "=Bearer {{ $env.WA_TOKEN }}" },
+            { "name": "content-type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"to\": $json.telefone,\n  \"text\": $json.resposta\n}",
+        "options": {}
+      },
+      "id": "wa-send",
+      "name": "Enviar resposta no WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1660, 560],
+      "notes": "Ajuste o body ao formato do seu provedor (Cloud API usa messaging_product/type/text.body)."
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.HANDOFF_NOTIFY_URL }}",
+        "method": "POST",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"evento\": \"transferir_humano\",\n  \"telefone\": $json.telefone,\n  \"nome\": $json.nome,\n  \"resumo\": $json.resumo || 'Cliente pediu atendente',\n  \"ultima_msg\": $json.texto\n}",
+        "options": {}
+      },
+      "id": "handoff",
+      "name": "Notificar equipe (handoff)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1660, 360],
+      "notes": "Aponte para Slack/Telegram/e-mail/CRM. Aqui a conversa sai do automático e entra um humano."
+    }
+  ],
+  "connections": {
+    "Webhook (mensagem recebida)": { "main": [[{ "node": "Normalizar payload", "type": "main", "index": 0 }]] },
+    "Normalizar payload": { "main": [[{ "node": "Pediu humano?", "type": "main", "index": 0 }]] },
+    "Pediu humano?": {
+      "main": [
+        [{ "node": "Notificar equipe (handoff)", "type": "main", "index": 0 }],
+        [{ "node": "Lena (Claude)", "type": "main", "index": 0 }]
+      ]
+    },
+    "Lena (Claude)": { "main": [[{ "node": "Interpretar resposta IA", "type": "main", "index": 0 }]] },
+    "Interpretar resposta IA": { "main": [[{ "node": "IA pediu transferir?", "type": "main", "index": 0 }]] },
+    "IA pediu transferir?": {
+      "main": [
+        [{ "node": "Notificar equipe (handoff)", "type": "main", "index": 0 }],
+        [{ "node": "Enviar resposta no WhatsApp", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {},
+  "meta": {
+    "description": "Esqueleto Lena v0.5. Variáveis de ambiente necessárias: ANTHROPIC_API_KEY, LENA_SYSTEM_PROMPT, WA_SEND_URL, WA_TOKEN, HANDOFF_NOTIFY_URL. Importar em n8n via Workflows > Import from File."
+  }
+}

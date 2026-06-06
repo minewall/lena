@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<title>Lena: OG Image 1200×630</title>
+<meta name="robots" content="noindex,nofollow" />
+<!--
+  Como exportar para PNG:
+  1) Abra este arquivo no Chrome
+  2) DevTools (Cmd+Opt+I) > Cmd+Shift+P > "Capture full size screenshot"
+     OU: clique direito > "Capture node screenshot" sobre o <div class="og">
+  3) Salve como /site/assets/og-image.png
+  4) Atualize as 2 meta tags og:image / twitter:image no index.html para apontar para esse arquivo.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#222;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:40px;font-family:'Hanken Grotesk',sans-serif}
+  .og{
+    width:1200px;height:630px;
+    background:#FBF3E7;
+    color:#241B15;
+    position:relative;overflow:hidden;
+    display:grid;grid-template-columns:1.15fr .85fr;align-items:center;
+    padding:80px 90px;
+    background-image:
+      radial-gradient(60% 80% at 100% 0%, rgba(217,97,58,.22), transparent 60%),
+      radial-gradient(50% 70% at 0% 100%, rgba(36,27,21,.08), transparent 60%);
+  }
+  .tag{
+    display:inline-flex;align-items:center;gap:10px;
+    font-size:18px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+    color:#B84A28;background:rgba(217,97,58,.14);
+    padding:10px 18px;border-radius:999px;margin-bottom:34px;
+  }
+  .tag::before{content:"";width:10px;height:10px;border-radius:50%;background:#4E9E78;box-shadow:0 0 0 5px rgba(78,158,120,.25)}
+  h1{
+    font-family:'Bricolage Grotesque',sans-serif;
+    font-weight:600;font-size:74px;line-height:1.02;letter-spacing:-.025em;
+    margin-bottom:40px;max-width:18ch;
+  }
+  .brand{display:flex;align-items:baseline;gap:14px}
+  .brand .wm{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:54px;letter-spacing:-.03em}
+  .brand .dot{color:#D9613A;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:54px}
+  .brand .phon{font-size:14px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#897866}
+  .avatar{justify-self:end}
+  .avatar svg{width:380px;height:380px;filter:drop-shadow(0 30px 60px rgba(184,74,40,.35))}
+</style>
+</head>
+<body>
+  <div class="og">
+    <div>
+      <div class="tag">Recepcionista virtual no WhatsApp</div>
+      <h1>Seu negócio respondendo e agendando 24 horas por dia.</h1>
+      <div class="brand">
+        <span class="wm">lena<span class="dot">.</span></span>
+        
+      </div>
+    </div>
+    <div class="avatar">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="50" fill="#D9613A"/>
+        <path d="M38.5 33.9 V66.1 H66.1" fill="none" stroke="#FBF3E7" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="65" cy="36" r="7" fill="#4E9E78"/>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>

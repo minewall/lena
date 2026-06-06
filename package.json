@@ -1,0 +1,19 @@
+{
+  "name": "lena",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Lena — recepcionista virtual com IA para WhatsApp (AVERSE TECNOLOGIA LTDA)",
+  "workspaces": [
+    "packages/*",
+    "lena-site",
+    "central"
+  ],
+  "scripts": {
+    "build:shared": "npm run build -w @lena/shared",
+    "dev:site": "npm run dev -w lena-site",
+    "dev:central": "npm run dev -w central"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

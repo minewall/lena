@@ -1,0 +1,25 @@
+node_modules
+dist
+.wrangler
+.DS_Store
+.env
+.env.local
+.env.*.local
+*.log
+.vscode
+.idea
+
+# Python (lead-generator)
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# Dados sensíveis (LGPD) — leads coletados nunca vão pro git
+lead-generator/data/
+lead-generator/logs/
+
+# Cache do gerador
+.pytest_cache/

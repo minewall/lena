@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quero saber mais sobre a Lena</title>
+<meta name="description" content="Demonstre interesse na Lena. Uma conversa rápida pra entender o seu negócio." />
+<meta name="robots" content="index,follow" />
+<link rel="canonical" href="https://lena.ia.br/interesse.html" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Lena" />
+<meta property="og:title" content="Quero saber mais sobre a Lena" />
+<meta property="og:description" content="Uma conversa rápida pra entender o seu negócio. A gente te chama no WhatsApp." />
+<meta property="og:url" content="https://lena.ia.br/interesse.html" />
+<!-- TODO(OG): trocar pela imagem 1200x630 exportada de og-image.html -->
+<meta property="og:image" content="https://lena.ia.br/assets/lena-avatar-1000.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://lena.ia.br/assets/lena-avatar-1000.png" />
+<meta name="theme-color" content="#241B15" />
+<link rel="icon" type="image/svg+xml" href="/assets/lena-avatar.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --primary:#D9613A; --primary-dark:#B84A28; --secondary:#F2A93C; --accent:#4E9E78;
+    --grad: linear-gradient(135deg, #D9613A 0%, #F2A93C 100%);
+    --dark:#241B15; --body:#6B5D4F; --muted:#897866; --line:#E8DFD0;
+    --bg:#FBF3E7; --bg-2:#FFFAF0; --white:#FFFFFF; --success:#4E9E78;
+    /* Chat palette — paleta Lena (referência: print do WhatsApp do usuário) */
+    --wa-green:#241B15;       /* header: café */
+    --wa-green-dk:#1B130D;
+    --wa-bg:#E5DDD2;          /* fundo do chat: bege quente WhatsApp-like */
+    --wa-bub-in:#FFFFFF;       /* bolhas da Lena: branco */
+    --wa-bub-out:#4E9E78;     /* bolhas do cliente: sálvia (brand) — vibrante como o verde do WhatsApp */
+    --wa-bub-out-text:#FFFFFF; /* texto do cliente: branco sobre sálvia */
+    --wa-bub-in-border:rgba(36,27,21,.10);
+    --wa-text:#241B15;
+    --wa-meta:#897866;
+    --wa-meta-out:rgba(255,255,255,.75); /* timestamps em branco translúcido sobre sálvia */
+    --wa-input-bg:#F0E8D8;    /* barra de composição: cream-soft */
+    --maxw:680px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Hanken Grotesk',sans-serif;background:var(--bg-2);color:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+  h1,h2{font-family:'Bricolage Grotesque',sans-serif;color:var(--dark);font-weight:700;line-height:1.15;letter-spacing:-.02em}
+  a{color:var(--primary);text-decoration:none}
+  a:hover{color:var(--primary-dark)}
+  button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+
+  /* === NAV === */
+  nav{padding:18px 28px;background:var(--white);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10;backdrop-filter:blur(10px)}
+  .nav-in{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .logo{display:inline-flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.55rem;letter-spacing:-.03em;color:var(--dark)}
+  .logo-mark{width:36px;height:36px;border-radius:9px;flex:none;display:block;box-shadow:0 8px 20px -8px rgba(217,97,58,.45)}
+  .logo .dot{color:#4E9E78;margin-left:-.1em}
+  .back{font-size:.92rem;color:var(--muted);font-weight:500;padding:8px 12px;border-radius:8px;transition:all .15s}
+  .back:hover{color:var(--dark);background:var(--bg)}
+
+  /* === MAIN === */
+  main{flex:1;padding:40px 20px 56px;position:relative;overflow:hidden}
+  main::before{content:"";position:absolute;top:-150px;right:-150px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(217,97,58,.10),transparent 70%);z-index:0;pointer-events:none}
+  main::after{content:"";position:absolute;bottom:-250px;left:-200px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(242,169,60,.08),transparent 70%);z-index:0;pointer-events:none}
+  .wrap{max-width:560px;margin:0 auto;position:relative;z-index:1}
+
+  .intro{text-align:center;margin-bottom:24px}
+  .eyebrow{display:inline-block;background:rgba(217,97,58,.1);color:var(--primary);font-size:.76rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:6px 13px;border-radius:999px;margin-bottom:14px}
+  h1{font-size:clamp(1.7rem,3.6vw,2.2rem);margin-bottom:8px}
+  .intro p{color:var(--body);font-size:.98rem;max-width:42ch;margin:0 auto}
+  .intro p b{color:var(--dark);font-weight:600}
+
+  /* === PROGRESS === */
+  .progress{margin:0 auto 22px;max-width:300px}
+  .progress-track{height:4px;background:var(--line);border-radius:999px;overflow:hidden}
+  .progress-fill{height:100%;background:var(--grad);width:0%;border-radius:999px;transition:width .4s cubic-bezier(.34,1.56,.64,1)}
+  .progress-label{text-align:center;margin-top:8px;font-size:.74rem;color:var(--muted);font-weight:500;letter-spacing:.04em}
+
+  /* === WHATSAPP PANEL === */
+  .chat-panel{
+    background:var(--wa-bg);
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 24px 60px -24px rgba(36,27,21,.25), 0 2px 4px rgba(36,27,21,.08);
+    border:1px solid rgba(36,27,21,.06);
+  }
+  .wa-header{
+    background:var(--wa-green);
+    color:#fff;
+    padding:14px 18px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .wa-header .av{
+    width:44px;height:44px;border-radius:50%;overflow:hidden;flex:none;
+    background:#D9613A;box-shadow:0 2px 6px rgba(0,0,0,.25), 0 0 0 2px rgba(255,255,255,.12);
+    display:grid;place-items:center;
+  }
+  .wa-header .av svg,
+  .wa-header .av img{width:100%;height:100%;display:block}
+  .wa-header .who{flex:1;min-width:0}
+  .wa-header .nm{font-weight:600;font-size:1rem;line-height:1.2;font-family:'Hanken Grotesk'}
+  .wa-header .st{font-size:.75rem;opacity:.85;margin-top:1px;display:flex;align-items:center;gap:5px}
+  .wa-header .st::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px rgba(78,158,120,.3)}
+  .wa-header .icons{display:flex;gap:14px;opacity:.85;font-size:1.1rem}
+
+  .wa-body{
+    background-color:var(--wa-bg);
+    background-image:url("/assets/wa-pattern.svg");
+    background-size:180px 180px;
+    background-repeat:repeat;
+    padding:18px 14px 14px;
+    height:520px;
+    overflow-y:auto;
+    overflow-x:hidden;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    scrollbar-width:thin;
+    scrollbar-color:rgba(36,27,21,.25) transparent;
+    scroll-behavior:smooth;
+  }
+  .wa-body::-webkit-scrollbar{width:6px}
+  .wa-body::-webkit-scrollbar-thumb{background-color:rgba(36,27,21,.2);border-radius:999px}
+  .wa-body::-webkit-scrollbar-thumb:hover{background-color:rgba(36,27,21,.35)}
+  .wa-body::-webkit-scrollbar-track{background:transparent}
+
+  /* === SYSTEM "today" date chip === */
+  .wa-date{align-self:center;background:rgba(255,255,255,.85);color:var(--wa-meta);font-size:.72rem;font-weight:500;padding:5px 12px;border-radius:8px;box-shadow:0 1px 1px rgba(0,0,0,.05);margin-bottom:4px}
+
+  /* === Bubbles === */
+  .wa-msg{display:flex;flex-direction:column;animation:bubIn .35s cubic-bezier(.34,1.2,.64,1)}
+  .wa-msg.in{align-items:flex-start}
+  .wa-msg.out{align-items:flex-end}
+  @keyframes bubIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .wa-bub{
+    max-width:85%;
+    padding:9px 13px 11px;
+    border-radius:8px;
+    font-size:1.02rem;
+    line-height:1.42;
+    color:var(--wa-text);
+    box-shadow:0 1px 1px rgba(0,0,0,.08);
+    position:relative;
+    word-wrap:break-word;
+    overflow-wrap:break-word;
+    font-family:'Hanken Grotesk',sans-serif;
+  }
+  .wa-msg.in .wa-bub{background:var(--wa-bub-in);border:1px solid var(--wa-bub-in-border);border-top-left-radius:0}
+  .wa-msg.out .wa-bub{background:var(--wa-bub-out);color:var(--wa-bub-out-text);border-top-right-radius:0}
+  .wa-bub b{font-weight:600}
+  .wa-bub .time{display:inline-block;font-size:.66rem;color:var(--wa-meta);margin-left:8px;margin-top:2px;vertical-align:bottom}
+  .wa-msg.out .wa-bub .time{color:var(--wa-meta-out)}
+  .wa-bub .ticks{color:#53BDEB;font-size:.78rem;margin-left:2px}
+  .wa-msg.out .wa-bub .ticks{color:rgba(255,255,255,.85)}
+
+  /* tail */
+  .wa-msg.in .wa-bub::before{
+    content:"";position:absolute;top:0;left:-8px;width:0;height:0;
+    border-top:8px solid var(--wa-bub-in);
+    border-left:8px solid transparent;
+  }
+  .wa-msg.out .wa-bub::before{
+    content:"";position:absolute;top:0;right:-8px;width:0;height:0;
+    border-top:8px solid var(--wa-bub-out);
+    border-right:8px solid transparent;
+  }
+
+  /* === Typing indicator === */
+  .wa-typing{
+    align-self:flex-start;background:var(--wa-bub-in);
+    padding:11px 14px;border-radius:8px;border-top-left-radius:0;
+    display:none;gap:4px;box-shadow:0 1px 1px rgba(0,0,0,.08);
+    position:relative;border:1px solid var(--wa-bub-in-border);
+  }
+  .wa-typing.show{display:flex;animation:bubIn .25s ease}
+  .wa-typing::before{
+    content:"";position:absolute;top:0;left:-8px;width:0;height:0;
+    border-top:8px solid var(--wa-bub-in);border-left:8px solid transparent;
+  }
+  .wa-typing span{width:7px;height:7px;border-radius:50%;background:#9AA5AD;animation:bounce 1s infinite}
+  .wa-typing span:nth-child(2){animation-delay:.15s}
+  .wa-typing span:nth-child(3){animation-delay:.3s}
+  @keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-5px);opacity:1}}
+
+  /* === Quick reply pills === */
+  .wa-pills{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;margin-top:4px;padding:0 4px}
+  .wa-pills label{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:8px 14px;border-radius:18px;
+    background:#fff;color:var(--primary);font-weight:500;font-size:.86rem;
+    cursor:pointer;transition:all .15s;user-select:none;
+    box-shadow:0 1px 2px rgba(0,0,0,.08);border:0;
+  }
+  .wa-pills label:hover{background:#FFF8F2;transform:translateY(-1px)}
+  .wa-pills input[type=radio]{position:absolute;opacity:0;pointer-events:none}
+  .wa-pills label.checked,
+  .wa-pills label:has(input:checked){background:var(--grad);color:#fff;box-shadow:0 4px 10px -3px rgba(217,97,58,.4)}
+
+  /* === Input area (WhatsApp message bar) === */
+  .wa-compose{
+    background:var(--wa-input-bg);
+    padding:8px 10px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    border-top:1px solid rgba(0,0,0,.05);
+  }
+  .wa-compose .field{
+    flex:1;background:#fff;border-radius:24px;padding:10px 16px;
+    display:flex;align-items:center;gap:8px;box-shadow:0 1px 1px rgba(0,0,0,.05);
+    min-height:42px;
+  }
+  .wa-compose input{
+    flex:1;border:0;outline:0;background:transparent;
+    font-family:'Hanken Grotesk',sans-serif;font-size:.96rem;color:var(--wa-text);
+  }
+  .wa-compose input::placeholder{color:#8696A0}
+  .wa-compose .btn-send{
+    width:42px;height:42px;border-radius:50%;background:var(--grad);
+    display:grid;place-items:center;color:#fff;flex:none;
+    transition:all .15s;box-shadow:0 4px 12px -2px rgba(217,97,58,.5);
+  }
+  .wa-compose .btn-send:hover{background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary) 100%);transform:scale(1.04)}
+  .wa-compose .btn-send:disabled{opacity:.4;cursor:not-allowed;transform:none}
+  .wa-compose .btn-send svg{width:20px;height:20px}
+
+  /* === Question container === */
+  .q{display:none;flex-direction:column;gap:8px}
+  .q.visible{display:flex}
+  .q .answer-slot{display:none;flex-direction:column;gap:8px}
+  .q.answered .answer-slot{display:flex}
+  .q.answered .wa-pills,
+  .q.answered .wa-compose,
+  .q.answered .outro-compose{display:none}
+
+  /* === Submit (final CTA after last step) === */
+  .submit-card{
+    display:none;background:#fff;padding:20px;border-radius:12px;margin-top:16px;
+    box-shadow:0 10px 30px -10px rgba(36,27,21,.15);animation:bubIn .45s ease;
+  }
+  .submit-card.visible{display:block}
+  .btn-submit{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    width:100%;padding:16px 24px;border-radius:12px;
+    background:var(--grad);color:#fff;font-weight:700;font-size:1.02rem;
+    box-shadow:0 12px 28px -10px rgba(217,97,58,.55);
+    transition:all .2s;font-family:'Hanken Grotesk',sans-serif;
+  }
+  .btn-submit:hover{transform:translateY(-2px);box-shadow:0 18px 36px -12px rgba(217,97,58,.65)}
+  .privacy{text-align:center;color:var(--muted);font-size:.84rem;margin-top:14px}
+  .privacy a{color:var(--primary);text-decoration:underline;text-underline-offset:3px}
+
+  /* === FOOTER === */
+  footer{padding:22px 28px;text-align:center;color:var(--muted);font-size:.84rem;border-top:1px solid var(--line);background:var(--white)}
+  footer a{color:var(--muted)}
+  footer a:hover{color:var(--dark)}
+
+  .gotcha{position:absolute;left:-9999px;opacity:0;pointer-events:none}
+
+  @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+  @media (max-width:540px){
+    main{padding:24px 14px 50px}
+    .wa-body{padding:14px 10px 10px;height:460px}
+    .wa-bub{font-size:.98rem;max-width:88%}
+    .wa-pills label{font-size:.82rem;padding:7px 12px}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a href="/" class="logo" aria-label="Lena, voltar à página inicial">
+      <img src="/assets/lena-selo.svg" alt="" width="36" height="36" class="logo-mark" />
+      Lena<span class="dot">.</span>
+    </a>
+    <a href="/" class="back">← Voltar ao site</a>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <div class="intro">
+      <span class="eyebrow">Demonstre seu interesse</span>
+      <h1>Vamos conversar?</h1>
+      <p>Uma conversa rápida pra eu entender o seu negócio. <b>Em até 1 dia útil</b> a gente te chama no WhatsApp.</p>
+    </div>
+
+    <div class="progress">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-label" id="progressLabel">Vamos começar</div>
+    </div>
+
+    <form id="interestForm" action="https://formspree.io/f/mqejovqj" method="POST" autocomplete="on">
+      <input type="hidden" name="_subject" value="Novo interesse na Lena" />
+      <input type="hidden" name="_next" value="https://lena.ia.br/obrigado.html" />
+      <input type="text" name="_gotcha" class="gotcha" tabindex="-1" autocomplete="off" />
+      <input type="hidden" name="plano_sugerido" id="planoSugerido" value="" />
+      <input type="hidden" name="horario_preferido" id="horarioPreferido" value="" />
+
+      <div class="chat-panel">
+        <div class="wa-header">
+          <div class="av" aria-label="Lena">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="44" height="44">
+              <circle cx="50" cy="50" r="50" fill="#D9613A"/>
+              <path d="M37 28 V64 H56" fill="none" stroke="#FBF3E7" stroke-width="12.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="72" cy="64" r="6.4" fill="#4E9E78"/>
+            </svg>
+          </div>
+          <div class="who">
+            <div class="nm">Lena, Atendimento</div>
+            <div class="st">online agora</div>
+          </div>
+          <div class="icons" aria-hidden="true">⋮</div>
+        </div>
+
+        <div class="wa-body" id="waBody">
+          <div class="wa-date">Hoje</div>
+
+          <!-- Intro greetings -->
+          <div id="introBlock"></div>
+
+          <!-- Q1 nome -->
+          <div class="q" data-step="1">
+            <div class="wa-msg in"><div class="wa-bub">Pra começar, <b>como posso te chamar</b>? 😊 <span class="time" data-now></span></div></div>
+            <div class="answer-slot" id="answer-1"></div>
+          </div>
+
+          <!-- Q2 e-mail -->
+          <div class="q" data-step="2">
+            <div class="wa-msg in"><div class="wa-bub" id="bub-2">Agora, me passa seu <b>e-mail</b>. ✉️ <span class="time" data-now></span></div></div>
+            <div class="answer-slot" id="answer-2"></div>
+          </div>
+
+          <!-- Q3 WhatsApp -->
+          <div class="q" data-step="3">
+            <div class="wa-msg in"><div class="wa-bub" id="bub-3">E seu <b>WhatsApp</b>? É por aí que vou te chamar. <span class="time" data-now></span></div></div>
+            <div class="answer-slot" id="answer-3"></div>
+          </div>
+
+          <!-- Q4 tipo -->
+          <div class="q" data-step="4">
+            <div class="wa-msg in"><div class="wa-bub" id="bub-4">Qual o <b>seu negócio</b>? <span class="time" data-now></span></div></div>
+            <div class="wa-pills" id="tipoPills">
+              <label><input type="radio" name="tipo_negocio" value="Clínica" required /> 🩺 Clínica</label>
+              <label><input type="radio" name="tipo_negocio" value="Imobiliária" /> 🏡 Imobiliária</label>
+              <label><input type="radio" name="tipo_negocio" value="Escola/Curso" /> 🎓 Escola/Curso</label>
+              <label><input type="radio" name="tipo_negocio" value="Outro" data-other="1" /> ✨ Outro</label>
+            </div>
+            <div class="outro-compose" id="tipoOutroRow" style="display:none">
+              <div class="wa-compose">
+                <div class="field"><input type="text" name="tipo_negocio_outro" placeholder="Conta o que é..." id="tipoOutroInput" /></div>
+                <button type="button" class="btn-send" data-advance="5" aria-label="Enviar">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="answer-slot" id="answer-4"></div>
+          </div>
+
+          <!-- Q5 volume -->
+          <div class="q" data-step="5">
+            <div class="wa-msg in"><div class="wa-bub" id="bub-5">Em um dia comum, mais ou menos quantas mensagens de clientes <b>você recebe por dia</b>? <span class="time" data-now></span></div></div>
+            <div class="wa-pills" id="volumePills">
+              <label><input type="radio" name="volume" value="Até 20 por dia (~500/mês)" data-plan="essencial" required /> Até 20</label>
+              <label><input type="radio" name="volume" value="20 a 50 por dia (~500-1.500/mês)" data-plan="profissional" /> 20 a 50</label>
+              <label><input type="radio" name="volume" value="50 a 130 por dia (~1.500-4.000/mês)" data-plan="premium" /> 50 a 130</label>
+              <label><input type="radio" name="volume" value="Mais de 130 por dia (4.000+/mês)" data-plan="enterprise" /> +130</label>
+              <label><input type="radio" name="volume" value="Não sei dizer" data-plan="naosei" /> Não sei dizer</label>
+            </div>
+            <div class="answer-slot" id="answer-5"></div>
+          </div>
+
+          <!-- Q6 como seguir -->
+          <div class="q" data-step="6">
+            <div class="wa-msg in"><div class="wa-bub" id="bub-6">Última pergunta: <b>como você gostaria de seguir</b>? <span class="time" data-now></span></div></div>
+            <div class="wa-pills" id="seguirPills">
+              <label><input type="radio" name="seguir" value="Agendar uma conversa agora" data-action="agendar" required /> 📞 Agendar uma conversa</label>
+              <label><input type="radio" name="seguir" value="Me chama daqui a 1 semana" data-action="semana" /> ⏰ Me chama em 1 semana</label>
+              <label><input type="radio" name="seguir" value="Me chama daqui a 1 mês" data-action="mes" /> 📅 Me chama em 1 mês</label>
+              <label><input type="radio" name="seguir" value="Espera que eu te chamo" data-action="usuario" /> ✋ Espera que eu te chamo</label>
+              <label><input type="radio" name="seguir" value="Só estou explorando, obrigado" data-action="explorando" /> 🔭 Só estou explorando</label>
+            </div>
+            <div class="answer-slot" id="answer-6"></div>
+          </div>
+
+          <!-- Q7 horario (condicional, só aparece se escolher "Agendar") -->
+          <div class="q" data-step="7">
+            <div class="wa-pills" id="horarioPills"><!-- gerado em JS --></div>
+            <div class="answer-slot" id="answer-7"></div>
+          </div>
+
+          <!-- typing indicator (reused) -->
+          <div class="wa-typing" id="waTyping"><span></span><span></span><span></span></div>
+        </div>
+
+        <!-- Compose area for text inputs (Q1 nome / Q2 email / Q3 whatsapp) -->
+        <div class="wa-compose" id="waCompose" style="display:none">
+          <div class="field">
+            <input type="text" name="nome" id="qNome" required placeholder="Digite seu nome" autocomplete="given-name" />
+            <input type="email" name="email" id="qEmail" required placeholder="Digite seu e-mail" autocomplete="email" style="display:none" />
+            <input type="tel" name="whatsapp" id="qWhatsapp" required placeholder="Digite seu WhatsApp" autocomplete="tel" style="display:none" />
+          </div>
+          <button type="button" class="btn-send" id="btnSend" aria-label="Enviar">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="submit-card" id="submitCard">
+        <label style="display:flex;gap:10px;align-items:flex-start;text-align:left;margin-bottom:16px;font-size:.92rem;color:var(--body);cursor:pointer">
+          <input type="checkbox" name="interesse_campanhas" value="Sim" style="margin-top:3px;width:18px;height:18px;accent-color:var(--primary);flex:none" />
+          <span>Também tenho interesse em <b>campanhas de reativação</b> (a Lena chama meus clientes de volta pelo WhatsApp).</span>
+        </label>
+        <button type="submit" class="btn-submit">Quero que entrem em contato →</button>
+        <p class="privacy">Seus dados ficam só com a gente. Veja a <a href="/privacidade.html">Política de Privacidade</a>.</p>
+      </div>
+    </form>
+  </div>
+</main>
+
+<footer>
+  © 2026 Lena, <a href="/privacidade.html">Privacidade</a>, <a href="/termos.html">Termos</a>, <a href="mailto:contato@lena.ia.br">contato@lena.ia.br</a>
+</footer>
+
+<script>
+  const TOTAL = 5; // formulário enxuto: nome, e-mail, whatsapp, tipo, volume → envio
+  const progressFill = document.getElementById('progressFill');
+  const progressLabel = document.getElementById('progressLabel');
+  const submitCard = document.getElementById('submitCard');
+  const waBody = document.getElementById('waBody');
+  const waTyping = document.getElementById('waTyping');
+  const waCompose = document.getElementById('waCompose');
+  const qNome = document.getElementById('qNome');
+  const qEmail = document.getElementById('qEmail');
+  const qWhatsapp = document.getElementById('qWhatsapp');
+  const btnSend = document.getElementById('btnSend');
+  const planoSugerido = document.getElementById('planoSugerido');
+  const horarioPreferido = document.getElementById('horarioPreferido');
+
+  let activeTextInput = qNome;
+  let userName = '';
+
+  function now(){
+    const d = new Date();
+    return d.getHours().toString().padStart(2,'0') + ':' + d.getMinutes().toString().padStart(2,'0');
+  }
+  document.querySelectorAll('[data-now]').forEach(el => el.textContent = now());
+
+  function updateProgress(step){
+    // step 1..6 = perguntas normais
+    // step 7 = horario sub-step (só quando "Agendar")
+    // step > 7 = final (submit)
+    if(step > 7){
+      progressFill.style.width = '100%';
+      progressLabel.textContent = 'Tudo pronto, envie';
+      return;
+    }
+    if(step === 7){
+      progressFill.style.width = '95%';
+      progressLabel.textContent = 'Escolha um horário';
+      return;
+    }
+    const pct = Math.min(96, (step / TOTAL) * 100);
+    progressFill.style.width = pct + '%';
+    if(pct >= 96) progressLabel.textContent = 'Última pergunta';
+    else if(pct >= 65) progressLabel.textContent = 'Falta pouco';
+    else if(pct >= 35) progressLabel.textContent = 'Indo bem';
+    else progressLabel.textContent = 'Vamos começar';
+  }
+
+  function getQ(n){ return document.querySelector(`.q[data-step="${n}"]`); }
+
+  function appendAnswer(step, text){
+    const slot = document.getElementById(`answer-${step}`);
+    if(!slot) return;
+    const msg = document.createElement('div');
+    msg.className = 'wa-msg out';
+    msg.innerHTML = `<div class="wa-bub">${text} <span class="time">${now()}<span class="ticks">✓✓</span></span></div>`;
+    slot.appendChild(msg);
+    const q = getQ(step);
+    if(q) q.classList.add('answered');
+    waBody.scrollTop = waBody.scrollHeight;
+  }
+
+  // Adiciona uma bolha da Lena DENTRO de um slot específico (ou no final do waBody)
+  function appendLenaBubble(html, slot){
+    const msg = document.createElement('div');
+    msg.className = 'wa-msg in';
+    msg.innerHTML = `<div class="wa-bub">${html} <span class="time">${now()}</span></div>`;
+    (slot || waBody).appendChild(msg);
+    waBody.scrollTop = waBody.scrollHeight;
+  }
+
+  // Cria um typing div fresh (evita estado ambíguo do waTyping único)
+  function makeTyping(){
+    const t = document.createElement('div');
+    t.className = 'wa-typing show';
+    t.innerHTML = '<span></span><span></span><span></span>';
+    return t;
+  }
+
+  function scrollSoft(){
+    // Scroll INTERNO do chat (não rola mais a janela inteira)
+    requestAnimationFrame(()=>{
+      waBody.scrollTop = waBody.scrollHeight;
+    });
+  }
+
+  // Mostra typing num target específico (insertBefore) — fallback: final do waBody
+  function showTypingAt(target, callback, ms=900){
+    const t = makeTyping();
+    if(target && target.parentNode){
+      target.parentNode.insertBefore(t, target);
+    } else if(target){
+      target.appendChild(t);
+    } else {
+      waBody.appendChild(t);
+    }
+    scrollSoft();
+    setTimeout(()=>{
+      t.remove();
+      callback();
+    }, ms);
+  }
+
+  // Atalho: typing no FIM do answer-slot da pergunta X (Lena respondendo ao usuário)
+  function lenaReplyTo(step, html, ms=900, then=null){
+    const slot = document.getElementById(`answer-${step}`);
+    if(!slot){ if(then) then(); return; }
+    const t = makeTyping();
+    slot.appendChild(t);
+    scrollSoft();
+    setTimeout(()=>{
+      t.remove();
+      appendLenaBubble(html, slot);
+      scrollSoft();
+      if(then) then();
+    }, ms);
+  }
+
+  // Backward-compat (intro / error)
+  function showTypingThen(callback, ms=900){
+    showTypingAt(null, callback, ms);
+  }
+
+  function bindCompose(input){
+    waCompose.style.display = 'flex';
+    [qNome, qEmail, qWhatsapp].forEach(i => i.style.display = (i === input) ? 'block' : 'none');
+    activeTextInput = input;
+    // Painel agora tem altura fixa — compose está sempre visível abaixo dele
+    // Só foca o input, sem scrolls agressivos
+    setTimeout(()=>input.focus(), 280);
+  }
+
+  function showSubmit(){
+    waCompose.style.display = 'none';
+    submitCard.classList.add('visible');
+    updateProgress(8);
+    setTimeout(()=> submitCard.scrollIntoView({behavior:'smooth', block:'center'}), 80);
+  }
+
+  function revealStep(n){
+    if(n > TOTAL){
+      showSubmit();
+      return;
+    }
+    const q = getQ(n);
+    if(!q || q.classList.contains('visible')) return;
+
+    const finish = ()=>{
+      q.classList.add('visible');
+      updateProgress(n);
+      if(n === 1)      bindCompose(qNome);
+      else if(n === 2) bindCompose(qEmail);
+      else if(n === 3) bindCompose(qWhatsapp);
+      else waCompose.style.display = 'none';
+      waBody.scrollTop = waBody.scrollHeight;
+    };
+
+    if(n === 1){ finish(); return; } // primeira pergunta entra direto
+    // typing logo ANTES do Q que vai aparecer (DOM position correto)
+    showTypingAt(q, finish, 950);
+  }
+
+  function revealHorario(){
+    const q = getQ(7);
+    if(!q || q.classList.contains('visible')) return;
+    generateHorarioPills();
+    q.classList.add('visible');
+    updateProgress(7);
+    waCompose.style.display = 'none';
+    setTimeout(()=> q.scrollIntoView({behavior:'smooth', block:'center'}), 80);
+  }
+
+  // === Validation ===
+  function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
+  function validPhone(v){ return v.replace(/\D/g,'').length >= 10; }
+  function validName(v){ return v.trim().length >= 2; }
+
+  function shakeInput(input){
+    input.animate(
+      [{transform:'translateX(0)'},{transform:'translateX(-4px)'},{transform:'translateX(4px)'},{transform:'translateX(0)'}],
+      {duration:280}
+    );
+  }
+
+  // === Send button (main compose) ===
+  btnSend.addEventListener('click', ()=>{
+    const input = activeTextInput;
+    if(input === qNome){
+      if(!validName(input.value)){ shakeInput(input); return; }
+      const full = input.value.trim();
+      userName = full.split(/\s+/)[0]; // primeiro nome
+      appendAnswer(1, full);
+      lenaReplyTo(1, `Prazer, <b>${userName}</b>! ✨`, 850, ()=>{
+        setTimeout(()=>revealStep(2), 600);
+      });
+    } else if(input === qEmail){
+      if(!validEmail(input.value)){ shakeInput(input); return; }
+      appendAnswer(2, input.value.trim());
+      revealStep(3);
+    } else if(input === qWhatsapp){
+      if(!validPhone(input.value)){ shakeInput(input); return; }
+      appendAnswer(3, input.value.trim());
+      revealStep(4);
+    }
+  });
+
+  [qNome, qEmail, qWhatsapp].forEach(inp=>{
+    inp.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter'){ e.preventDefault(); btnSend.click(); }
+    });
+  });
+
+  // === Q4 tipo ===
+  const tipoPills = document.getElementById('tipoPills');
+  const tipoOutroRow = document.getElementById('tipoOutroRow');
+  const tipoOutroInput = document.getElementById('tipoOutroInput');
+
+  tipoPills.addEventListener('change', (e)=>{
+    const inp = e.target;
+    const isOther = inp.dataset.other === '1';
+    if(isOther){
+      tipoOutroRow.style.display = 'block';
+      setTimeout(()=>tipoOutroInput.focus(), 100);
+    } else {
+      tipoOutroRow.style.display = 'none';
+      tipoOutroInput.value = '';
+      setTimeout(()=>{
+        appendAnswer(4, inp.value);
+        revealStep(5);
+      }, 350);
+    }
+  });
+
+  tipoOutroRow.querySelector('.btn-send').addEventListener('click', ()=>{
+    const v = tipoOutroInput.value.trim();
+    if(v.length < 2){ shakeInput(tipoOutroInput); return; }
+    appendAnswer(4, `Outro: ${v}`);
+    revealStep(5);
+  });
+  tipoOutroInput.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter'){ e.preventDefault(); tipoOutroRow.querySelector('.btn-send').click(); }
+  });
+
+  // === Q5 volume — plano vira bolha normal da Lena ===
+  const planMap = {
+    essencial:    {ic:'🌱', name:'Essencial',    price:'R$ 400/mês',     note:'Cabe perfeitamente no seu volume.'},
+    profissional: {ic:'🚀', name:'Profissional', price:'R$ 900/mês',     note:'É o mais escolhido pra esse perfil.'},
+    premium:      {ic:'⚡', name:'Premium',      price:'R$ 1.800/mês',   note:'Recomendado pra operações maiores.'},
+    enterprise:   {ic:'🏢', name:'Sob medida',   price:'preço sob consulta', note:'A gente desenha o pacote junto.'},
+    naosei:       {ic:'🤝', name:null,           price:null,             note:'Sem problema! A gente conversa pra entender o tamanho certo.'}
+  };
+  const volumePills = document.getElementById('volumePills');
+  volumePills.addEventListener('change', (e)=>{
+    const inp = e.target;
+    const key = inp.dataset.plan;
+    if(!key) return;
+    const p = planMap[key];
+    appendAnswer(5, inp.value);
+    const msg = p.name
+      ? `${p.ic} Pelo seu volume, o plano que mais te atende é o <b>${p.name}</b>, ${p.price}. ${p.note}`
+      : `${p.ic} ${p.note}`;
+    planoSugerido.value = p.name ? `${p.name} (${p.price})` : 'Não definido';
+    lenaReplyTo(5, msg, 950, ()=>{
+      setTimeout(()=>showSubmit(), 700);
+    });
+  });
+
+  // === Q6 seguir ===
+  const seguirPills = document.getElementById('seguirPills');
+  const seguirReplies = {
+    semana:     'Combinado! Te chamo daqui a 1 semana. 👋',
+    mes:        'Beleza! Daqui a 1 mês eu volto a falar contigo. 📆',
+    usuario:    'Tranquilo! Fico aqui esperando seu contato. 😊',
+    explorando: 'Sem pressa! Tô à disposição se mudar de ideia. 🙏'
+  };
+
+  seguirPills.addEventListener('change', (e)=>{
+    const inp = e.target;
+    const action = inp.dataset.action;
+    appendAnswer(6, inp.value);
+
+    if(action === 'agendar'){
+      lenaReplyTo(6, `Boa${userName ? ', ' + userName : ''}! Aqui vão alguns horários: qual fica melhor pra você?`, 950, ()=>{
+        setTimeout(()=>revealHorario(), 600);
+      });
+    } else {
+      lenaReplyTo(6, seguirReplies[action] || 'Entendi! 😊', 900, ()=>{
+        setTimeout(()=>showSubmit(), 700);
+      });
+    }
+  });
+
+  // === Q7 horario (gerado dinamicamente) ===
+  function nextBusinessDays(n){
+    const days = [];
+    const d = new Date();
+    d.setDate(d.getDate() + 1); // começa amanhã
+    while(days.length < n){
+      const dow = d.getDay();
+      if(dow !== 0 && dow !== 6) days.push(new Date(d));
+      d.setDate(d.getDate() + 1);
+    }
+    return days;
+  }
+  function formatDay(d){
+    const names = ['dom','seg','ter','qua','qui','sex','sáb'];
+    const dd = d.getDate().toString().padStart(2,'0');
+    const mm = (d.getMonth()+1).toString().padStart(2,'0');
+    return `${names[d.getDay()]} ${dd}/${mm}`;
+  }
+  function generateHorarioPills(){
+    const container = document.getElementById('horarioPills');
+    container.innerHTML = '';
+    const days = nextBusinessDays(3);
+    const slots = ['10h', '14h'];
+    days.forEach((day, i)=>{
+      slots.forEach(slot=>{
+        const fullDay = formatDay(day);
+        const value = `${fullDay} às ${slot}`;
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="radio" name="horario_slot" value="${value}" /> 🗓 ${fullDay} às ${slot}`;
+        container.appendChild(label);
+      });
+    });
+  }
+  // Event delegation para os horários (gerados depois)
+  document.getElementById('horarioPills').addEventListener('change', (e)=>{
+    const inp = e.target;
+    if(inp.name !== 'horario_slot') return;
+    horarioPreferido.value = inp.value;
+    appendAnswer(7, inp.value);
+    lenaReplyTo(7, `Anotado! ${userName ? userName + ', vou' : 'Vou'} confirmar esse horário com você. 🗓️`, 900, ()=>{
+      setTimeout(()=>showSubmit(), 700);
+    });
+  });
+
+  // Manual checked state (browsers without :has())
+  document.body.addEventListener('change', (e)=>{
+    if(e.target.type !== 'radio') return;
+    const group = e.target.closest('.wa-pills');
+    if(!group) return;
+    group.querySelectorAll('label').forEach(lab=>{
+      const inp = lab.querySelector('input');
+      lab.classList.toggle('checked', inp && inp.checked);
+    });
+  });
+
+  // === INTRO: Lena se apresenta antes da Q1 ===
+  const introBlock = document.getElementById('introBlock');
+  const introMessages = [
+    'Oi! Eu sou a <b>Lena</b> 👋 Sou a assistente de IA que cuida do atendimento e dos agendamentos no WhatsApp.',
+    'Vamos bater um papo rapidinho pra eu te conhecer? Leva 1 minuto.'
+  ];
+
+  function appendIntroBubble(text){
+    const msg = document.createElement('div');
+    msg.className = 'wa-msg in';
+    msg.innerHTML = `<div class="wa-bub">${text} <span class="time">${now()}</span></div>`;
+    introBlock.appendChild(msg);
+    waBody.scrollTop = waBody.scrollHeight;
+  }
+
+  function playIntro(){
+    showTypingThen(()=>{
+      appendIntroBubble(introMessages[0]);
+      showTypingThen(()=>{
+        appendIntroBubble(introMessages[1]);
+        setTimeout(()=>revealStep(1), 700);
+      }, 1100);
+    }, 700);
+  }
+
+  // === Envio AJAX (controle total) ===
+  const form = document.getElementById('interestForm');
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const submitBtn = form.querySelector('.btn-submit');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Enviando...';
+    submitBtn.style.opacity = '0.7';
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+      if(response.ok){
+        window.location.href = '/obrigado.html';
+      } else {
+        const data = await response.json().catch(()=>({}));
+        throw new Error(data?.error || 'Erro no envio');
+      }
+    } catch(err){
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+      submitBtn.style.opacity = '1';
+      const apologyMsg = document.createElement('div');
+      apologyMsg.className = 'wa-msg in';
+      apologyMsg.innerHTML = `<div class="wa-bub" style="background:#FFE5E0;color:#A03020;border-color:#F0A090">Ops, deu um problema no envio 😕 Tenta de novo, ou escreve direto pra <b>contato@lena.ia.br</b>. <span class="time">${now()}</span></div>`;
+      waBody.appendChild(apologyMsg);
+      waBody.scrollTop = waBody.scrollHeight;
+    }
+  });
+
+  // Init
+  updateProgress(0);
+  playIntro();
+</script>
+
+<!-- Cloudflare Web Analytics (sem cookies) — TODO: trocar TOKEN_CLOUDFLARE pelo token real. Conversão = visualizações de /obrigado.html. -->
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "TOKEN_CLOUDFLARE"}'></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+Lena — Logotipos vetoriais (SVG)
+AVERSE TECNOLOGIA LTDA · lena.ia.br
+
+Arquivos:
+  lena-selo.svg ................ icone / selo (terracota) — fundo claro e escuro
+  lena-selo-escuro.svg ......... selo realcado para fundo quase-preto
+  lena-avatar-circulo.svg ...... avatar circular (WhatsApp / Instagram)
+  lena-glifo.svg ............... "L" isolado, 1 cor (gravacao / carimbo)
+  lena-lockup-horizontal-claro.svg ... selo + "lena." (texto cafe, p/ fundo claro)
+  lena-lockup-horizontal-escuro.svg .. selo + "lena." (texto creme, p/ fundo escuro)
+  lena-lockup-empilhado-claro.svg .... versao empilhada (texto cafe)
+  lena-lockup-empilhado-escuro.svg ... versao empilhada (texto creme)
+
+Cores:
+  Terracota #D9613A  ·  Creme #FBF3E7  ·  Salvia (presenca) #4E9E78
+  Cafe #241B15  ·  Terracota+ #E8784E
+
+Tipografia da wordmark: Bricolage Grotesque (700), sempre minusculas.
+IMPORTANTE: nos lockups, o texto usa a fonte via @import (renderiza em
+navegador). Para impressao/uso final, abra no Illustrator/Figma e converta
+o texto em curvas (outline / flatten).

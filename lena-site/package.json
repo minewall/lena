@@ -1,0 +1,14 @@
+{
+  "name": "lena-site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Site lena.ia.br — Cloudflare Pages (estático + Pages Function)",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler pages dev .",
+    "build": "echo 'site estático — nada a buildar'"
+  },
+  "dependencies": {
+    "@lena/shared": "*"
+  }
+}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Página não encontrada</title>
+<meta name="robots" content="noindex,nofollow" />
+<meta name="theme-color" content="#D9613A" />
+<link rel="icon" type="image/svg+xml" href="/assets/lena-avatar.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --primary:#D9613A; --primary-dark:#B84A28; --secondary:#F2A93C;
+    --grad: linear-gradient(135deg, #D9613A 0%, #F2A93C 100%);
+    --dark:#241B15; --body:#6B5D4F; --muted:#897866; --line:#E8DFD0;
+    --bg-2:#FFFAF0; --white:#FFFFFF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Hanken Grotesk',sans-serif;background:var(--bg-2);color:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+  h1{font-family:'Bricolage Grotesque',sans-serif;color:var(--dark);font-weight:800;line-height:1;letter-spacing:-.04em}
+  a{color:var(--primary);text-decoration:none}
+
+  nav{padding:22px 28px;background:var(--white);border-bottom:1px solid var(--line)}
+  .nav-in{max-width:1100px;margin:0 auto;display:flex;align-items:center}
+  .logo{display:inline-flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.55rem;letter-spacing:-.03em;color:var(--dark)}
+  .logo-mark{width:36px;height:36px;border-radius:9px;flex:none;display:block;box-shadow:0 8px 20px -8px rgba(217,97,58,.45)}
+  .logo .dot{color:#4E9E78;margin-left:-.1em}
+
+  main{flex:1;display:flex;align-items:center;justify-content:center;padding:60px 24px;position:relative;overflow:hidden;text-align:center}
+  main::before{content:"";position:absolute;top:-200px;right:-200px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(217,97,58,.15),transparent 70%);z-index:0}
+  main::after{content:"";position:absolute;bottom:-300px;left:-200px;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(242,169,60,.12),transparent 70%);z-index:0}
+  .wrap{position:relative;z-index:1;max-width:560px}
+  .code{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(7rem,18vw,11rem);line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-.05em;margin-bottom:8px}
+  h1{font-size:clamp(1.7rem,3.6vw,2.4rem);margin-bottom:14px}
+  .lead{color:var(--body);font-size:1.06rem;margin-bottom:32px;max-width:42ch;margin-left:auto;margin-right:auto}
+  .actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:10px;font-weight:600;font-size:.96rem;transition:all .2s;font-family:'Hanken Grotesk',sans-serif}
+  .btn-primary{background:var(--grad);color:#fff;box-shadow:0 10px 24px -10px rgba(217,97,58,.55)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 34px -10px rgba(217,97,58,.65)}
+  .btn-outline{background:transparent;color:var(--primary);border:1.5px solid var(--line)}
+  .btn-outline:hover{border-color:var(--primary);background:rgba(217,97,58,.05)}
+
+  footer{padding:22px 28px;text-align:center;color:var(--muted);font-size:.84rem;border-top:1px solid var(--line);background:var(--white)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a href="/" class="logo" aria-label="Lena, ir para a página inicial">
+      <img src="/assets/lena-selo.svg" alt="" width="36" height="36" class="logo-mark" />
+      Lena<span class="dot">.</span>
+    </a>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <div class="code">404</div>
+    <h1>Essa página fugiu do roteiro.</h1>
+    <p class="lead">A gente ainda não sabe o que tinha aqui. Mas a Lena saberia responder, é a praia dela.</p>
+    <div class="actions">
+      <a href="/" class="btn btn-primary">Voltar para o início</a>
+      <a href="mailto:contato@lena.ia.br" class="btn btn-outline">Falar com a gente</a>
+    </div>
+  </div>
+</main>
+
+<footer>© 2026 Lena, <a href="/privacidade.html" style="color:var(--muted)">Privacidade</a>, <a href="/termos.html" style="color:var(--muted)">Termos</a></footer>
+
+</body>
+</html>
