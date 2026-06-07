@@ -1,6 +1,6 @@
 // ==========================================================================
 // GERADO POR scripts/sync-edge-shared.mjs — NÃO EDITAR À MÃO.
-// Fonte: packages/shared/src/wa/<file>.ts
+// Fonte: packages/shared/src/<subpkg>/<file>.ts
 // ==========================================================================
 import type { WhatsAppProvider } from "./provider.ts";
 import type {

@@ -3,8 +3,6 @@
 // Fonte: packages/shared/src/<subpkg>/<file>.ts
 // ==========================================================================
 export * from "./types.ts";
-export type { WhatsAppProvider } from "./provider.ts";
-export { MetaCloudProvider, normalizeMetaWebhook } from "./meta-cloud.ts";
-export type { MetaCloudProviderOpts } from "./meta-cloud.ts";
-export { validateMetaSignature } from "./signature.ts";
-export { toE164, stripPlus } from "./phone.ts";
+export * from "./build.ts";
+export * from "./from-db.ts";
+export { ESCOLAS_BRAIN_SEED } from "./segments/escolas.ts";

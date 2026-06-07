@@ -1,6 +1,6 @@
 // ==========================================================================
 // GERADO POR scripts/sync-edge-shared.mjs — NÃO EDITAR À MÃO.
-// Fonte: packages/shared/src/wa/<file>.ts
+// Fonte: packages/shared/src/<subpkg>/<file>.ts
 // ==========================================================================
 /**
  * Tipos normalizados para o WhatsApp. A interface WhatsAppProvider devolve
