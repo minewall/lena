@@ -9,6 +9,10 @@ dist
 .vscode
 .idea
 
+# Supabase CLI cache local
+supabase/.temp/
+supabase/.branches/
+
 # Python (lead-generator)
 __pycache__/
 *.pyc
