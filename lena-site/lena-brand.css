@@ -1,0 +1,147 @@
+/* ===========================================================
+   Lena — Sistema de identidade · lena-brand.css
+   Marca: selo "L" com sorriso + ponto de presença (fusão B+C+A)
+   AVERSE TECNOLOGIA LTDA · lena.ia.br
+   =========================================================== */
+
+:root {
+  /* — Paleta — */
+  --cream:    #FBF3E7;  /* fundo */
+  --areia:    #F3E7D3;  /* superfície / cartões */
+  --cafe:     #241B15;  /* tinta */
+  --cafe-dk:  #1B130D;  /* fundo escuro */
+  --cafe-2:   #4A3B30;  /* tinta secundária */
+  --soft:     #897866;  /* texto de apoio */
+  --terra:    #D9613A;  /* primária */
+  --terra-up: #E8784E;  /* primária p/ fundo escuro */
+  --terra-dk: #B84A28;  /* pressionada */
+  --ambar:    #F2A93C;  /* destaque · imobiliárias */
+  --salvia:   #4E9E78;  /* presença (online) · clínicas */
+  --salvia-up:#5FB98D;
+  --ameixa:   #8A5A9C;  /* escolas (acento proposto) */
+  --hairline: rgba(36,27,21,0.12);
+
+  --maxw: 1180px;
+  --r: 18px;
+
+  --display: "Bricolage Grotesque", system-ui, sans-serif;
+  --text: "Hanken Grotesk", system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--cream); color: var(--cafe);
+  font-family: var(--text); font-size: 17px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 { font-family: var(--display); font-weight: 700; letter-spacing: -0.025em; line-height: 1.03; margin: 0; }
+.eyebrow { font-size: 12.5px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--terra); }
+.lede { font-size: clamp(18px, 2vw, 21px); color: var(--cafe-2); line-height: 1.5; text-wrap: pretty; }
+.muted { color: var(--soft); }
+a { color: inherit; }
+b { font-weight: 700; }
+
+/* — Layout — */
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 40px; }
+section { padding: 96px 0; position: relative; }
+.section-head { max-width: 730px; margin-bottom: 50px; }
+.section-head h2 { font-size: clamp(34px, 5vw, 52px); margin: 14px 0 0; }
+.section-head .lede { margin-top: 18px; }
+.num { font-family: var(--mono); font-size: 13px; color: var(--soft); letter-spacing: 0.04em; }
+
+.band-areia { background: var(--areia); }
+.band-cafe { background: var(--cafe); color: var(--cream); }
+.band-cafe .eyebrow { color: var(--ambar); }
+.band-cafe .lede { color: rgba(251,243,231,0.72); }
+.band-cafe .muted { color: rgba(251,243,231,0.55); }
+.band-cafe .card { background: rgba(251,243,231,0.05); border-color: rgba(251,243,231,0.14); }
+.band-cafe .hairline { background: rgba(251,243,231,0.16); }
+
+.grid { display: grid; gap: 24px; }
+.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.cols-5 { grid-template-columns: repeat(5, 1fr); }
+@media (max-width: 920px) {
+  .cols-3, .cols-4, .cols-5 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .cols-2, .cols-3, .cols-4, .cols-5 { grid-template-columns: 1fr; }
+  .wrap { padding: 0 22px; } section { padding: 66px 0; }
+}
+
+.card { background: #fff; border: 1px solid var(--hairline); border-radius: var(--r); padding: 28px; position: relative; }
+.hairline { height: 1px; background: var(--hairline); border: 0; margin: 0; }
+
+/* — Marca / selo container helpers — */
+.mark { display: inline-flex; align-items: center; justify-content: center; line-height: 0; }
+
+/* wordmark — minúsculas + ponto de presença */
+.wordmark { font-family: var(--display); font-weight: 700; letter-spacing: -0.012em; line-height: 1; color: var(--cafe); }
+.wordmark .dot { color: var(--salvia); }
+.lockup { display: inline-flex; align-items: center; gap: 18px; }
+
+/* — chips / pills — */
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip { font-size: 14px; font-weight: 500; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--hairline); background: rgba(255,255,255,0.5); }
+.band-cafe .chip { background: rgba(251,243,231,0.06); border-color: rgba(251,243,231,0.18); color: var(--cream); }
+
+/* — swatches — */
+.swatch { border-radius: 14px; overflow: hidden; border: 1px solid var(--hairline); background: #fff; }
+.swatch .chip-color { height: 92px; }
+.swatch .meta { padding: 12px 14px; }
+.swatch .meta .nm { font-weight: 600; font-size: 15px; }
+.swatch .meta .hex { font-family: var(--mono); font-size: 12.5px; color: var(--soft); margin-top: 2px; text-transform: uppercase; }
+.swatch .meta .role { font-size: 11.5px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; }
+
+/* — skill / habilidade icons — */
+.skill { text-align: center; }
+.skill .tile { width: 76px; height: 76px; border-radius: 20px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; background: var(--cream); border: 1px solid var(--hairline); }
+.band-areia .skill .tile { background: #fff; }
+.skill .ico { stroke: var(--cafe); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.skill .ico .accent { fill: var(--salvia); stroke: none; }
+.skill h4 { font-size: 18px; }
+.skill p { font-size: 14.5px; color: var(--soft); margin: 6px 0 0; line-height: 1.45; }
+
+/* — chat bubbles — */
+.chat { display: flex; flex-direction: column; gap: 10px; }
+.bubble { max-width: 80%; padding: 10px 14px; border-radius: 16px; font-size: 14.5px; line-height: 1.4; }
+.bubble.in { align-self: flex-start; background: #fff; border: 1px solid var(--hairline); border-bottom-left-radius: 5px; }
+.bubble.out { align-self: flex-end; background: #DCF6E4; border-bottom-right-radius: 5px; color: #143526; }
+
+/* do / dont */
+.do .k, .dont .k { font-weight: 700; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; display: inline-flex; align-items: center; gap: 7px; }
+.do .k { color: var(--salvia); }
+.dont .k { color: var(--terra); }
+.do ul, .dont ul { margin: 14px 0 0; padding: 0; list-style: none; }
+.do li, .dont li { padding: 9px 0; border-top: 1px solid var(--hairline); font-size: 15px; line-height: 1.4; }
+
+/* — phone mock — */
+.phone { width: 300px; border-radius: 40px; background: var(--cafe); padding: 12px; box-shadow: 0 30px 60px -20px rgba(36,27,21,0.45); position: relative; }
+.phone .screen { background: #E9E2D6; border-radius: 30px; overflow: hidden; }
+.wa-head { background: #075E54; color: #fff; padding: 38px 16px 14px; }
+
+/* — nav — */
+.topnav { position: sticky; top: 0; z-index: 40; background: rgba(251,243,231,0.85); backdrop-filter: saturate(180%) blur(12px); border-bottom: 1px solid var(--hairline); }
+.topnav .row { display: flex; align-items: center; gap: 28px; height: 60px; }
+.topnav .links { display: flex; gap: 20px; margin-left: auto; font-size: 14px; font-weight: 500; }
+.topnav .links a { color: var(--cafe-2); text-decoration: none; opacity: 0.8; transition: opacity .15s; }
+.topnav .links a:hover { opacity: 1; color: var(--terra); }
+@media (max-width: 860px){ .topnav .links { display: none; } }
+
+.tag { display:inline-block; font-size:13px; font-weight:600; color: var(--terra); }
+
+/* — clear space / construção — */
+.dgrid { background:
+  linear-gradient(var(--hairline) 1px, transparent 1px) 0 0 / 100% 12.5%,
+  linear-gradient(90deg, var(--hairline) 1px, transparent 1px) 0 0 / 12.5% 100%;
+}
+
+/* — sector accent layer — */
+.sector { border-radius: var(--r); overflow: hidden; border: 1px solid var(--hairline); background: #fff; }
+.sector .top { padding: 14px 18px; display: flex; align-items: center; gap: 10px; }
+.sector .dotc { width: 9px; height: 9px; border-radius: 50%; }
+.sector .body { padding: 0 18px 20px; }
