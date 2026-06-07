@@ -7,6 +7,9 @@ import { CerebroDados } from "./pages/Cerebro/Dados";
 import { CerebroFaq } from "./pages/Cerebro/Faq";
 import { CerebroServicos } from "./pages/Cerebro/Servicos";
 import { CerebroTom } from "./pages/Cerebro/Tom";
+import { ConfiguracoesGeral } from "./pages/Configuracoes/Geral";
+import { ConfiguracoesLayout } from "./pages/Configuracoes/Layout";
+import { ConfiguracoesWhatsapp } from "./pages/Configuracoes/Whatsapp";
 import { CreateTenant } from "./pages/CreateTenant";
 import { Dashboard } from "./pages/Dashboard";
 import { Login } from "./pages/Login";
@@ -44,10 +47,10 @@ export function App() {
           </Route>
           <Route path="/conversas" element={<Placeholder title="Conversas" />} />
           <Route path="/agenda" element={<Placeholder title="Agenda" />} />
-          <Route
-            path="/configuracoes"
-            element={<Placeholder title="Configurações" />}
-          />
+          <Route path="/configuracoes" element={<ConfiguracoesLayout />}>
+            <Route index element={<ConfiguracoesGeral />} />
+            <Route path="whatsapp" element={<ConfiguracoesWhatsapp />} />
+          </Route>
         </Route>
 
         <Route path="*" element={<div className="p-8">não encontrado</div>} />
