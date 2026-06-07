@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "build:shared": "npm run build -w @lena/shared",
+    "sync:edge": "node scripts/sync-edge-shared.mjs",
     "dev:site": "npm run dev -w lena-site",
     "dev:central": "npm run dev -w central"
   },
