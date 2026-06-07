@@ -1,16 +1,19 @@
 // ============================================================================
 // msg-processor — processa um webhook_event de WhatsApp em background.
 //
-// Recebe { webhook_event_id } via POST com Authorization: Bearer SERVICE_ROLE.
-//
-// Para evento kind='message':
-//   1. Upsert contact + conversation + insert message inbound.
-//   2. Se conversation.state = 'lena', chama Claude e envia resposta via WA.
-//   3. Persiste outbound message + ai_usage.
-//   4. Marca webhook_event.status='processed'.
-//
-// Para evento kind='status': por ora só marca processed (atualização de
-// status de mensagem enviada será no E6+).
+// Responsabilidades:
+//   1. Persiste contact + conversation + message inbound.
+//   2. Se conversation.state = 'lena':
+//      - Anti-loop: pula se Lena já respondeu nos últimos 5s OU se chegou
+//        mensagem mais nova depois desta.
+//      - Conta mensagens IN da conversation na última hora:
+//          0-9   → modo normal
+//          10-19 → modo direto (1 frase, oferece humano)
+//          20+   → handoff (state=paused, mensagem fixa, para)
+//      - Carrega brain + services + contact.notes
+//      - Monta prompt, chama Claude, envia resposta, persiste outbound + ai_usage.
+//      - Em background (waitUntil), chama Haiku para atualizar contact.notes
+//        a cada 5 turnos.
 // ============================================================================
 
 import { getServiceClient } from "../_shared/supabase.ts";
@@ -22,14 +25,21 @@ import { MetaCloudProvider } from "../_shared/wa/meta-cloud.ts";
 import { buildDemoSystem, brainRecordToPrompt } from "../_shared/prompt/index.ts";
 
 const MODEL = "claude-sonnet-4-6";
+const MODEL_LIGHT = "claude-haiku-4-5-20251001";
 const MAX_TOKENS = 600;
 const HISTORY_LIMIT = 20;
+const DEBOUNCE_WINDOW_MS = 5000;
+const LOOKBACK_MINUTES = 60;
+const DEFAULT_DIRECT_AFTER = 10;
+const DEFAULT_HANDOFF_AFTER = 20;
+const NOTES_UPDATE_EVERY_TURNS = 5;
 
-// Pricing em micro-USD por 1k tokens (×1e6 do USD/1k)
 const PRICING_MICRO_PER_1K: Record<string, { in: number; out: number }> = {
   "claude-sonnet-4-6": { in: 3000, out: 15000 },
   "claude-haiku-4-5-20251001": { in: 800, out: 4000 },
 };
+
+declare const EdgeRuntime: { waitUntil(p: Promise<unknown>): void } | undefined;
 
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -50,6 +60,7 @@ interface InboundContext {
   conversationState: "lena" | "human" | "paused";
   contactId: string;
   contactPhoneE164: string;
+  waMessageId: string;
 }
 
 Deno.serve(async (req) => {
@@ -95,10 +106,9 @@ Deno.serve(async (req) => {
     if (event.payload.kind === "message") {
       const ctx = await processInboundMessage(sb, event.tenant_id, event.payload);
       if (ctx && ctx.conversationState === "lena" && event.payload.text) {
-        await respondWithLena(sb, event.tenant_id, ctx, event.payload.text);
+        await respondWithLena(sb, event.tenant_id, ctx);
       }
     }
-    // status events: por ora só marca processado.
 
     await sb
       .from("webhook_events")
@@ -123,7 +133,6 @@ async function processInboundMessage(
   tenantId: string,
   msg: WhatsAppInboundMessage,
 ): Promise<InboundContext | null> {
-  // 1) upsert contact
   const { data: contact, error: contactErr } = await sb
     .from("contacts")
     .upsert(
@@ -140,7 +149,6 @@ async function processInboundMessage(
 
   const contactId = (contact as { id: string }).id;
 
-  // 2) upsert conversation
   const { data: conv, error: convErr } = await sb
     .from("conversations")
     .upsert(
@@ -151,10 +159,9 @@ async function processInboundMessage(
     .single();
   if (convErr) throw new Error(`conversation upsert: ${convErr.message}`);
 
-  const conversationId = (conv as { id: string; state: InboundContext["conversationState"] }).id;
+  const conversationId = (conv as { id: string }).id;
   const conversationState = (conv as { state: InboundContext["conversationState"] }).state;
 
-  // 3) insert inbound message
   const { error: msgErr } = await sb.from("messages").insert({
     conversation_id: conversationId,
     tenant_id: tenantId,
@@ -175,7 +182,71 @@ async function processInboundMessage(
     conversationState,
     contactId,
     contactPhoneE164: msg.fromPhoneE164,
+    waMessageId: msg.waMessageId,
   };
+}
+
+// ── anti-loop / debounce ───────────────────────────────────────────────
+
+async function shouldSkipResponse(
+  sb: ReturnType<typeof getServiceClient>,
+  conversationId: string,
+  currentWaMsgId: string,
+): Promise<string | null> {
+  // 1. Lena já respondeu nos últimos DEBOUNCE_WINDOW_MS ms?
+  const since = new Date(Date.now() - DEBOUNCE_WINDOW_MS).toISOString();
+  const { data: recentOut } = await sb
+    .from("messages")
+    .select("id, created_at")
+    .eq("conversation_id", conversationId)
+    .eq("direction", "out")
+    .gt("created_at", since)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (recentOut) return `recent_out_${recentOut.created_at}`;
+
+  // 2. chegou mensagem IN mais nova depois desta? (supersession)
+  const { data: latestIn } = await sb
+    .from("messages")
+    .select("wa_message_id, created_at")
+    .eq("conversation_id", conversationId)
+    .eq("direction", "in")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (
+    latestIn &&
+    (latestIn as { wa_message_id: string }).wa_message_id !== currentWaMsgId
+  ) {
+    return "superseded_by_newer";
+  }
+
+  return null;
+}
+
+// ── tiers de volume ────────────────────────────────────────────────────
+
+async function classifyVolumeTier(
+  sb: ReturnType<typeof getServiceClient>,
+  conversationId: string,
+  rules: { direct_mode_after_count?: number; handoff_after_count?: number },
+): Promise<{ tier: "normal" | "direct" | "handoff"; inCount: number }> {
+  const since = new Date(Date.now() - LOOKBACK_MINUTES * 60_000).toISOString();
+  const { count } = await sb
+    .from("messages")
+    .select("id", { count: "exact", head: true })
+    .eq("conversation_id", conversationId)
+    .eq("direction", "in")
+    .gt("created_at", since);
+
+  const inCount = count ?? 0;
+  const directAfter = rules.direct_mode_after_count ?? DEFAULT_DIRECT_AFTER;
+  const handoffAfter = rules.handoff_after_count ?? DEFAULT_HANDOFF_AFTER;
+
+  if (inCount >= handoffAfter) return { tier: "handoff", inCount };
+  if (inCount >= directAfter) return { tier: "direct", inCount };
+  return { tier: "normal", inCount };
 }
 
 // ── Claude responde ────────────────────────────────────────────────────
@@ -184,7 +255,6 @@ async function respondWithLena(
   sb: ReturnType<typeof getServiceClient>,
   tenantId: string,
   ctx: InboundContext,
-  _latestUserText: string,
 ) {
   const anthropicKey = Deno.env.get("ANTHROPIC_API_KEY");
   if (!anthropicKey) {
@@ -192,8 +262,15 @@ async function respondWithLena(
     return;
   }
 
-  // 1) carrega brain + services ativos
-  const [{ data: brain }, { data: services }] = await Promise.all([
+  // anti-loop
+  const skipReason = await shouldSkipResponse(sb, ctx.conversationId, ctx.waMessageId);
+  if (skipReason) {
+    console.log(`skip response: ${skipReason}`);
+    return;
+  }
+
+  // load brain + services + contact
+  const [brainQ, servicesQ, contactQ] = await Promise.all([
     sb.from("tenant_brains").select("*").eq("tenant_id", tenantId).maybeSingle(),
     sb
       .from("tenant_services")
@@ -201,14 +278,56 @@ async function respondWithLena(
       .eq("tenant_id", tenantId)
       .eq("active", true)
       .order("position", { ascending: true }),
+    sb.from("contacts").select("name, notes").eq("id", ctx.contactId).maybeSingle(),
   ]);
+
+  const brain = brainQ.data as Record<string, unknown> | null;
+  const services = (servicesQ.data ?? []) as unknown[];
+  const contact = contactQ.data as { name: string | null; notes: string | null } | null;
 
   if (!brain) {
     console.warn(`tenant ${tenantId} sem brain — pulando resposta`);
     return;
   }
 
-  // 2) histórico recente (últimas N mensagens text)
+  const rules =
+    ((brain.escalation_rules as Record<string, unknown> | null)?.anti_abuse as
+      | { direct_mode_after_count?: number; handoff_after_count?: number }
+      | undefined) ?? {};
+  const { tier, inCount } = await classifyVolumeTier(sb, ctx.conversationId, rules);
+  console.log(`tier=${tier} in_count_last_hour=${inCount}`);
+
+  // ── handoff: para de responder e marca conversa em modo paused ──
+  if (tier === "handoff") {
+    const handoffMsg =
+      "Estou vendo que você tem várias coisas pra resolver. Vou pedir ajuda da nossa equipe pra te atender melhor, fica disponível por aqui que alguém te chama em seguida.";
+
+    const secret = await loadSecret(sb, tenantId);
+    if (secret) {
+      const provider = new MetaCloudProvider(secret);
+      try {
+        const r = await provider.sendText(ctx.contactPhoneE164, handoffMsg);
+        await sb.from("messages").insert({
+          conversation_id: ctx.conversationId,
+          tenant_id: tenantId,
+          direction: "out",
+          kind: "text",
+          body: handoffMsg,
+          wa_message_id: r.waMessageId,
+          meta: { ai_model: null, handoff: true },
+        });
+      } catch (e) {
+        console.error("handoff send falhou:", e);
+      }
+    }
+    await sb
+      .from("conversations")
+      .update({ state: "paused" })
+      .eq("id", ctx.conversationId);
+    return;
+  }
+
+  // histórico
   const { data: history } = await sb
     .from("messages")
     .select("direction, body, created_at")
@@ -219,7 +338,7 @@ async function respondWithLena(
 
   const ordered = (history ?? []).slice().reverse();
   const messages = ordered
-    .map((m) => ({
+    .map((m: { direction: string; body: string | null }) => ({
       role: m.direction === "in" ? ("user" as const) : ("assistant" as const),
       content: String(m.body ?? "").trim(),
     }))
@@ -230,31 +349,28 @@ async function respondWithLena(
     return;
   }
 
-  // 3) secret do tenant (token + phone_number_id)
-  const { data: secret } = await sb
-    .from("tenant_secrets")
-    .select("value, meta")
-    .eq("tenant_id", tenantId)
-    .eq("kind", "wa")
-    .maybeSingle();
+  // secret
+  const secret = await loadSecret(sb, tenantId);
   if (!secret) {
     console.warn(`tenant ${tenantId} sem wa secret — pulando envio`);
     return;
   }
 
-  const meta = (secret.value ? (secret as { meta: { phone_number_id?: string } }).meta : {}) || {};
-  const phoneNumberId = meta.phone_number_id;
-  const accessToken = (secret as { value: string }).value;
-  if (!phoneNumberId || !accessToken) {
-    console.warn("secret incompleto (phone_number_id ou token), abortando");
-    return;
+  // prompt
+  const cfg = brainRecordToPrompt(brain as never, services as never);
+  let system = buildDemoSystem(cfg);
+
+  if (contact?.notes && contact.notes.trim().length > 0) {
+    system +=
+      `\n\nSOBRE ESTE CLIENTE (notas internas, não confirme com ele a menos que ele pergunte direto):\n${contact.notes.trim()}`;
   }
 
-  // 4) monta system prompt via @lena/shared
-  const cfg = brainRecordToPrompt(brain, (services ?? []) as never);
-  const system = buildDemoSystem(cfg);
+  if (tier === "direct") {
+    system +=
+      `\n\nATENÇÃO: este cliente já mandou ${inCount} mensagens na última hora. Responda em UMA única frase, vá direto ao ponto. Ofereça transferir para um humano da equipe agora ("quer que eu te conecte com nossa equipe?").`;
+  }
 
-  // 5) chama Anthropic
+  // anthropic
   const anthropicResp = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -292,14 +408,8 @@ async function respondWithLena(
     return;
   }
 
-  // 6) envia via WhatsApp Cloud API
-  const provider = new MetaCloudProvider({
-    phoneNumberId,
-    accessToken,
-    appSecret: Deno.env.get("META_APP_SECRET") ?? "",
-    verifyToken: Deno.env.get("META_VERIFY_TOKEN") ?? "",
-  });
-
+  // envia
+  const provider = new MetaCloudProvider(secret);
   let sendResult;
   try {
     sendResult = await provider.sendText(ctx.contactPhoneE164, replyText);
@@ -308,8 +418,8 @@ async function respondWithLena(
     return;
   }
 
-  // 7) persiste outbound message + ai_usage
-  const { data: outMsg, error: outErr } = await sb
+  // persiste outbound
+  const { data: outMsg } = await sb
     .from("messages")
     .insert({
       conversation_id: ctx.conversationId,
@@ -321,15 +431,13 @@ async function respondWithLena(
       meta: {
         ai_model: MODEL,
         stop_reason: claudeData.stop_reason ?? null,
+        tier,
       },
     })
     .select("id")
     .single();
 
-  if (outErr) {
-    console.error("erro ao persistir outbound:", outErr);
-  }
-
+  // ai_usage
   const inputTokens = claudeData.usage?.input_tokens ?? 0;
   const outputTokens = claudeData.usage?.output_tokens ?? 0;
   const pricing = PRICING_MICRO_PER_1K[MODEL] ?? PRICING_MICRO_PER_1K["claude-sonnet-4-6"];
@@ -345,11 +453,126 @@ async function respondWithLena(
     input_tokens: inputTokens,
     output_tokens: outputTokens,
     cost_micro_usd: costMicroUsd,
-    meta: { stop_reason: claudeData.stop_reason ?? null },
+    meta: { tier, stop_reason: claudeData.stop_reason ?? null },
   });
 
   console.log(
-    `Lena respondeu tenant=${tenantId} conv=${ctx.conversationId} ` +
+    `Lena respondeu tenant=${tenantId} conv=${ctx.conversationId} tier=${tier} ` +
       `in=${inputTokens} out=${outputTokens} cost=${costMicroUsd}µUSD`,
   );
+
+  // ── atualizar notes do contato em background, a cada N turnos ──
+  if (inCount > 0 && inCount % NOTES_UPDATE_EVERY_TURNS === 0) {
+    const job = updateContactNotes(sb, ctx.contactId, contact?.notes ?? null, messages, anthropicKey, tenantId);
+    if (typeof EdgeRuntime !== "undefined" && EdgeRuntime.waitUntil) {
+      EdgeRuntime.waitUntil(job.catch((e) => console.error("notes update bg failed:", e)));
+    } else {
+      job.catch((e) => console.error("notes update failed:", e));
+    }
+  }
+}
+
+// ── helpers ─────────────────────────────────────────────────────────────
+
+interface ProviderOpts {
+  phoneNumberId: string;
+  accessToken: string;
+  appSecret: string;
+  verifyToken: string;
+}
+
+async function loadSecret(
+  sb: ReturnType<typeof getServiceClient>,
+  tenantId: string,
+): Promise<ProviderOpts | null> {
+  const { data } = await sb
+    .from("tenant_secrets")
+    .select("value, meta")
+    .eq("tenant_id", tenantId)
+    .eq("kind", "wa")
+    .maybeSingle();
+  if (!data) return null;
+  const meta = ((data as { meta: { phone_number_id?: string } }).meta ?? {}) as {
+    phone_number_id?: string;
+  };
+  if (!meta.phone_number_id || !(data as { value: string }).value) return null;
+  return {
+    phoneNumberId: meta.phone_number_id,
+    accessToken: (data as { value: string }).value,
+    appSecret: Deno.env.get("META_APP_SECRET") ?? "",
+    verifyToken: Deno.env.get("META_VERIFY_TOKEN") ?? "",
+  };
+}
+
+async function updateContactNotes(
+  sb: ReturnType<typeof getServiceClient>,
+  contactId: string,
+  currentNotes: string | null,
+  conversation: { role: "user" | "assistant"; content: string }[],
+  anthropicKey: string,
+  tenantId: string,
+): Promise<void> {
+  const recent = conversation.slice(-10);
+  const transcript = recent
+    .map((m) => `[${m.role === "user" ? "cliente" : "lena"}] ${m.content}`)
+    .join("\n");
+
+  const userPrompt =
+    `Você é uma analista de CRM. Atualize as notas internas sobre este cliente, baseado na conversa abaixo.\n\n` +
+    `NOTAS ATUAIS:\n${currentNotes && currentNotes.trim() ? currentNotes.trim() : "(sem notas anteriores)"}\n\n` +
+    `CONVERSA RECENTE:\n${transcript}\n\n` +
+    `INSTRUÇÕES:\n` +
+    `- Devolva apenas as novas notas, em até 3 linhas curtas.\n` +
+    `- Foque em preferências, perguntas recorrentes, contexto pessoal relevante (ex.: tipo de negócio, dores mencionadas, próximo passo combinado).\n` +
+    `- NUNCA registre dados sensíveis (senha, CPF, cartão, saúde detalhada).\n` +
+    `- Se nada novo de relevante, devolva as notas atuais sem mudança.\n` +
+    `- Não escreva preâmbulo. Devolva só o texto das notas, sem aspas.`;
+
+  const resp = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": anthropicKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: MODEL_LIGHT,
+      max_tokens: 250,
+      messages: [{ role: "user", content: userPrompt }],
+    }),
+  });
+
+  if (!resp.ok) {
+    console.warn(`notes haiku ${resp.status}: ${await resp.text()}`);
+    return;
+  }
+  const data = (await resp.json()) as {
+    content?: { type: string; text?: string }[];
+    usage?: { input_tokens?: number; output_tokens?: number };
+  };
+  const text = (data.content ?? [])
+    .filter((b) => b.type === "text")
+    .map((b) => b.text ?? "")
+    .join("")
+    .trim();
+
+  if (!text || text.length < 5) return;
+
+  await sb.from("contacts").update({ notes: text }).eq("id", contactId);
+
+  // telemetria
+  const usage = data.usage ?? {};
+  const pricing = PRICING_MICRO_PER_1K[MODEL_LIGHT];
+  const costMicro = Math.round(
+    ((usage.input_tokens ?? 0) * pricing.in) / 1000 +
+      ((usage.output_tokens ?? 0) * pricing.out) / 1000,
+  );
+  await sb.from("ai_usage").insert({
+    tenant_id: tenantId,
+    model: MODEL_LIGHT,
+    input_tokens: usage.input_tokens ?? 0,
+    output_tokens: usage.output_tokens ?? 0,
+    cost_micro_usd: costMicro,
+    meta: { purpose: "contact_notes_update" },
+  });
 }
