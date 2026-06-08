@@ -280,8 +280,8 @@ async function respondWithLena(
     return;
   }
 
-  // load brain + services + contact
-  const [brainQ, servicesQ, contactQ] = await Promise.all([
+  // load brain + services + contact + tenant (timezone)
+  const [brainQ, servicesQ, contactQ, tenantQ] = await Promise.all([
     sb.from("tenant_brains").select("*").eq("tenant_id", tenantId).maybeSingle(),
     sb
       .from("tenant_services")
@@ -290,11 +290,14 @@ async function respondWithLena(
       .eq("active", true)
       .order("position", { ascending: true }),
     sb.from("contacts").select("name, notes").eq("id", ctx.contactId).maybeSingle(),
+    sb.from("tenants").select("timezone").eq("id", tenantId).maybeSingle(),
   ]);
 
   const brain = brainQ.data as Record<string, unknown> | null;
   const services = (servicesQ.data ?? []) as unknown[];
   const contact = contactQ.data as { name: string | null; notes: string | null } | null;
+  const tenantTz =
+    (tenantQ.data as { timezone?: string } | null)?.timezone || "America/Sao_Paulo";
 
   if (!brain) {
     console.warn(`tenant ${tenantId} sem brain — pulando resposta`);
@@ -385,55 +388,121 @@ async function respondWithLena(
       `\n\nATENÇÃO: este cliente já mandou ${inCount} mensagens na última hora. Responda em UMA única frase, vá direto ao ponto. Ofereça transferir para um humano da equipe agora ("quer que eu te conecte com nossa equipe?").`;
   }
 
-  // anthropic
-  const anthropicResp = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      "x-api-key": anthropicKey,
-      "anthropic-version": "2023-06-01",
-    },
-    body: JSON.stringify({
-      model: dialogModel,
-      max_tokens: MAX_TOKENS,
-      system,
-      messages,
-    }),
-  });
+  // ── tools de agenda (só se o tenant tem disponibilidade configurada) ──
+  const { count: availCount } = await sb
+    .from("tenant_availability")
+    .select("id", { count: "exact", head: true })
+    .eq("tenant_id", tenantId)
+    .eq("active", true);
+  const agendaEnabled = (availCount ?? 0) > 0;
+  const tools = agendaEnabled ? buildAgendaTools() : undefined;
 
-  if (!anthropicResp.ok) {
-    const errText = await anthropicResp.text();
-    console.error(`anthropic ${anthropicResp.status}: ${errText}`);
-    return;
+  if (agendaEnabled) {
+    const tz = tenantTz;
+    const nowLocal = new Date().toLocaleString("pt-BR", { timeZone: tz });
+    system +=
+      `\n\nAGENDA. Você consegue agendar de verdade.` +
+      `\nAgora é ${nowLocal} (fuso ${tz}). Para agendar:` +
+      `\n1. Use consultar_horarios_livres para ver horários reais antes de oferecer qualquer horário. Nunca invente horário.` +
+      `\n2. Confirme o horário e o serviço com o cliente.` +
+      `\n3. Use criar_agendamento. Se o horário foi tomado, ofereça outro da lista.` +
+      `\nPergunte o nome do cliente se ainda não souber. Para cancelar, use cancelar_agendamento com o id que você criou.`;
   }
 
-  const claudeData = (await anthropicResp.json()) as {
-    content?: { type: string; text?: string }[];
-    usage?: { input_tokens?: number; output_tokens?: number };
-    stop_reason?: string;
-  };
-  const replyText = (claudeData.content ?? [])
-    .filter((b) => b.type === "text")
-    .map((b) => b.text ?? "")
-    .join("")
-    .trim();
-
-  if (!replyText) {
-    console.warn("Claude devolveu vazio");
-    return;
-  }
-
-  // envia
+  // ── loop de conversa com tool use ──
   const provider = new MetaCloudProvider(secret);
+  // conversa em blocos (começa do histórico em texto)
+  const convo: { role: "user" | "assistant"; content: unknown }[] = messages.map(
+    (m) => ({ role: m.role, content: m.content }),
+  );
+
+  let totalIn = 0;
+  let totalOut = 0;
+  let finalText = "";
+  let lastStopReason: string | null = null;
+  const MAX_TOOL_ROUNDS = 5;
+
+  for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
+    const anthropicResp = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": anthropicKey,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: dialogModel,
+        max_tokens: MAX_TOKENS,
+        system,
+        messages: convo,
+        ...(tools ? { tools } : {}),
+      }),
+    });
+
+    if (!anthropicResp.ok) {
+      console.error(`anthropic ${anthropicResp.status}: ${await anthropicResp.text()}`);
+      return;
+    }
+
+    const claudeData = (await anthropicResp.json()) as {
+      content?: { type: string; text?: string; id?: string; name?: string; input?: unknown }[];
+      usage?: { input_tokens?: number; output_tokens?: number };
+      stop_reason?: string;
+    };
+    totalIn += claudeData.usage?.input_tokens ?? 0;
+    totalOut += claudeData.usage?.output_tokens ?? 0;
+    lastStopReason = claudeData.stop_reason ?? null;
+
+    const blocks = claudeData.content ?? [];
+    finalText = blocks
+      .filter((b) => b.type === "text")
+      .map((b) => b.text ?? "")
+      .join("")
+      .trim();
+
+    if (claudeData.stop_reason === "tool_use") {
+      // executa cada tool e devolve resultados
+      convo.push({ role: "assistant", content: blocks });
+      const toolResults: unknown[] = [];
+      for (const b of blocks) {
+        if (b.type !== "tool_use") continue;
+        const result = await executeAgendaTool(sb, {
+          tenantId,
+          tz: tenantTz,
+          conversationId: ctx.conversationId,
+          contactId: ctx.contactId,
+          contactName: contact?.name ?? null,
+          services: services as { id: string; name: string; duration_min: number | null }[],
+          name: b.name ?? "",
+          input: (b.input ?? {}) as Record<string, unknown>,
+        });
+        toolResults.push({
+          type: "tool_result",
+          tool_use_id: b.id,
+          content: JSON.stringify(result),
+        });
+      }
+      convo.push({ role: "user", content: toolResults });
+      continue; // próxima rodada
+    }
+
+    break; // end_turn ou outro: sai com finalText
+  }
+
+  if (!finalText) {
+    console.warn("Claude não produziu texto final");
+    return;
+  }
+
+  // envia resposta final
   let sendResult;
   try {
-    sendResult = await provider.sendText(ctx.contactPhoneE164, replyText);
+    sendResult = await provider.sendText(ctx.contactPhoneE164, finalText);
   } catch (e) {
     console.error("sendText falhou:", e);
     return;
   }
 
-  // persiste outbound
   const { data: outMsg } = await sb
     .from("messages")
     .insert({
@@ -441,23 +510,16 @@ async function respondWithLena(
       tenant_id: tenantId,
       direction: "out",
       kind: "text",
-      body: replyText,
+      body: finalText,
       wa_message_id: sendResult.waMessageId,
-      meta: {
-        ai_model: dialogModel,
-        stop_reason: claudeData.stop_reason ?? null,
-        tier,
-      },
+      meta: { ai_model: dialogModel, stop_reason: lastStopReason, tier },
     })
     .select("id")
     .single();
 
-  // ai_usage
-  const inputTokens = claudeData.usage?.input_tokens ?? 0;
-  const outputTokens = claudeData.usage?.output_tokens ?? 0;
   const pricing = pricingFor(dialogModel);
   const costMicroUsd = Math.round(
-    (inputTokens * pricing.in) / 1000 + (outputTokens * pricing.out) / 1000,
+    (totalIn * pricing.in) / 1000 + (totalOut * pricing.out) / 1000,
   );
 
   await sb.from("ai_usage").insert({
@@ -465,15 +527,15 @@ async function respondWithLena(
     conversation_id: ctx.conversationId,
     message_id: (outMsg as { id?: string } | null)?.id ?? null,
     model: dialogModel,
-    input_tokens: inputTokens,
-    output_tokens: outputTokens,
+    input_tokens: totalIn,
+    output_tokens: totalOut,
     cost_micro_usd: costMicroUsd,
-    meta: { tier, stop_reason: claudeData.stop_reason ?? null },
+    meta: { tier, stop_reason: lastStopReason, agenda: agendaEnabled },
   });
 
   console.log(
     `Lena respondeu tenant=${tenantId} conv=${ctx.conversationId} tier=${tier} model=${dialogModel} ` +
-      `in=${inputTokens} out=${outputTokens} cost=${costMicroUsd}µUSD`,
+      `agenda=${agendaEnabled} in=${totalIn} out=${totalOut} cost=${costMicroUsd}µUSD`,
   );
 
   // ── atualizar notes do contato em background, a cada N turnos ──
@@ -485,6 +547,202 @@ async function respondWithLena(
       job.catch((e) => console.error("notes update failed:", e));
     }
   }
+}
+
+// ── tools de agenda ──────────────────────────────────────────────────────
+
+function buildAgendaTools() {
+  return [
+    {
+      name: "consultar_horarios_livres",
+      description:
+        "Consulta horários livres reais na agenda do negócio. Use SEMPRE antes de oferecer um horário ao cliente. Devolve uma lista de horários disponíveis.",
+      input_schema: {
+        type: "object",
+        properties: {
+          de: {
+            type: "string",
+            description: "Data inicial da busca no formato AAAA-MM-DD. Use hoje se o cliente não especificou.",
+          },
+          ate: {
+            type: "string",
+            description: "Data final da busca no formato AAAA-MM-DD. Use até 7 dias à frente se o cliente não especificou.",
+          },
+          duracao_min: {
+            type: "integer",
+            description: "Duração desejada em minutos. Deixe vazio para usar o padrão do serviço.",
+          },
+        },
+        required: ["de", "ate"],
+      },
+    },
+    {
+      name: "criar_agendamento",
+      description:
+        "Cria um agendamento de verdade. Só use depois de confirmar horário e serviço com o cliente. Se o horário já tiver sido tomado, devolve erro e você deve oferecer outro.",
+      input_schema: {
+        type: "object",
+        properties: {
+          inicio: {
+            type: "string",
+            description: "Data e hora de início no formato AAAA-MM-DDTHH:MM (horário local do negócio).",
+          },
+          duracao_min: {
+            type: "integer",
+            description: "Duração em minutos.",
+          },
+          nome_cliente: {
+            type: "string",
+            description: "Nome de quem está agendando.",
+          },
+          servico: {
+            type: "string",
+            description: "Nome do serviço, se houver.",
+          },
+        },
+        required: ["inicio", "duracao_min"],
+      },
+    },
+    {
+      name: "cancelar_agendamento",
+      description: "Cancela um agendamento existente pelo id devolvido em criar_agendamento.",
+      input_schema: {
+        type: "object",
+        properties: {
+          agendamento_id: { type: "string", description: "id do agendamento" },
+          motivo: { type: "string", description: "motivo opcional" },
+        },
+        required: ["agendamento_id"],
+      },
+    },
+  ];
+}
+
+interface AgendaToolCtx {
+  tenantId: string;
+  tz: string;
+  conversationId: string;
+  contactId: string;
+  contactName: string | null;
+  services: { id: string; name: string; duration_min: number | null }[];
+  name: string;
+  input: Record<string, unknown>;
+}
+
+async function executeAgendaTool(
+  sb: ReturnType<typeof getServiceClient>,
+  ctx: AgendaToolCtx,
+): Promise<unknown> {
+  try {
+    if (ctx.name === "consultar_horarios_livres") {
+      const de = String(ctx.input.de ?? "");
+      const ate = String(ctx.input.ate ?? "");
+      const dur = ctx.input.duracao_min ? Number(ctx.input.duracao_min) : null;
+      const { data, error } = await sb.rpc("find_free_slots", {
+        p_tenant_id: ctx.tenantId,
+        p_from: de,
+        p_to: ate,
+        p_duration_min: dur,
+        p_limit: 12,
+      });
+      if (error) return { ok: false, error: error.message };
+      const slots = ((data ?? []) as { slot_start: string }[]).map((s) =>
+        new Date(s.slot_start).toLocaleString("pt-BR", {
+          timeZone: ctx.tz,
+          weekday: "short",
+          day: "2-digit",
+          month: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      );
+      return { ok: true, horarios: slots, total: slots.length };
+    }
+
+    if (ctx.name === "criar_agendamento") {
+      // interpreta "AAAA-MM-DDTHH:MM" como horário local do tenant
+      const raw = String(ctx.input.inicio ?? "").trim();
+      const startsAtIso = localToIso(raw, ctx.tz);
+      if (!startsAtIso) return { ok: false, error: "data_invalida" };
+      const dur = Number(ctx.input.duracao_min ?? 60);
+      const servico = ctx.input.servico ? String(ctx.input.servico) : null;
+      const matched = servico
+        ? ctx.services.find(
+            (s) => s.name.toLowerCase() === servico.toLowerCase(),
+          )
+        : undefined;
+
+      const { data, error } = await sb.rpc("book_appointment", {
+        p_tenant_id: ctx.tenantId,
+        p_starts_at: startsAtIso,
+        p_duration_min: dur,
+        p_customer_name: String(ctx.input.nome_cliente ?? ctx.contactName ?? ""),
+        p_contact_id: ctx.contactId,
+        p_service_id: matched?.id ?? null,
+        p_conversation_id: ctx.conversationId,
+        p_origin: "lena",
+        p_notes: null,
+      });
+      if (error) return { ok: false, error: error.message };
+      return data;
+    }
+
+    if (ctx.name === "cancelar_agendamento") {
+      const { data, error } = await sb.rpc("cancel_appointment", {
+        p_appointment_id: String(ctx.input.agendamento_id ?? ""),
+        p_reason: ctx.input.motivo ? String(ctx.input.motivo) : null,
+      });
+      if (error) return { ok: false, error: error.message };
+      return data;
+    }
+
+    return { ok: false, error: "ferramenta_desconhecida" };
+  } catch (e) {
+    return { ok: false, error: String((e as Error).message ?? e) };
+  }
+}
+
+/**
+ * Converte "AAAA-MM-DDTHH:MM" (ou com espaço) no horário local do tenant
+ * para um ISO com offset correto. Usa Intl para descobrir o offset do tz
+ * naquela data (cobre horário de verão).
+ */
+function localToIso(raw: string, tz: string): string | null {
+  const m = raw.match(/(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})/);
+  if (!m) return null;
+  const [, y, mo, d, h, mi] = m;
+  // monta uma data assumindo UTC, depois corrige pelo offset do tz
+  const asUtc = Date.UTC(+y, +mo - 1, +d, +h, +mi, 0);
+  const offsetMs = tzOffsetMs(new Date(asUtc), tz);
+  return new Date(asUtc - offsetMs).toISOString();
+}
+
+function tzOffsetMs(date: Date, tz: string): number {
+  // diferença entre o "wall clock" no tz e o UTC, em ms
+  const dtf = new Intl.DateTimeFormat("en-US", {
+    timeZone: tz,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+  const parts = dtf.formatToParts(date);
+  const map: Record<string, number> = {};
+  for (const p of parts) {
+    if (p.type !== "literal") map[p.type] = Number(p.value);
+  }
+  const asUtcWall = Date.UTC(
+    map.year,
+    map.month - 1,
+    map.day,
+    map.hour === 24 ? 0 : map.hour,
+    map.minute,
+    map.second,
+  );
+  return asUtcWall - date.getTime();
 }
 
 // ── helpers ─────────────────────────────────────────────────────────────
