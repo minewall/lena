@@ -1,0 +1,8 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lena">
+  <rect width="512" height="512" fill="#D9613A"/>
+  <g transform="translate(-33,0)">
+    <path d="M198 132 V292 C198 356 238 384 296 380 C338 377 360 356 366 324"
+          stroke="#FBF3E7" stroke-width="64" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <circle cx="372" cy="300" r="40" fill="#4E9E78"/>
+  </g>
+</svg>
