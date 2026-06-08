@@ -10,6 +10,7 @@ import { CerebroTom } from "./pages/Cerebro/Tom";
 import { ConfiguracoesGeral } from "./pages/Configuracoes/Geral";
 import { ConfiguracoesLayout } from "./pages/Configuracoes/Layout";
 import { ConfiguracoesWhatsapp } from "./pages/Configuracoes/Whatsapp";
+import { ConversasPage } from "./pages/Conversas";
 import { CreateTenant } from "./pages/CreateTenant";
 import { Dashboard } from "./pages/Dashboard";
 import { Login } from "./pages/Login";
@@ -45,7 +46,7 @@ export function App() {
             <Route path="servicos" element={<CerebroServicos />} />
             <Route path="faq" element={<CerebroFaq />} />
           </Route>
-          <Route path="/conversas" element={<Placeholder title="Conversas" />} />
+          <Route path="/conversas" element={<ConversasPage />} />
           <Route path="/agenda" element={<Placeholder title="Agenda" />} />
           <Route path="/configuracoes" element={<ConfiguracoesLayout />}>
             <Route index element={<ConfiguracoesGeral />} />
