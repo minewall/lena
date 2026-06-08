@@ -14,18 +14,10 @@ import { ConfiguracoesGeral } from "./pages/Configuracoes/Geral";
 import { ConfiguracoesLayout } from "./pages/Configuracoes/Layout";
 import { ConfiguracoesWhatsapp } from "./pages/Configuracoes/Whatsapp";
 import { ConversasPage } from "./pages/Conversas";
+import { Agenda } from "./pages/Agenda";
 import { CreateTenant } from "./pages/CreateTenant";
 import { Dashboard } from "./pages/Dashboard";
 import { Login } from "./pages/Login";
-
-function Placeholder({ title }: { title: string }) {
-  return (
-    <div className="rounded-[var(--radius-card)] border border-creme-edge bg-creme-soft p-8">
-      <h1 className="font-display text-2xl text-cafe">{title}</h1>
-      <p className="mt-2 text-cafe-soft">Em construção.</p>
-    </div>
-  );
-}
 
 export function App() {
   return (
@@ -58,7 +50,7 @@ export function App() {
             <Route path="limites" element={<CerebroLimites />} />
           </Route>
           <Route path="/conversas" element={<ConversasPage />} />
-          <Route path="/agenda" element={<Placeholder title="Agenda" />} />
+          <Route path="/agenda" element={<Agenda />} />
           <Route
             path="/configuracoes"
             element={
