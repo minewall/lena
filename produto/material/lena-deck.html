@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<style>
+  @page { size: 33.867cm 19.05cm; margin: 0; }   /* 16:9 PowerPoint */
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; color:#241B15; }
+  .slide { width:33.867cm; height:19.05cm; position:relative; overflow:hidden; page-break-after:always; padding:2.2cm 2.6cm; display:flex; flex-direction:column; }
+  .slide:last-child { page-break-after:auto; }
+  .cream { background:#FBF3E7; }
+  .dark { background:#241B15; color:#FBF3E7; }
+  .terra { background:#D9613A; color:#fff; }
+  .sage { background:#4E9E78; color:#fff; }
+
+  .kicker { font-size:15px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:#D9613A; margin-bottom:14px; }
+  .dark .kicker, .terra .kicker, .sage .kicker { color:#E8A87C; }
+  h1 { font-size:54px; line-height:1.12; font-weight:800; letter-spacing:-1px; }
+  h2 { font-size:40px; line-height:1.15; font-weight:800; letter-spacing:-.5px; margin-bottom:8px; }
+  .hl { color:#D9613A; }
+  .dark .hl { color:#E8A87C; }
+
+  .pagenum { position:absolute; bottom:1.1cm; right:1.6cm; font-size:12px; color:#b8ab9a; }
+  .dark .pagenum { color:#6b5f52; }
+
+  /* capa */
+  .cover-mark { display:flex; align-items:center; gap:22px; margin-bottom:40px; }
+  .cover-mark img { width:120px; height:120px; border-radius:50%; object-fit:cover; border:4px solid #fff; box-shadow:0 4px 16px rgba(0,0,0,.18); }
+  .cover-mark .wm { font-size:72px; font-weight:800; letter-spacing:-2px; }
+  .cover-mark .wm .dot { color:#D9613A; }
+  .cover-sub { font-size:22px; color:#5b5046; margin-top:24px; max-width:80%; line-height:1.4; }
+
+  ul.big { list-style:none; margin-top:18px; }
+  ul.big li { font-size:24px; line-height:1.5; padding:10px 0 10px 44px; position:relative; }
+  ul.big li::before { content:'✓'; position:absolute; left:0; top:8px; color:#4E9E78; font-weight:800; font-size:28px; }
+  .dark ul.big li::before { color:#7BD0A6; }
+
+  .pains { list-style:none; margin-top:18px; }
+  .pains li { font-size:25px; line-height:1.5; padding:12px 0 12px 46px; position:relative; color:#3c342c; }
+  .pains li::before { content:'✕'; position:absolute; left:6px; top:12px; color:#D9613A; font-weight:800; }
+
+  .steps { display:flex; gap:26px; margin-top:40px; }
+  .step { flex:1; }
+  .step .n { width:58px; height:58px; border-radius:50%; background:#D9613A; color:#fff; font-size:28px; font-weight:800; display:flex; align-items:center; justify-content:center; margin-bottom:16px; }
+  .step h3 { font-size:23px; margin-bottom:8px; }
+  .step p { font-size:17px; color:#5b5046; line-height:1.4; }
+
+  .cols { display:flex; gap:24px; margin-top:36px; }
+  .col { flex:1; background:#fff; border-radius:16px; padding:26px; border:1px solid #ecdcc6; }
+  .col .who { font-size:21px; font-weight:800; color:#241B15; margin-bottom:10px; }
+  .col .who span { display:block; font-size:14px; color:#4E9E78; font-weight:700; margin-top:2px; }
+  .col p { font-size:16px; color:#5b5046; line-height:1.45; }
+
+  .plans { display:flex; gap:22px; margin-top:44px; }
+  .plan { flex:1; background:#fff; border-radius:16px; padding:28px 22px; text-align:center; border:1px solid #ecdcc6; }
+  .plan.featured { border:3px solid #D9613A; transform:scale(1.04); }
+  .plan .name { font-size:16px; font-weight:800; letter-spacing:.5px; }
+  .plan .price { font-size:44px; font-weight:800; color:#D9613A; margin:10px 0 4px; }
+  .plan .price span { font-size:18px; color:#9a8f82; font-weight:600; }
+  .plan .lim { font-size:15px; color:#7a6f63; }
+  .plan .badge { font-size:12px; background:#D9613A; color:#fff; border-radius:12px; padding:3px 12px; font-weight:700; display:inline-block; margin-bottom:8px; }
+  .anchor { margin-top:30px; font-size:19px; color:#241B15; font-weight:700; }
+  .anchor .hl { color:#D9613A; }
+
+  .final-links { margin-top:46px; font-size:26px; line-height:1.9; font-weight:700; }
+  .final-links .pill { display:inline-block; background:#fff; color:#241B15; border-radius:30px; padding:12px 26px; margin-right:14px; }
+  .final-sub { font-size:20px; opacity:.92; margin-top:18px; }
+</style>
+</head>
+<body>
+
+  <!-- 1 capa -->
+  <div class="slide cream">
+    <div class="cover-mark">
+      <img src="../../lena-site/assets/lena-avatar-1024.png" alt="Lena">
+      <div class="wm">lena<span class="dot">.</span></div>
+    </div>
+    <h1>A recepcionista virtual que <span class="hl">atende e agenda sozinha</span> no seu WhatsApp.</h1>
+    <div class="cover-sub">24 horas por dia. Sem perder cliente, sem perder falta, sem você preso no celular.</div>
+    <div class="pagenum">lena.ia.br</div>
+  </div>
+
+  <!-- 2 a dor -->
+  <div class="slide cream">
+    <div class="kicker">O problema</div>
+    <h2>Todo dia o seu negócio <span class="hl">perde cliente</span> sem você ver.</h2>
+    <ul class="pains">
+      <li>Quem responde primeiro leva o cliente. Fora do horário, ninguém responde.</li>
+      <li>Cliente esquece o horário e falta. O lugar fica vago, o dinheiro some.</li>
+      <li>Você atende à noite, no fim de semana, no meio de outro atendimento.</li>
+      <li>Não dá pra enxergar quantos clientes chegam e quantos viram agendamento.</li>
+    </ul>
+    <div class="pagenum">2</div>
+  </div>
+
+  <!-- 3 o que faz -->
+  <div class="slide dark">
+    <div class="kicker">A solução</div>
+    <h2>A Lena resolve, não enrola.</h2>
+    <ul class="big">
+      <li>Responde com a informação real do seu negócio e não inventa</li>
+      <li>Agenda de verdade, sozinha, sem dupla marcação</li>
+      <li>Lembra e confirma pra reduzir falta</li>
+      <li>Passa pra um humano quando foge do escopo</li>
+      <li>Entrega um painel com tudo: conversas, agendamentos, indicadores</li>
+    </ul>
+    <div class="pagenum">3</div>
+  </div>
+
+  <!-- 4 como funciona -->
+  <div class="slide cream">
+    <div class="kicker">Como funciona</div>
+    <h2>Pronta em poucos dias. Você não mexe em nada técnico.</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="n">1</div>
+        <h3>A gente monta o cérebro dela</h3>
+        <p>Horários, serviços, preços, regras e o que ela não pode dizer. Tudo com você.</p>
+      </div>
+      <div class="step">
+        <div class="n">2</div>
+        <h3>Ela entra no seu WhatsApp</h3>
+        <p>Passa a atender e agendar seus clientes na hora, 24h, no seu número.</p>
+      </div>
+      <div class="step">
+        <div class="n">3</div>
+        <h3>Você acompanha pelo painel</h3>
+        <p>Vê as conversas, assume quando quiser e enxerga os números do negócio.</p>
+      </div>
+    </div>
+    <div class="pagenum">4</div>
+  </div>
+
+  <!-- 5 arquetipos -->
+  <div class="slide cream">
+    <div class="kicker">Feita pro seu tipo de negócio</div>
+    <h2>Mesma Lena, argumento certo pra cada negócio.</h2>
+    <div class="cols">
+      <div class="col">
+        <div class="who">Consultórios e clínicas<span>médico · dentista · psi · nutri</span></div>
+        <p>Cada falta é prejuízo. A Lena confirma, lembra e agenda quem chega às 22h. Ela se paga só cortando no-show.</p>
+      </div>
+      <div class="col">
+        <div class="who">Salões, estética e pet<span>salão · barbearia · petshop</span></div>
+        <p>Atende na hora, marca o horário e chama de volta quem sumiu. Você atende, ela cuida da agenda e do WhatsApp.</p>
+      </div>
+      <div class="col">
+        <div class="who">Escolas e imobiliárias<span>curso · colégio · corretor</span></div>
+        <p>A maioria procura fora do horário. A Lena responde, qualifica e marca a visita antes do concorrente.</p>
+      </div>
+    </div>
+    <div class="pagenum">5</div>
+  </div>
+
+  <!-- 6 planos -->
+  <div class="slide cream">
+    <div class="kicker">Planos</div>
+    <h2>A partir de R$ 400/mês. Sem fidelidade.</h2>
+    <div class="plans">
+      <div class="plan">
+        <div class="name">ESSENCIAL</div>
+        <div class="price">R$ 400<span>/mês</span></div>
+        <div class="lim">até 500 conversas/mês</div>
+      </div>
+      <div class="plan featured">
+        <div class="badge">mais escolhido</div>
+        <div class="name">PROFISSIONAL</div>
+        <div class="price">R$ 900<span>/mês</span></div>
+        <div class="lim">até 1.500 conversas/mês</div>
+      </div>
+      <div class="plan">
+        <div class="name">PREMIUM</div>
+        <div class="price">R$ 1.800<span>/mês</span></div>
+        <div class="lim">até 4.000 conversas/mês</div>
+      </div>
+    </div>
+    <div class="anchor">Implantação a partir de R$ 1.500. <span class="hl">Uma falta evitada por semana já paga a Lena.</span></div>
+    <div class="pagenum">6</div>
+  </div>
+
+  <!-- 7 CTA -->
+  <div class="slide sage">
+    <div class="kicker">Vamos conversar</div>
+    <h1>Quer ver a Lena<br>atendendo agora?</h1>
+    <div class="final-links">
+      <span class="pill">lena.ia.br</span>
+      <span class="pill">wa.me/5511939615168</span>
+    </div>
+    <div class="final-sub">AVERSE Tecnologia &middot; contato@lena.ia.br</div>
+    <div class="pagenum">7</div>
+  </div>
+
+</body>
+</html>

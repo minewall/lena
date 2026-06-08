@@ -16,6 +16,12 @@ Itens deferidos para retomar depois.
 - [ ] **E6** — agenda básica (Google Calendar)
 - [ ] **E7** — relatórios essenciais
 - [ ] **E8** — Painel Averse (super-admin) com dados reais
+- [ ] **E10** — **Módulo de faturamento integrado com o Asaas** (cobrança recorrente dos tenants da Lena).
+  - PSP escolhido: **Asaas** (decisão Q5, fase 2). Cobrança das mensalidades da Central (assinatura por tenant), não confundir com cobrança que o cliente final faz dos pacientes dele.
+  - Escopo provável: criar customer no Asaas por tenant; planos/assinaturas (recorrência mensal); webhook Asaas → atualizar `subscription_status` do tenant (active/past_due/canceled); suspender acesso da Central quando inadimplente (grace period); link de cobrança Pix/boleto/cartão; recibos. Edge function `asaas-webhook` validando assinatura + idempotência (mesmo padrão do wa-webhook).
+  - Modelo de dados: tabela `subscriptions` (tenant_id, asaas_customer_id, asaas_subscription_id, plan, status, current_period_end) + `invoices` (histórico). Guardar API key do Asaas em `tenant_secrets`/Vault, nunca no front.
+  - UI: aba Configurações → Faturamento (plano atual, status, próxima cobrança, histórico, link p/ atualizar forma de pagamento). Painel Averse vê MRR/inadimplência.
+  - Pré-requisito: definir os planos e o pricing antes de codar. Não bloqueia piloto (primeiros clientes podem ser cobrança manual).
 - [ ] **Refactor pós-MVP:** mover webhook do WhatsApp de `https://<projeto>.supabase.co/functions/v1/wa-webhook` para domínio próprio (sugerido: `wa.lena.ia.br` via Cloudflare Worker proxy). Razão: independência do project ref, URL limpa em logs Meta. Não bloqueia E3.
 - [ ] **Verificação Meta Business:** ajustar contrato social via Contabilizei (incluir e-mail e telefone) e completar Business Verification — destrava Embedded Signup multi-tenant. Não bloqueia piloto.
 
@@ -24,6 +30,44 @@ Itens deferidos para retomar depois.
 - [ ] **Sistema de flags e call-actions para o gestor.** Quando a Lena marca `paused` ou identifica algo que precisa atenção (cliente irritado, dúvida fora do brain, lead quente para fechar), o gestor precisa receber sinal claro do que fazer. Caminho a desenhar: tags automáticas por conversa (lead_quente / reclamação / agendamento_pendente / handoff_solicitado / fora_de_escopo), prioridade visual na inbox, ações sugeridas no detalhe da conversa ("ligar agora", "enviar proposta", "marcar reunião"). Pode envolver notificação por email/WhatsApp para o admin do tenant. Decidir entre regras fixas (rule engine) ou classificação com Haiku rápida no msg-processor.
 - [x] **Sessão de restrições no brain (o que a Lena NÃO pode falar).** FEITO 2026-06-08: colunas `restrictions` + `escalation_triggers` em tenant_brains, bloco RESTRIÇÕES OBRIGATÓRIAS no prompt, aba Cérebro → Limites.
 - [x] **Política de identificação pessoal no atendimento (público vs privado).** FEITO 2026-06-08: colunas `team_public` (jsonb nome/função) + `team_private`, bloco EQUIPE E IDENTIFICAÇÃO no prompt, mesma aba Limites com aviso de responsabilidade LGPD do contratante.
+
+## Sessão de planejamento estratégico (2026-06-08) — 18 frentes levantadas por Roberto
+
+**Prospecção / marketing (destrava captação)**
+- [ ] **P1 — Atualizar a apresentação comercial** com a evolução: Lena agora AGENDA de verdade (tool use), respeita restrições, identifica equipe, tem inbox + dashboard pro gestor. Antes vendia "responde no WhatsApp"; agora é "recepcionista que agenda sozinha 24h".
+- [ ] **P2 — Mockups de Agenda + Dashboard do cliente** prontos pra estampar no material (telas reais ou hi-fi). Depende de refinar essas telas (ver A1/D1).
+- [ ] **P3 — Materiais visuais das redes** (Instagram, Facebook, LinkedIn) com avatar novo + copy atualizada. Kit: foto perfil, capa, 3-5 posts feed, stories destaque, banner LinkedIn.
+- [ ] **P4 — Funil/workflow site → Lena**: rever jornada de lena.ia.br até a 1ª msg no WhatsApp. Mapear pontos de fricção, CTA, mensagem de entrada da Lena, /obrigado.html.
+- [ ] **P5 — Campanha Instagram/Facebook com botão WhatsApp** (Click-to-WhatsApp Ads via Meta Ads Manager apontando pro número da Lena). Viável tecnicamente; precisa pixel/conta de anúncios + criativo. Brief de campanha.
+- [ ] **P6 — Variações visuais do avatar da Lena** (roupa, cabelo preso/solto, feição/expressão) p/ usar em contextos diferentes sem repetir a mesma arte. Prompt p/ o design gerar set.
+
+**Estratégia de segmentos (decisão de foco)**
+- [ ] **S1 — Definir a lista inicial de quem atender, por PADRÃO OPERACIONAL e não por segmento.** Insight do Roberto: classificar por rotatividade de horários, agendamento por profissional/recurso, frequência/recorrência de atendimento — em vez de "salão x clínica x escola". Criar matriz segmento × contexto operacional → escolher 2-3 arquétipos pra afunilar a prospecção. Doc dedicado: `produto/segmentos-arquetipos.md`.
+
+**Agenda v2 — o grande tema (evolução do E6, hoje mono-recurso)**
+- [ ] **AG1 — Visões de calendário dia/semana/mês** na Central (hoje só lista "próximos"). Agenda visual estilo Google Calendar.
+- [ ] **AG2 — Multi-profissional / multi-recurso:** vários agendamentos no MESMO horário com profissionais diferentes, cada um com cor própria. **Mudança de modelo de dados:** nova tabela `professionals` (ou `resources`), `appointments.professional_id`, disponibilidade por profissional, EXCLUSION constraint passa a ser por (professional_id, horário). É o item que mais mexe na arquitetura — destrava AG3, AG4 e parte do dashboard.
+- [ ] **AG3 — Ausência pontual de profissional:** marcar que o profissional X não atende no dia Y → a Lena responde "fulano não tem agenda nesse dia" e oferece outro profissional/horário. Depende de AG2.
+- [ ] **AG4 — Dias especiais / exceções:** negócio fechado, feriado, evento, horário diferente, dia promocional — override simples sobre a disponibilidade padrão. Tela "exceções do calendário".
+- [ ] **AG5 — Lista de espera:** quando não há horário, cliente opta por entrar na fila / ser avisado se vagar. Regra de **antecedência mínima** pro aviso (cliente precisa se deslocar). Quando um horário é cancelado, Lena avisa o próximo da fila respeitando a antecedência. Tabela `waitlist`.
+
+**Cérebro / RAG da Lena**
+- [ ] **R1 — Onboarding do cérebro por perguntas de múltipla escolha** (como no Haile): guiar o gestor a montar o cérebro respondendo perguntas objetivas, em vez de texto livre. Melhora qualidade e reduz fricção no cadastro.
+- [ ] **R2 — RAG em camadas:** resposta nível 1 (rápida, do prompt) + nível 2 (busca mais informação só quando a pergunta exige). Melhora latência e custo. Decidir: prompt em camadas vs busca vetorial (embeddings) sob demanda.
+- [ ] **R3 — Lista de preços: mensagem vs JPEG/PDF.** Decisão de UX: lista curta → texto; lista longa → enviar imagem/PDF (WhatsApp suporta documento). Campo no cérebro pra anexar tabela de preços; Lena decide o formato. (resposta detalhada na conversa de 2026-06-08)
+
+**Dashboard estratégico (evolução do E dashboard atual)**
+- [ ] **D1 — Refinar dashboard do cliente** (pré-requisito do mockup P2).
+- [ ] **D2 — Gráficos de indicadores estratégicos:** atendimentos fora do horário comercial, agendamentos fora x dentro do horário, tempo médio de resposta, qtde de interações, conversas resolvidas pela Lena x enviadas pra humano, taxa de conversão (conversa → agendamento). Precisa instrumentar eventos (ver C1).
+
+**Conversas / ciclo de vida**
+- [ ] **C1 — Definir variáveis de "conversa encerrada".** Critérios candidatos: agendamento confirmado, cliente se despediu, X horas sem resposta (timeout), handoff resolvido pelo humano, fora de escopo concluído. Vira um status + métrica (alimenta D2). (resposta com proposta na conversa de 2026-06-08)
+
+**Pagamentos / sinal (compliance)**
+- [ ] **PG1 — Envio de dados de Pix para sinal.** MVP: Lena envia a CHAVE PIX / QR Code copia-e-cola do PRÓPRIO negócio (valor de sinal configurável no cérebro) como INFORMAÇÃO — negócio recebe direto, sem custódia. Isso NÃO nos torna instituição de pagamento (não recebemos/repassamos fundos). Confirmação do pagamento é manual/pelo negócio. Fase 2 (quando E10/Asaas entrar): gerar link de cobrança Pix dinâmico via Asaas (PSP regulado) = totalmente compliant. NUNCA processar/custodiar dinheiro pela Lena. Respeitar WhatsApp Commerce Policy. (análise legal na conversa de 2026-06-08)
+
+**Jurídico / Meta**
+- [ ] **J1 — Atualizar Termos de Uso + Política de Privacidade + Confidencialidade** incluindo: que operamos sobre a WhatsApp Business Cloud API (Meta), tratamento de dados pessoais via Meta, conformidade com as políticas da Meta/WhatsApp, papel de operador/controlador (LGPD), e referências exigidas pela Meta. Revisão por advogado antes de publicar.
 
 ## Deferido — discutir em breve
 - [x] **Lena v0.5 — automação inicial** → ver `automacao/` (esqueleto pronto p/ piloto, 2026-06-01)

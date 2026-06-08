@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; color:#241B15; }
+  .page { width:210mm; min-height:297mm; background:#FBF3E7; padding:16mm 15mm; position:relative; }
+
+  /* header */
+  .top { display:flex; align-items:center; gap:16px; padding-bottom:14px; border-bottom:3px solid #D9613A; }
+  .avatar { width:74px; height:74px; border-radius:50%; object-fit:cover; border:3px solid #fff; box-shadow:0 2px 8px rgba(36,27,21,.15); }
+  .wordmark { font-size:40px; font-weight:800; letter-spacing:-1px; color:#241B15; line-height:1; }
+  .wordmark .dot { color:#D9613A; }
+  .tag { font-size:13px; color:#4E9E78; font-weight:700; margin-top:4px; }
+
+  h1 { font-size:27px; line-height:1.18; margin:22px 0 6px; color:#241B15; font-weight:800; }
+  h1 .hl { color:#D9613A; }
+  .sub { font-size:14px; color:#5b5046; line-height:1.5; margin-bottom:20px; max-width:95%; }
+
+  .grid { display:flex; gap:14px; margin-bottom:18px; }
+  .card { flex:1; background:#fff; border:1px solid #ecdcc6; border-radius:12px; padding:14px 15px; }
+  .card h3 { font-size:13px; color:#D9613A; margin-bottom:8px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; }
+  .card ul { list-style:none; }
+  .card li { font-size:12.5px; color:#3c342c; padding:3px 0 3px 18px; position:relative; line-height:1.35; }
+  .card li::before { content:'✓'; position:absolute; left:0; color:#4E9E78; font-weight:800; }
+
+  .section-label { font-size:12px; font-weight:800; color:#4E9E78; text-transform:uppercase; letter-spacing:.5px; margin:6px 0 10px; }
+
+  .arq { display:flex; gap:12px; margin-bottom:18px; }
+  .arq-card { flex:1; background:#241B15; color:#FBF3E7; border-radius:12px; padding:13px 14px; }
+  .arq-card .who { font-size:12px; font-weight:800; color:#E8A87C; margin-bottom:5px; }
+  .arq-card .txt { font-size:11.5px; line-height:1.4; color:#e7ddd0; }
+
+  .plans { display:flex; gap:10px; margin-bottom:20px; }
+  .plan { flex:1; background:#fff; border:1px solid #ecdcc6; border-radius:12px; padding:12px; text-align:center; }
+  .plan.featured { border:2px solid #D9613A; }
+  .plan .name { font-size:12px; font-weight:800; color:#241B15; }
+  .plan .price { font-size:21px; font-weight:800; color:#D9613A; margin:4px 0 2px; }
+  .plan .price span { font-size:11px; color:#9a8f82; font-weight:600; }
+  .plan .lim { font-size:10.5px; color:#7a6f63; }
+  .plan .badge { font-size:9px; background:#D9613A; color:#fff; border-radius:10px; padding:2px 8px; display:inline-block; margin-bottom:4px; font-weight:700; }
+
+  .cta { display:flex; align-items:center; justify-content:space-between; background:#4E9E78; border-radius:14px; padding:16px 20px; color:#fff; }
+  .cta .big { font-size:16px; font-weight:800; }
+  .cta .small { font-size:12px; opacity:.95; margin-top:2px; }
+  .cta .links { text-align:right; font-size:13px; font-weight:700; line-height:1.6; }
+  .foot { text-align:center; font-size:10px; color:#9a8f82; margin-top:14px; }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="top">
+      <img class="avatar" src="../../lena-site/assets/lena-avatar-1024.png" alt="Lena">
+      <div>
+        <div class="wordmark">lena<span class="dot">.</span></div>
+        <div class="tag">recepcionista virtual no WhatsApp</div>
+      </div>
+    </div>
+
+    <h1>Sua recepcionista que <span class="hl">atende e agenda sozinha</span>, 24 horas por dia.</h1>
+    <p class="sub">Pare de perder cliente por demora e dinheiro com falta. A Lena responde na hora, agenda de verdade e organiza tudo num painel pra você. Sem robô de menuzinho, sem você preso no celular, sem precisar entender de tecnologia.</p>
+
+    <div class="grid">
+      <div class="card">
+        <h3>O que ela faz</h3>
+        <ul>
+          <li>Responde com a informação real do seu negócio</li>
+          <li>Agenda sozinha, sem dupla marcação</li>
+          <li>Fala português de gente, não inventa</li>
+          <li>Passa pra um humano quando precisa</li>
+          <li>Respeita o que ela pode e não pode dizer</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>O que você ganha</h3>
+        <ul>
+          <li>Nenhum cliente sem resposta, nem de madrugada</li>
+          <li>Menos falta com lembrete e confirmação</li>
+          <li>Painel com conversas e agendamentos</li>
+          <li>Funcionando em poucos dias</li>
+          <li>Sem fidelidade, cancela quando quiser</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-label">Feita pro seu tipo de negócio</div>
+    <div class="arq">
+      <div class="arq-card">
+        <div class="who">Consultórios e clínicas</div>
+        <div class="txt">Cada falta é prejuízo. A Lena confirma, lembra e ainda agenda quem te procura às 22h. Ela se paga só cortando no-show.</div>
+      </div>
+      <div class="arq-card">
+        <div class="who">Salões, estética e petshops</div>
+        <div class="txt">Atende na hora, marca o horário e chama de volta quem sumiu. Você atende, ela cuida da agenda e do WhatsApp.</div>
+      </div>
+      <div class="arq-card">
+        <div class="who">Escolas e imobiliárias</div>
+        <div class="txt">A maioria procura fora do horário. A Lena responde na hora, qualifica e marca a visita antes do concorrente.</div>
+      </div>
+    </div>
+
+    <div class="section-label">Planos a partir de R$ 400/mês &middot; implantação a partir de R$ 1.500</div>
+    <div class="plans">
+      <div class="plan">
+        <div class="name">ESSENCIAL</div>
+        <div class="price">R$ 400<span>/mês</span></div>
+        <div class="lim">até 500 conversas/mês</div>
+      </div>
+      <div class="plan featured">
+        <div class="badge">mais escolhido</div>
+        <div class="name">PROFISSIONAL</div>
+        <div class="price">R$ 900<span>/mês</span></div>
+        <div class="lim">até 1.500 conversas/mês</div>
+      </div>
+      <div class="plan">
+        <div class="name">PREMIUM</div>
+        <div class="price">R$ 1.800<span>/mês</span></div>
+        <div class="lim">até 4.000 conversas/mês</div>
+      </div>
+    </div>
+
+    <div class="cta">
+      <div>
+        <div class="big">Quer ver a Lena atendendo agora?</div>
+        <div class="small">Fale com ela no WhatsApp e sinta como é.</div>
+      </div>
+      <div class="links">
+        lena.ia.br<br>
+        Fale com a Lena: wa.me/5511939615168
+      </div>
+    </div>
+
+    <div class="foot">AVERSE Tecnologia &middot; contato@lena.ia.br &middot; lena.ia.br</div>
+  </div>
+</body>
+</html>
