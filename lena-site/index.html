@@ -105,25 +105,15 @@
   .seg-dots button { width: 8px; height: 8px; border-radius: 999px; border: 0; padding: 0; background: var(--areia); cursor: pointer; transition: width .3s ease, background .3s ease; }
   .seg-dots button.active { width: 26px; background: var(--terra); }
 
-  /* icon boxes (features + segments + floats) */
+  /* icon boxes (features + segments) */
   .feat .ic svg, .seg-card .ic svg { width: 23px; height: 23px; color: var(--terra); }
   .band-cafe .feat .ic svg { color: var(--areia); }
-  .float .ic svg { width: 17px; height: 17px; }
 
   /* segment cards */
   .seg-card { text-align: left; }
   .seg-card .ic { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; background: #fff; border: 1px solid var(--hairline); margin-bottom: 15px; }
   .seg-card h3 { font-size: 16.5px; }
   .seg-card p { font-size: 13.5px; color: var(--soft); margin: 8px 0 0; line-height: 1.45; }
-
-  /* floating proof chips around phone (desktop) */
-  .float { position: absolute; z-index: 5; background: #fff; border: 1px solid var(--hairline); border-radius: 14px; padding: 11px 14px; box-shadow: 0 18px 40px -16px rgba(36,27,21,0.3); font-size: 13.5px; display: flex; align-items: center; gap: 10px; }
-  .float .ic { width: 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex: 0 0 auto; font-size: 15px; }
-  .float .lab { font-size: 11px; color: var(--soft); text-transform: uppercase; letter-spacing: 0.06em; }
-  .float .val { font-weight: 700; font-size: 14px; color: var(--cafe); margin-top: 1px; }
-  .float.f1 { top: 12px; left: -48px; } .float.f1 .ic { background: #E7F4EC; color: var(--salvia); }
-  .float.f2 { bottom: 60px; right: -42px; } .float.f2 .ic { background: #FCEFE0; color: var(--terra); }
-  @media (max-width: 1080px){ .float { display: none; } }
 
   /* ============ stat strip ============ */
   .stripe { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--hairline); border-radius: var(--r); overflow: hidden; background: #fff; }
@@ -237,14 +227,6 @@
       <!-- DEMO COLUMN: auto-rotating segments -->
       <div class="demo-col" id="demo" data-screen-label="Demo">
         <div class="phone-wrap">
-          <div class="float f1" aria-hidden="true">
-            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></div>
-            <div><div class="lab">Confirmado</div><div class="val" id="confVal">Sexta, 10h</div></div>
-          </div>
-          <div class="float f2" aria-hidden="true">
-            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></div>
-            <div><div class="lab">Resposta em</div><div class="val">~4 segundos</div></div>
-          </div>
           <div class="phone">
             <div class="screen">
               <div class="wa-head">
@@ -430,7 +412,6 @@
 (function () {
   var chat = document.getElementById('chat');
   var bizName = document.getElementById('bizName');
-  var confVal = document.getElementById('confVal');
   var segNow = document.getElementById('segNow');
   var segDots = document.getElementById('segDots');
 
@@ -493,7 +474,6 @@
   function setHeader(i){
     var s = SEGMENTS[i];
     bizName.textContent = s.biz;
-    confVal.textContent = s.conf;
     segNow.textContent = s.label;
     dots.forEach(function (d, k){ d.classList.toggle('active', k === i); });
   }
