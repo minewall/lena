@@ -8,10 +8,28 @@ import type {
 } from "@lena/shared/db";
 import { supabase } from "./supabase";
 
-// ai_model foi adicionado por migration; estende os tipos gerados até a
-// próxima regeneração de @lena/shared/db.
-export type TenantBrainRow = BaseTenantBrainRow & { ai_model: string };
-export type TenantBrainUpdate = BaseTenantBrainUpdate & { ai_model?: string };
+// Campos adicionados por migration; estende os tipos gerados até a próxima
+// regeneração de @lena/shared/db.
+export interface TeamMemberRow {
+  name: string;
+  role: string;
+}
+
+export type TenantBrainRow = BaseTenantBrainRow & {
+  ai_model: string;
+  restrictions: string | null;
+  escalation_triggers: string[];
+  team_public: TeamMemberRow[];
+  team_private: string | null;
+};
+
+export type TenantBrainUpdate = BaseTenantBrainUpdate & {
+  ai_model?: string;
+  restrictions?: string | null;
+  escalation_triggers?: string[];
+  team_public?: TeamMemberRow[];
+  team_private?: string | null;
+};
 
 export async function loadBrain(tenantId: string) {
   const { data, error } = await supabase

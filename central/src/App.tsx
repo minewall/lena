@@ -6,6 +6,7 @@ import { AuthCallback } from "./pages/AuthCallback";
 import { CerebroLayout } from "./pages/Cerebro/Layout";
 import { CerebroDados } from "./pages/Cerebro/Dados";
 import { CerebroFaq } from "./pages/Cerebro/Faq";
+import { CerebroLimites } from "./pages/Cerebro/Limites";
 import { CerebroServicos } from "./pages/Cerebro/Servicos";
 import { CerebroTom } from "./pages/Cerebro/Tom";
 import { ConfiguracoesEquipe } from "./pages/Configuracoes/Equipe";
@@ -54,6 +55,7 @@ export function App() {
             <Route path="tom" element={<CerebroTom />} />
             <Route path="servicos" element={<CerebroServicos />} />
             <Route path="faq" element={<CerebroFaq />} />
+            <Route path="limites" element={<CerebroLimites />} />
           </Route>
           <Route path="/conversas" element={<ConversasPage />} />
           <Route path="/agenda" element={<Placeholder title="Agenda" />} />

@@ -9,6 +9,65 @@ function formatServices(services?: TenantBrain["services"]): string {
   return list || "não detalhados";
 }
 
+function buildRestrictionsBlock(cfg: TenantBrain): string {
+  const restrictions = String(cfg.restrictions || "").trim();
+  const triggers = (cfg.escalationTriggers ?? [])
+    .map((t) => String(t || "").trim())
+    .filter(Boolean);
+
+  if (!restrictions && triggers.length === 0) return "";
+
+  const parts: string[] = ["\n\nRESTRIÇÕES OBRIGATÓRIAS. NUNCA QUEBRE."];
+  if (restrictions) {
+    parts.push(restrictions);
+  }
+  if (triggers.length > 0) {
+    parts.push(
+      `Se o cliente mencionar qualquer um destes assuntos, transfira imediatamente para um humano e não tente resolver sozinha: ${triggers.join(", ")}.`,
+    );
+  }
+  parts.push(
+    "Se algo que o cliente pede cai numa restrição, diga com cuidado que isso precisa de uma pessoa da equipe e que você vai encaminhar. Nunca dê a resposta proibida.",
+  );
+  return parts.join("\n");
+}
+
+function buildTeamBlock(cfg: TenantBrain): string {
+  const publicTeam = (cfg.teamPublic ?? []).filter(
+    (m) => m && String(m.name || "").trim(),
+  );
+  const privateInfo = String(cfg.teamPrivate || "").trim();
+
+  if (publicTeam.length === 0 && !privateInfo) return "";
+
+  const parts: string[] = ["\n\nEQUIPE E IDENTIFICAÇÃO."];
+  if (publicTeam.length > 0) {
+    const list = publicTeam
+      .map((m) => {
+        const name = String(m.name || "").trim();
+        const role = String(m.role || "").trim();
+        return role ? `${name} (${role})` : name;
+      })
+      .join("; ");
+    parts.push(
+      `Você PODE citar pelo nome apenas estas pessoas, quando fizer sentido: ${list}.`,
+    );
+  } else {
+    parts.push(
+      "Não cite nomes de profissionais do negócio. Fale de forma geral (por exemplo: nossa equipe, o profissional responsável).",
+    );
+  }
+  parts.push(
+    "Nunca invente nomes de pessoas. Não revele dados internos da equipe (ramais, e-mails internos, escala, salários, conflitos).",
+  );
+  if (privateInfo) {
+    parts.push(
+      `Contexto interno que você conhece mas NUNCA repassa ao cliente: ${privateInfo}`,
+    );
+  }
+  return parts.join("\n");
+}
+
 /**
  * System prompt da Lena.
  *
@@ -22,6 +81,8 @@ function formatServices(services?: TenantBrain["services"]): string {
 export function buildDemoSystem(cfg: TenantBrain): string {
   const tone = describeTone(cfg.tone);
   const svc = formatServices(cfg.services);
+  const restrictionsBlock = buildRestrictionsBlock(cfg);
+  const teamBlock = buildTeamBlock(cfg);
   return `Você é a Lena, a recepcionista virtual com IA do negócio "${cfg.name || "o negócio"}" (${cfg.segment || "negócio de serviço"}). Você atende clientes pelo WhatsApp e é ótima no que faz. Resolve, não enrola.
 
 Seu tom é ${tone}. Responda em português do Brasil, breve e natural (1 a 3 frases curtas), no máximo um emoji por mensagem.
@@ -43,5 +104,5 @@ COMO VOCÊ AGE
 • Seja proativa e resolvedora, como recepcionista experiente. Cite preço, horário e benefício quando o cliente perguntar. Não fique vaga.
 • Conduza para agendar ou para o próximo passo natural sempre que fizer sentido.
 • Se for sua primeira fala nesta conversa, apresente-se em uma frase curta antes de responder. Quando fizer sentido, ofereça caminhos curtos para o cliente escolher (por exemplo: "posso te contar sobre planos, agendar uma visita ou tirar uma dúvida específica, o que te ajuda mais?"). Sem listas longas.
-• Só envolva um humano em casos fora do alcance (reclamações sérias, situações sensíveis, questões médicas ou clínicas, pagamentos com problema).`;
+• Só envolva um humano em casos fora do alcance (reclamações sérias, situações sensíveis, questões médicas ou clínicas, pagamentos com problema).${restrictionsBlock}${teamBlock}`;
 }

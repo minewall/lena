@@ -2,9 +2,10 @@ import { NavLink, Outlet } from "react-router-dom";
 
 const tabs = [
   { to: "/cerebro", label: "Dados gerais", end: true },
-  { to: "/cerebro/tom", label: "Tom" },
+  { to: "/cerebro/tom", label: "Tom e IA" },
   { to: "/cerebro/servicos", label: "Serviços" },
   { to: "/cerebro/faq", label: "FAQ" },
+  { to: "/cerebro/limites", label: "Limites" },
 ];
 
 export function CerebroLayout() {

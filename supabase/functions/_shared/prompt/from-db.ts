@@ -2,7 +2,7 @@
 // GERADO POR scripts/sync-edge-shared.mjs — NÃO EDITAR À MÃO.
 // Fonte: packages/shared/src/<subpkg>/<file>.ts
 // ==========================================================================
-import type { TenantBrain } from "./types.ts";
+import type { TeamMember, TenantBrain } from "./types.ts";
 import type { TenantBrainRow, TenantService } from "../db/index.ts";
 
 function formatPriceBRL(cents: number | null | undefined): string {
@@ -23,10 +23,35 @@ function formatPriceBRL(cents: number | null | undefined): string {
  *   (string vazia faz o prompt-builder cair no default).
  * - hours/promo/extras nulos viram strings vazias.
  */
+// Campos adicionados por migration que ainda não estão nos tipos gerados.
+type BrainExtra = TenantBrainRow & {
+  restrictions?: string | null;
+  escalation_triggers?: string[] | null;
+  team_public?: unknown;
+  team_private?: string | null;
+};
+
+function parseTeamPublic(value: unknown): TeamMember[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .map((m) => {
+      if (m && typeof m === "object") {
+        const obj = m as { name?: unknown; role?: unknown };
+        return {
+          name: typeof obj.name === "string" ? obj.name : undefined,
+          role: typeof obj.role === "string" ? obj.role : undefined,
+        };
+      }
+      return {};
+    })
+    .filter((m) => m.name && m.name.trim().length > 0);
+}
+
 export function brainRecordToPrompt(
   brain: TenantBrainRow,
   services: TenantService[],
 ): TenantBrain {
+  const b = brain as BrainExtra;
   return {
     name: brain.business_name,
     segment: brain.segment,
@@ -34,6 +59,12 @@ export function brainRecordToPrompt(
     tone: brain.tone,
     promo: brain.promo ?? "",
     extras: brain.extras ?? "",
+    restrictions: b.restrictions ?? "",
+    escalationTriggers: Array.isArray(b.escalation_triggers)
+      ? b.escalation_triggers
+      : [],
+    teamPublic: parseTeamPublic(b.team_public),
+    teamPrivate: b.team_private ?? "",
     services: services
       .filter((s) => s.active)
       .sort((a, b) => a.position - b.position)
