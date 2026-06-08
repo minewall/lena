@@ -27,3 +27,6 @@ lead-generator/logs/
 
 # Cache do gerador
 .pytest_cache/
+
+# Protótipos de design (mantidos apenas localmente)
+prototipos/
