@@ -1,13 +1,18 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../store/auth";
 
-const navItems = [
+const navItems: { to: string; label: string; adminOnly?: boolean }[] = [
   { to: "/", label: "Visão geral" },
-  { to: "/cerebro", label: "Cérebro da Lena" },
+  { to: "/cerebro", label: "Cérebro da Lena", adminOnly: true },
   { to: "/conversas", label: "Conversas" },
   { to: "/agenda", label: "Agenda" },
-  { to: "/configuracoes", label: "Configurações" },
+  { to: "/configuracoes", label: "Configurações", adminOnly: true },
 ];
+
+const ROLE_LABEL: Record<string, string> = {
+  admin: "Administrador",
+  operador: "Operador",
+};
 
 export function Layout() {
   const tenants = useAuth((s) => s.tenants);
@@ -15,9 +20,19 @@ export function Layout() {
   const setCurrentTenant = useAuth((s) => s.setCurrentTenant);
   const signOut = useAuth((s) => s.signOut);
   const user = useAuth((s) => s.user);
+  const isAdmin = useAuth((s) => s.isAdmin());
+  const currentRole = useAuth((s) => s.currentRole());
+  const isPlatformAdmin = useAuth((s) => s.isPlatformAdmin);
   const navigate = useNavigate();
 
   const currentTenant = tenants.find((t) => t.id === currentTenantId) ?? null;
+  const visibleNav = navItems.filter((item) => !item.adminOnly || isAdmin);
+
+  const roleLabel = isPlatformAdmin
+    ? "Averse"
+    : currentRole
+      ? ROLE_LABEL[currentRole]
+      : null;
 
   return (
     <div className="grid h-full grid-cols-[260px_1fr] bg-creme">
@@ -48,7 +63,7 @@ export function Layout() {
         )}
 
         <nav className="flex flex-col gap-1 text-sm">
-          {navItems.map((item) => (
+          {visibleNav.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
@@ -68,6 +83,11 @@ export function Layout() {
 
         <div className="mt-auto flex flex-col gap-2 text-xs text-cafe-muted">
           <span className="truncate">{user?.email}</span>
+          {roleLabel ? (
+            <span className="w-fit rounded-full bg-creme-edge px-2 py-0.5 text-[11px] text-cafe-soft">
+              {roleLabel}
+            </span>
+          ) : null}
           <button
             type="button"
             onClick={async () => {

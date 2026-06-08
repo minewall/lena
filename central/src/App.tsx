@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { AdminRoute } from "./components/AdminRoute";
 import { AuthGate } from "./components/AuthGate";
 import { Layout } from "./components/Layout";
 import { AuthCallback } from "./pages/AuthCallback";
@@ -41,7 +42,14 @@ export function App() {
         >
           <Route index element={<Dashboard />} />
           <Route path="/criar-tenant" element={<CreateTenant />} />
-          <Route path="/cerebro" element={<CerebroLayout />}>
+          <Route
+            path="/cerebro"
+            element={
+              <AdminRoute>
+                <CerebroLayout />
+              </AdminRoute>
+            }
+          >
             <Route index element={<CerebroDados />} />
             <Route path="tom" element={<CerebroTom />} />
             <Route path="servicos" element={<CerebroServicos />} />
@@ -49,7 +57,14 @@ export function App() {
           </Route>
           <Route path="/conversas" element={<ConversasPage />} />
           <Route path="/agenda" element={<Placeholder title="Agenda" />} />
-          <Route path="/configuracoes" element={<ConfiguracoesLayout />}>
+          <Route
+            path="/configuracoes"
+            element={
+              <AdminRoute>
+                <ConfiguracoesLayout />
+              </AdminRoute>
+            }
+          >
             <Route index element={<ConfiguracoesGeral />} />
             <Route path="whatsapp" element={<ConfiguracoesWhatsapp />} />
             <Route path="equipe" element={<ConfiguracoesEquipe />} />
