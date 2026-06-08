@@ -72,7 +72,7 @@ export function ConversasPage() {
   if (!tenantId) return null;
 
   return (
-    <div className="-m-8 grid h-[calc(100vh-56px)] grid-cols-[360px_1fr] overflow-hidden">
+    <div className="-mx-8 -my-8 grid h-[calc(100vh-1px)] grid-cols-[340px_1fr] overflow-hidden border-t border-creme-edge">
       <aside className="flex flex-col overflow-hidden border-r border-creme-edge bg-creme-soft">
         <header className="flex items-center justify-between border-b border-creme-edge px-4 py-3">
           <div>
