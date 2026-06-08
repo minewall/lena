@@ -24,8 +24,13 @@ import type {
 import { MetaCloudProvider } from "../_shared/wa/meta-cloud.ts";
 import { buildDemoSystem, brainRecordToPrompt } from "../_shared/prompt/index.ts";
 
-const MODEL = "claude-sonnet-4-6";
-const MODEL_LIGHT = "claude-haiku-4-5-20251001";
+const DEFAULT_MODEL = "claude-sonnet-4-6";
+const MODEL_LIGHT = "claude-haiku-4-5";
+const ALLOWED_DIALOG_MODELS = new Set([
+  "claude-sonnet-4-6",
+  "claude-haiku-4-5",
+  "claude-opus-4-8",
+]);
 const MAX_TOKENS = 600;
 const HISTORY_LIMIT = 20;
 const DEBOUNCE_WINDOW_MS = 5000;
@@ -34,10 +39,16 @@ const DEFAULT_DIRECT_AFTER = 10;
 const DEFAULT_HANDOFF_AFTER = 20;
 const NOTES_UPDATE_EVERY_TURNS = 5;
 
+// micro-USD por 1k tokens (USD/1M ÷ 1000 × 1e6 = USD/1k × 1e6)
 const PRICING_MICRO_PER_1K: Record<string, { in: number; out: number }> = {
   "claude-sonnet-4-6": { in: 3000, out: 15000 },
-  "claude-haiku-4-5-20251001": { in: 800, out: 4000 },
+  "claude-haiku-4-5": { in: 1000, out: 5000 },
+  "claude-opus-4-8": { in: 5000, out: 25000 },
 };
+
+function pricingFor(model: string): { in: number; out: number } {
+  return PRICING_MICRO_PER_1K[model] ?? PRICING_MICRO_PER_1K[DEFAULT_MODEL];
+}
 
 declare const EdgeRuntime: { waitUntil(p: Promise<unknown>): void } | undefined;
 
@@ -356,6 +367,10 @@ async function respondWithLena(
     return;
   }
 
+  // modelo de diálogo escolhido pelo tenant (com allowlist e fallback)
+  const brainModel = typeof brain.ai_model === "string" ? brain.ai_model : DEFAULT_MODEL;
+  const dialogModel = ALLOWED_DIALOG_MODELS.has(brainModel) ? brainModel : DEFAULT_MODEL;
+
   // prompt
   const cfg = brainRecordToPrompt(brain as never, services as never);
   let system = buildDemoSystem(cfg);
@@ -379,7 +394,7 @@ async function respondWithLena(
       "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify({
-      model: MODEL,
+      model: dialogModel,
       max_tokens: MAX_TOKENS,
       system,
       messages,
@@ -429,7 +444,7 @@ async function respondWithLena(
       body: replyText,
       wa_message_id: sendResult.waMessageId,
       meta: {
-        ai_model: MODEL,
+        ai_model: dialogModel,
         stop_reason: claudeData.stop_reason ?? null,
         tier,
       },
@@ -440,7 +455,7 @@ async function respondWithLena(
   // ai_usage
   const inputTokens = claudeData.usage?.input_tokens ?? 0;
   const outputTokens = claudeData.usage?.output_tokens ?? 0;
-  const pricing = PRICING_MICRO_PER_1K[MODEL] ?? PRICING_MICRO_PER_1K["claude-sonnet-4-6"];
+  const pricing = pricingFor(dialogModel);
   const costMicroUsd = Math.round(
     (inputTokens * pricing.in) / 1000 + (outputTokens * pricing.out) / 1000,
   );
@@ -449,7 +464,7 @@ async function respondWithLena(
     tenant_id: tenantId,
     conversation_id: ctx.conversationId,
     message_id: (outMsg as { id?: string } | null)?.id ?? null,
-    model: MODEL,
+    model: dialogModel,
     input_tokens: inputTokens,
     output_tokens: outputTokens,
     cost_micro_usd: costMicroUsd,
@@ -457,7 +472,7 @@ async function respondWithLena(
   });
 
   console.log(
-    `Lena respondeu tenant=${tenantId} conv=${ctx.conversationId} tier=${tier} ` +
+    `Lena respondeu tenant=${tenantId} conv=${ctx.conversationId} tier=${tier} model=${dialogModel} ` +
       `in=${inputTokens} out=${outputTokens} cost=${costMicroUsd}µUSD`,
   );
 
@@ -562,7 +577,7 @@ async function updateContactNotes(
 
   // telemetria
   const usage = data.usage ?? {};
-  const pricing = PRICING_MICRO_PER_1K[MODEL_LIGHT];
+  const pricing = pricingFor(MODEL_LIGHT);
   const costMicro = Math.round(
     ((usage.input_tokens ?? 0) * pricing.in) / 1000 +
       ((usage.output_tokens ?? 0) * pricing.out) / 1000,

@@ -1,12 +1,17 @@
 import type {
-  TenantBrainRow,
-  TenantBrainUpdate,
+  TenantBrainRow as BaseTenantBrainRow,
+  TenantBrainUpdate as BaseTenantBrainUpdate,
   TenantFaq,
   TenantFaqInsert,
   TenantService,
   TenantServiceInsert,
 } from "@lena/shared/db";
 import { supabase } from "./supabase";
+
+// ai_model foi adicionado por migration; estende os tipos gerados até a
+// próxima regeneração de @lena/shared/db.
+export type TenantBrainRow = BaseTenantBrainRow & { ai_model: string };
+export type TenantBrainUpdate = BaseTenantBrainUpdate & { ai_model?: string };
 
 export async function loadBrain(tenantId: string) {
   const { data, error } = await supabase
@@ -15,18 +20,18 @@ export async function loadBrain(tenantId: string) {
     .eq("tenant_id", tenantId)
     .single();
   if (error) throw error;
-  return data as TenantBrainRow;
+  return data as unknown as TenantBrainRow;
 }
 
 export async function updateBrain(tenantId: string, patch: TenantBrainUpdate) {
   const { data, error } = await supabase
     .from("tenant_brains")
-    .update(patch)
+    .update(patch as never)
     .eq("tenant_id", tenantId)
     .select()
     .single();
   if (error) throw error;
-  return data as TenantBrainRow;
+  return data as unknown as TenantBrainRow;
 }
 
 // ── Services ───────────────────────────────────────────────────────────
