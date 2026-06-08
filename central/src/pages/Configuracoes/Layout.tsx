@@ -3,6 +3,7 @@ import { NavLink, Outlet } from "react-router-dom";
 const tabs = [
   { to: "/configuracoes", label: "Geral", end: true },
   { to: "/configuracoes/whatsapp", label: "WhatsApp" },
+  { to: "/configuracoes/equipe", label: "Equipe" },
 ];
 
 export function ConfiguracoesLayout() {

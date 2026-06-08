@@ -2,6 +2,7 @@ import { create } from "zustand";
 import type { Session, User } from "@supabase/supabase-js";
 import type { Tenant } from "@lena/shared/db";
 import { supabase } from "../lib/supabase";
+import { acceptMyInvitations } from "../lib/team";
 
 interface AuthState {
   session: Session | null;
@@ -33,6 +34,7 @@ export const useAuth = create<AuthState>((set, get) => ({
     });
 
     if (data.session) {
+      await acceptMyInvitations();
       await get().loadTenants();
     }
 
@@ -43,6 +45,7 @@ export const useAuth = create<AuthState>((set, get) => ({
         status: session ? "signed-in" : "anon",
       });
       if (session) {
+        await acceptMyInvitations();
         await get().loadTenants();
       } else {
         set({ tenants: [], currentTenantId: null });

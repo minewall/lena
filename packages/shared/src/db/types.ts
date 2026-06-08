@@ -16,6 +16,45 @@ export type Database = {
   __InternalSupabase: { PostgrestVersion: "14.5" };
   public: {
     Tables: {
+      ai_usage: {
+        Row: {
+          conversation_id: string | null;
+          cost_micro_usd: number;
+          id: string;
+          input_tokens: number;
+          message_id: string | null;
+          meta: Json;
+          model: string;
+          occurred_at: string;
+          output_tokens: number;
+          tenant_id: string;
+        };
+        Insert: {
+          conversation_id?: string | null;
+          cost_micro_usd?: number;
+          id?: string;
+          input_tokens?: number;
+          message_id?: string | null;
+          meta?: Json;
+          model: string;
+          occurred_at?: string;
+          output_tokens?: number;
+          tenant_id: string;
+        };
+        Update: {
+          conversation_id?: string | null;
+          cost_micro_usd?: number;
+          id?: string;
+          input_tokens?: number;
+          message_id?: string | null;
+          meta?: Json;
+          model?: string;
+          occurred_at?: string;
+          output_tokens?: number;
+          tenant_id?: string;
+        };
+        Relationships: [];
+      };
       contacts: {
         Row: {
           created_at: string;
@@ -235,6 +274,39 @@ export type Database = {
           tags?: string[];
           tenant_id?: string;
           updated_at?: string;
+        };
+        Relationships: [];
+      };
+      tenant_invitations: {
+        Row: {
+          accepted_at: string | null;
+          email: string;
+          id: string;
+          invited_at: string;
+          invited_by: string | null;
+          role: Database["public"]["Enums"]["tenant_role"];
+          status: Database["public"]["Enums"]["invitation_status"];
+          tenant_id: string;
+        };
+        Insert: {
+          accepted_at?: string | null;
+          email: string;
+          id?: string;
+          invited_at?: string;
+          invited_by?: string | null;
+          role?: Database["public"]["Enums"]["tenant_role"];
+          status?: Database["public"]["Enums"]["invitation_status"];
+          tenant_id: string;
+        };
+        Update: {
+          accepted_at?: string | null;
+          email?: string;
+          id?: string;
+          invited_at?: string;
+          invited_by?: string | null;
+          role?: Database["public"]["Enums"]["tenant_role"];
+          status?: Database["public"]["Enums"]["invitation_status"];
+          tenant_id?: string;
         };
         Relationships: [];
       };
@@ -505,13 +577,43 @@ export type Database = {
     };
     Views: Record<string, never>;
     Functions: {
+      accept_my_invitations: {
+        Args: never;
+        Returns: {
+          role: Database["public"]["Enums"]["tenant_role"];
+          tenant_id: string;
+        }[];
+      };
       create_tenant: {
         Args: { p_name: string; p_segment?: string; p_slug: string };
+        Returns: string;
+      };
+      invite_member: {
+        Args: {
+          p_email: string;
+          p_role?: Database["public"]["Enums"]["tenant_role"];
+          p_tenant_id: string;
+        };
         Returns: string;
       };
       is_platform_admin: { Args: never; Returns: boolean };
       is_tenant_admin: { Args: { t: string }; Returns: boolean };
       is_tenant_member: { Args: { t: string }; Returns: boolean };
+      list_tenant_members: {
+        Args: { p_tenant_id: string };
+        Returns: {
+          accepted_at: string;
+          email: string;
+          full_name: string;
+          invited_at: string;
+          role: Database["public"]["Enums"]["tenant_role"];
+          user_id: string;
+        }[];
+      };
+      revoke_invitation: {
+        Args: { p_invitation_id: string };
+        Returns: undefined;
+      };
       set_tenant_wa_config: {
         Args: {
           p_display_name: string;
@@ -528,6 +630,7 @@ export type Database = {
     };
     Enums: {
       conversation_state: "lena" | "human" | "paused";
+      invitation_status: "pending" | "accepted" | "revoked";
       message_direction: "in" | "out";
       message_kind:
         | "text"
@@ -564,6 +667,7 @@ export const Constants = {
   public: {
     Enums: {
       conversation_state: ["lena", "human", "paused"],
+      invitation_status: ["pending", "accepted", "revoked"],
       message_direction: ["in", "out"],
       message_kind: [
         "text",
