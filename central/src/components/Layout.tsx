@@ -1,11 +1,17 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../store/auth";
 
-const navItems: { to: string; label: string; adminOnly?: boolean }[] = [
+const navItems: {
+  to: string;
+  label: string;
+  adminOnly?: boolean;
+  platformOnly?: boolean;
+}[] = [
   { to: "/", label: "Visão geral" },
   { to: "/cerebro", label: "Cérebro da Lena", adminOnly: true },
   { to: "/conversas", label: "Conversas" },
   { to: "/agenda", label: "Agenda" },
+  { to: "/prospeccao", label: "Prospecção", platformOnly: true },
   { to: "/configuracoes", label: "Configurações", adminOnly: true },
 ];
 
@@ -26,7 +32,11 @@ export function Layout() {
   const navigate = useNavigate();
 
   const currentTenant = tenants.find((t) => t.id === currentTenantId) ?? null;
-  const visibleNav = navItems.filter((item) => !item.adminOnly || isAdmin);
+  const visibleNav = navItems.filter(
+    (item) =>
+      (!item.adminOnly || isAdmin) &&
+      (!item.platformOnly || isPlatformAdmin),
+  );
 
   const roleLabel = isPlatformAdmin
     ? "Averse"
