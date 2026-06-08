@@ -35,8 +35,11 @@
 .lena-central .win-bar .d{ width:10px; height:10px; border-radius:50%; }
 .lena-central .win-bar .d1{ background:#E8784E } .lena-central .win-bar .d2{ background:#F2C14E } .lena-central .win-bar .d3{ background:#5FB98D }
 .lena-central .win-bar .url{ margin-left:12px; background:#fff; border:1px solid var(--hairline); border-radius:8px; padding:4px 14px; font-size:11px; color:var(--soft); }
-.lena-central .dash{ padding:16px 18px; background:#FCF8F1; min-height:404px; }
-.lena-central .view{ display:none; } .lena-central .view.on{ display:block; }
+.lena-central .dash{ padding:16px 18px; background:#FCF8F1; min-height:404px; display:grid; }
+/* empilha os painéis na mesma célula: a altura fica fixa (= maior painel), sem pulo ao trocar */
+.lena-central .view{ grid-area:1 / 1; opacity:0; visibility:hidden; pointer-events:none; transition:opacity .3s ease; }
+.lena-central .view.on{ opacity:1; visibility:visible; pointer-events:auto; }
+@media (prefers-reduced-motion: reduce){ .lena-central .view{ transition:none; } }
 .lena-central .drow{ display:flex; align-items:center; justify-content:space-between; margin-bottom:13px; }
 .lena-central .drow b{ font-family:var(--display); font-weight:800; font-size:16px; }
 .lena-central .drow .per{ font-size:11px; color:var(--soft); border:1px solid var(--hairline); background:#fff; border-radius:999px; padding:4px 12px; }
