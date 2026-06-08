@@ -164,6 +164,28 @@
   }
   @media (max-width: 560px){ .lena-hub .nodes { grid-template-columns:1fr; } }
 
+  /* ============ segmentos dinâmicos ============ */
+  #segmentos .section-head{ text-align:center; margin-left:auto; margin-right:auto; }
+  #segmentos .rot{ display:inline-block; color:var(--terra); }
+  #segmentos .rot .w{ display:inline-block; transition:opacity .32s ease, transform .32s ease; }
+  #segmentos .rot .w.out{ opacity:0; transform:translateY(-14px); }
+  #segmentos .rot .w.in{ opacity:0; transform:translateY(14px); }
+  #segmentos .marquee{ overflow:hidden; padding:7px 0;
+    -webkit-mask:linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+            mask:linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
+  #segmentos .track{ display:flex; gap:12px; width:max-content; animation:seg-scroll 46s linear infinite; }
+  #segmentos .track.rev{ animation-direction:reverse; animation-duration:54s; }
+  #segmentos .marquee:hover .track{ animation-play-state:paused; }
+  @keyframes seg-scroll{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  #segmentos .chip{ flex:none; display:inline-flex; align-items:center; gap:9px; background:#fff; border:1px solid var(--hairline); border-radius:999px; padding:11px 18px; font-size:15px; font-weight:600; color:var(--cafe-2); box-shadow:0 8px 20px -16px rgba(36,27,21,.4); }
+  #segmentos .chip .d{ width:8px; height:8px; border-radius:50%; background:var(--terra); }
+  #segmentos .chip.you{ background:var(--terra); color:#fff; border-color:transparent; }
+  #segmentos .chip.you .d{ background:#fff; }
+  @media (prefers-reduced-motion: reduce){
+    #segmentos .track{ animation:none; }
+    #segmentos .rot .w{ transition:none; }
+  }
+
   /* ============ features ============ */
   .feat .ic { width: 46px; height: 46px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 22px; background: var(--cream); border: 1px solid var(--hairline); margin-bottom: 18px; }
   .band-cafe .feat .ic { background: rgba(251,243,231,0.06); border-color: rgba(251,243,231,0.16); }
@@ -499,20 +521,43 @@
 <!-- ============ SEGMENTS ============ -->
 <section class="band-areia" id="segmentos" data-screen-label="Segmentos">
   <div class="wrap">
-    <div class="section-head" style="max-width:680px">
-      <span class="eyebrow">Para vários negócios</span>
-      <h2>Um jeito de atender. Vários segmentos.</h2>
-      <p class="lede">Eu aprendo o vocabulário, os serviços e as regras do seu nicho. Mesmo motor por trás, uma conversa que parece sua. Não é script genérico.</p>
+    <div class="section-head" style="max-width:740px">
+      <span class="eyebrow">Para o seu negócio</span>
+      <h2>A recepcionista feita para <span class="rot"><span class="w">salões</span></span>.</h2>
+      <p class="lede">Mesmo motor, treinado com o vocabulário do seu nicho. Se você atende e agenda pelo WhatsApp, a Lena é pra você.</p>
     </div>
-    <div class="grid cols-5">
-      <div class="card seg-card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.7L18.5 9l-4.7 1.8L12 15.5l-1.8-4.7L5.5 9l4.7-1.3L12 3Z"/><path d="M18.5 14.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7.7-1.8Z"/></svg></div><h3>Clínicas &amp; estética</h3><p>Marco avaliação, confirmo e reduzo as faltas. Agenda cheia, sem buraco.</p></div>
-      <div class="card seg-card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><path d="M8 8l12 8M8 16L20 8"/></svg></div><h3>Salões &amp; barbearia</h3><p>Encaixo horário, ofereço combo de serviços e lembro o cliente no dia.</p></div>
-      <div class="card seg-card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="9" r="1.8"/><circle cx="12" cy="6.5" r="1.8"/><circle cx="17" cy="9" r="1.8"/><path d="M12 11c-2.5 0-4.5 2-4.5 4 0 1.7 1.3 2.5 2.6 2.5 1 0 1.3-.5 1.9-.5s.9.5 1.9.5c1.3 0 2.6-.8 2.6-2.5 0-2-2-4-4.5-4Z"/></svg></div><h3>Petshops</h3><p>Agendo banho e tosa pelo porte e aviso quando o pet está pronto.</p></div>
-      <div class="card seg-card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10.5 5 8 4.5 4.5 4.5V18c3.5 0 6 .5 7.5 2 1.5-1.5 4-2 7.5-2V4.5C16 4.5 13.5 5 12 6.5Z"/><path d="M12 6.5V20"/></svg></div><h3>Escolas &amp; cursos</h3><p>Tiro dúvida de matrícula, mostro turmas e marco aula experimental.</p></div>
-      <div class="card seg-card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7.5" width="18" height="12" rx="2"/><path d="M8.5 7.5V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v1.5"/><path d="M3 12.5h18"/></svg></div><h3>Escritórios</h3><p>Agendo reuniões e consultas, qualifico o lead e passo o resumo pra você.</p></div>
+    <div class="marquee" aria-hidden="true">
+      <div class="track">
+        <span class="chip"><span class="d"></span>Salões de beleza</span><span class="chip"><span class="d"></span>Barbearias</span><span class="chip"><span class="d"></span>Clínicas de estética</span><span class="chip"><span class="d"></span>Consultórios médicos</span><span class="chip"><span class="d"></span>Odontologia</span><span class="chip"><span class="d"></span>Fisioterapia</span><span class="chip"><span class="d"></span>Psicologia</span><span class="chip"><span class="d"></span>Nutrição</span><span class="chip"><span class="d"></span>Petshops</span><span class="chip"><span class="d"></span>Veterinárias</span><span class="chip"><span class="d"></span>Escolas e cursos</span><span class="chip"><span class="d"></span>Idiomas</span>
+        <span class="chip"><span class="d"></span>Salões de beleza</span><span class="chip"><span class="d"></span>Barbearias</span><span class="chip"><span class="d"></span>Clínicas de estética</span><span class="chip"><span class="d"></span>Consultórios médicos</span><span class="chip"><span class="d"></span>Odontologia</span><span class="chip"><span class="d"></span>Fisioterapia</span><span class="chip"><span class="d"></span>Psicologia</span><span class="chip"><span class="d"></span>Nutrição</span><span class="chip"><span class="d"></span>Petshops</span><span class="chip"><span class="d"></span>Veterinárias</span><span class="chip"><span class="d"></span>Escolas e cursos</span><span class="chip"><span class="d"></span>Idiomas</span>
+      </div>
+    </div>
+    <div class="marquee" aria-hidden="true" style="margin-top:14px">
+      <div class="track rev">
+        <span class="chip"><span class="d"></span>Academias</span><span class="chip"><span class="d"></span>Pilates e yoga</span><span class="chip"><span class="d"></span>Studios</span><span class="chip"><span class="d"></span>Imobiliárias</span><span class="chip"><span class="d"></span>Advocacia</span><span class="chip"><span class="d"></span>Contabilidade</span><span class="chip"><span class="d"></span>Autoescolas</span><span class="chip"><span class="d"></span>Spas</span><span class="chip"><span class="d"></span>Estúdios de tatuagem</span><span class="chip"><span class="d"></span>Assistência técnica</span><span class="chip"><span class="d"></span>Salões de festa</span><span class="chip you"><span class="d"></span>E o seu também ✨</span>
+        <span class="chip"><span class="d"></span>Academias</span><span class="chip"><span class="d"></span>Pilates e yoga</span><span class="chip"><span class="d"></span>Studios</span><span class="chip"><span class="d"></span>Imobiliárias</span><span class="chip"><span class="d"></span>Advocacia</span><span class="chip"><span class="d"></span>Contabilidade</span><span class="chip"><span class="d"></span>Autoescolas</span><span class="chip"><span class="d"></span>Spas</span><span class="chip"><span class="d"></span>Estúdios de tatuagem</span><span class="chip"><span class="d"></span>Assistência técnica</span><span class="chip"><span class="d"></span>Salões de festa</span><span class="chip you"><span class="d"></span>E o seu também ✨</span>
+      </div>
     </div>
   </div>
 </section>
+
+<script>
+(function(){
+  var el=document.querySelector('#segmentos .rot .w'); if(!el) return;
+  var words=['salões','clínicas','petshops','escolas','consultórios','academias','imobiliárias','escritórios'];
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce) return;
+  var i=0;
+  setInterval(function(){
+    el.classList.add('out');
+    setTimeout(function(){
+      i=(i+1)%words.length; el.textContent=words[i];
+      el.classList.remove('out'); el.classList.add('in');
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){ el.classList.remove('in'); }); });
+    }, 330);
+  }, 2200);
+})();
+</script>
 
 <!-- ============ FEATURES ============ -->
 <section class="band-cafe" id="diferenciais" data-screen-label="O que faz">

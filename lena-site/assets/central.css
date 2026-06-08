@@ -116,7 +116,7 @@
 .lena-central .blk2 .lab{ font-size:12.5px; font-weight:700; font-family:var(--display); margin-bottom:11px; display:flex; align-items:center; gap:8px; color:var(--cafe); }
 .lena-central .blk2 .lab svg{ width:16px; height:16px; stroke:var(--terra); fill:none; stroke-width:2; }
 .lena-central .seg{ display:inline-flex; border:1px solid var(--hairline); border-radius:999px; overflow:hidden; }
-.lena-central .seg button{ font:inherit; border:0; background:#fff; padding:8px 18px; font-size:12px; color:var(--cafe2); cursor:pointer; }
+.lena-central .seg button{ font:inherit; border:0; background:#fff; padding:8px 18px; font-size:12px; color:var(--cafe-2); cursor:pointer; }
 .lena-central .seg button.on{ background:var(--terra); color:#fff; font-weight:700; }
 .lena-central .chips{ display:flex; flex-wrap:wrap; gap:7px; }
 .lena-central .chips .cp{ font-size:11.5px; background:rgba(217,97,58,.10); color:var(--terra); border:1px solid rgba(217,97,58,.25); border-radius:999px; padding:5px 12px; }
