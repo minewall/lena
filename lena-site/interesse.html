@@ -272,17 +272,42 @@
     .wa-bub{font-size:.98rem;max-width:88%}
     .wa-pills label{font-size:.82rem;padding:7px 12px}
   }
+  /* nav + footer unificados com o site */
+  .nav-links{display:flex;gap:22px;font-size:.92rem;font-weight:600}
+  .nav-links a{color:#897866;text-decoration:none}
+  .nav-links a:hover{color:#D9613A}
+  .nav-cta{background:#D9613A;color:#fff;font-weight:700;font-size:.88rem;padding:9px 16px;border-radius:999px;text-decoration:none}
+  .nav-cta:hover{background:#B84A28;color:#fff}
+  @media(max-width:860px){.nav-links{display:none}}
+  .site-footer{background:#1B130D;color:#C7B49A;padding:48px 0 26px;font-size:.9rem;text-align:left}
+  .site-footer .fwrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  .site-footer .ftop{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:36px;padding-bottom:26px;border-bottom:1px solid rgba(255,255,255,.1)}
+  .site-footer .flogo{display:inline-flex;align-items:center;gap:9px;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.2rem;color:#fff;text-decoration:none}
+  .site-footer .flogo img{width:28px;height:28px}.site-footer .flogo span{color:#4E9E78}
+  .site-footer .fbrand p{margin-top:12px;color:rgba(255,255,255,.55);max-width:320px;line-height:1.6;font-size:.9rem}
+  .site-footer h4{color:#fff;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;margin-bottom:13px;font-family:'Bricolage Grotesque',sans-serif}
+  .site-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+  .site-footer ul a{color:#C7B49A;text-decoration:none}.site-footer ul a:hover{color:#fff}
+  .site-footer .flegal{padding-top:18px;color:rgba(255,255,255,.4);font-size:.82rem}
+  @media(max-width:760px){.site-footer .ftop{grid-template-columns:1fr;gap:24px}}
 </style>
 </head>
 <body>
 
 <nav>
   <div class="nav-in">
-    <a href="/" class="logo" aria-label="Lena, voltar à página inicial">
+    <a href="/" class="logo" aria-label="Lena, página inicial">
       <img src="/assets/lena-selo.svg" alt="" width="36" height="36" class="logo-mark" />
       Lena<span class="dot">.</span>
     </a>
-    <a href="/" class="back">← Voltar ao site</a>
+    <div class="nav-links">
+      <a href="/#capacidades">O que ela faz</a>
+      <a href="/#como">Como funciona</a>
+      <a href="/#central">A Central</a>
+      <a href="/precos.html">Planos</a>
+      <a href="/#faq">Dúvidas</a>
+    </div>
+    <a class="nav-cta" href="https://wa.me/5511939615168?text=Oi%2C%20queria%20saber%20sobre%20a%20Lena" target="_blank" rel="noopener">Falar com a Lena</a>
   </div>
 </nav>
 
@@ -428,8 +453,34 @@
   </div>
 </main>
 
-<footer>
-  © 2026 Lena, <a href="/privacidade.html">Privacidade</a>, <a href="/termos.html">Termos</a>, <a href="mailto:contato@lena.ia.br">contato@lena.ia.br</a>
+<footer class="site-footer">
+  <div class="fwrap">
+    <div class="ftop">
+      <div class="fbrand">
+        <a href="/" class="flogo"><img src="/assets/lena-selo.svg" alt="" />Lena<span>.</span></a>
+        <p>A recepcionista virtual do seu negócio: atende no WhatsApp 24h, marca na sua agenda e confirma. Menos cliente perdido, menos falta, mais agenda cheia.</p>
+      </div>
+      <div>
+        <h4>Produto</h4>
+        <ul>
+          <li><a href="/#capacidades">O que ela faz</a></li>
+          <li><a href="/#central">A Central</a></li>
+          <li><a href="/precos.html">Planos</a></li>
+          <li><a href="/#faq">Dúvidas</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="https://wa.me/5511939615168?text=Oi%2C%20queria%20saber%20sobre%20a%20Lena" target="_blank" rel="noopener">Falar com a Lena</a></li>
+          <li><a href="mailto:contato@lena.ia.br">contato@lena.ia.br</a></li>
+          <li><a href="/privacidade.html">Privacidade</a></li>
+          <li><a href="/termos.html">Termos</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="flegal">© 2026 Lena &middot; AVERSE Tecnologia LTDA &middot; CNPJ 63.832.744/0001-92 &middot; Curitiba, PR</div>
+  </div>
 </footer>
 
 <script>

@@ -36,6 +36,23 @@
   .logo img{width:28px;height:28px}
   .back{font-size:.92rem;color:var(--muted);text-decoration:none}
   .back:hover{color:var(--ink)}
+  .nav-in{max-width:1080px}
+  .nav-links{display:flex;gap:22px;font-size:.92rem;font-weight:600}
+  .nav-links a{color:var(--muted);text-decoration:none}
+  .nav-links a:hover{color:var(--coral)}
+  .nav-cta{background:var(--coral);color:#fff;font-weight:700;font-size:.88rem;padding:9px 16px;border-radius:999px;text-decoration:none}
+  .nav-cta:hover{background:var(--coral-deep);color:#fff}
+  @media(max-width:820px){.nav-links{display:none}}
+  .site-footer{background:var(--forest-deep);color:var(--sand);padding:48px 0 26px;margin-top:60px;font-size:.9rem}
+  .site-footer .fwrap{max-width:1000px;margin:0 auto;padding:0 24px}
+  .site-footer .ftop{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:36px;padding-bottom:26px;border-bottom:1px solid rgba(255,255,255,.1)}
+  .site-footer .logo{color:var(--cream);text-decoration:none;font-size:1.2rem}
+  .site-footer .fbrand p{margin-top:12px;color:rgba(255,255,255,.55);max-width:320px;line-height:1.6;font-size:.9rem}
+  .site-footer h4{color:#fff;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;margin-bottom:13px;font-family:'Bricolage Grotesque',sans-serif}
+  .site-footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px}
+  .site-footer ul a{color:var(--sand);text-decoration:none}.site-footer ul a:hover{color:#fff}
+  .site-footer .flegal{padding-top:18px;color:rgba(255,255,255,.4);font-size:.82rem}
+  @media(max-width:760px){.site-footer .ftop{grid-template-columns:1fr;gap:24px}}
 
   main{max-width:780px;margin:0 auto;padding:64px 24px 96px}
   .eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--coral-deep);margin-bottom:14px}
@@ -59,11 +76,18 @@
 
 <nav>
   <div class="nav-in">
-    <a href="/" class="logo" aria-label="Lena, voltar à página inicial">
+    <a href="/" class="logo" aria-label="Lena, página inicial">
       <img src="/assets/lena-selo.svg" alt="" />
       Lena<span>.</span>
     </a>
-    <a href="/" class="back">← Voltar</a>
+    <div class="nav-links">
+      <a href="/#capacidades">O que ela faz</a>
+      <a href="/#como">Como funciona</a>
+      <a href="/#central">A Central</a>
+      <a href="/precos.html">Planos</a>
+      <a href="/#faq">Dúvidas</a>
+    </div>
+    <a class="nav-cta" href="https://wa.me/5511939615168?text=Oi%2C%20queria%20saber%20sobre%20a%20Lena" target="_blank" rel="noopener">Falar com a Lena</a>
   </div>
 </nav>
 
@@ -127,10 +151,33 @@
   Assuntos de privacidade: <a href="mailto:dpo@lena.ia.br">dpo@lena.ia.br</a></p>
 </main>
 
-<footer>
-  <div class="foot-in">
-    <div>© 2026 Lena</div>
-    <div><a href="/privacidade.html">Privacidade</a>, <a href="/termos.html">Termos</a>, <a href="mailto:contato@lena.ia.br">contato@lena.ia.br</a></div>
+<footer class="site-footer">
+  <div class="fwrap">
+    <div class="ftop">
+      <div class="fbrand">
+        <a href="/" class="logo"><img src="/assets/lena-selo.svg" alt="" width="28" height="28" />Lena<span>.</span></a>
+        <p>A recepcionista virtual do seu negócio: atende no WhatsApp 24h, marca na sua agenda e confirma. Menos cliente perdido, menos falta, mais agenda cheia.</p>
+      </div>
+      <div>
+        <h4>Produto</h4>
+        <ul>
+          <li><a href="/#capacidades">O que ela faz</a></li>
+          <li><a href="/#central">A Central</a></li>
+          <li><a href="/precos.html">Planos</a></li>
+          <li><a href="/#faq">Dúvidas</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="https://wa.me/5511939615168?text=Oi%2C%20queria%20saber%20sobre%20a%20Lena" target="_blank" rel="noopener">Falar com a Lena</a></li>
+          <li><a href="mailto:contato@lena.ia.br">contato@lena.ia.br</a></li>
+          <li><a href="/privacidade.html">Privacidade</a></li>
+          <li><a href="/termos.html">Termos</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="flegal">© 2026 Lena &middot; AVERSE Tecnologia LTDA &middot; CNPJ 63.832.744/0001-92 &middot; Curitiba, PR</div>
   </div>
 </footer>
 
