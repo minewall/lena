@@ -186,6 +186,42 @@
     #segmentos .rot .w{ transition:none; }
   }
 
+  /* ============ recuperação (bento) ============ */
+  #diferenciais h2 .hl, #como h2 .hl{ color:var(--terra); }
+  #diferenciais .bento{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:34px; }
+  #diferenciais .bento .b{ background:#fff; border:1px solid var(--hairline); border-radius:18px; padding:22px 22px 20px; display:flex; flex-direction:column; }
+  #diferenciais .bento .b.w2{ grid-column:span 2; }
+  #diferenciais .bento .ic{ width:44px; height:44px; border-radius:12px; background:rgba(217,97,58,.12); display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
+  #diferenciais .bento .ic svg{ width:22px; height:22px; stroke:var(--terra); fill:none; stroke-width:2.1; stroke-linecap:round; stroke-linejoin:round; }
+  #diferenciais .bento .b h3{ font-family:var(--display); font-weight:700; font-size:18px; }
+  #diferenciais .bento .b p{ font-size:14.5px; color:var(--soft); line-height:1.45; margin-top:7px; }
+  #diferenciais .bento .b .chip{ align-self:flex-start; margin-top:12px; font-size:12px; font-weight:600; color:var(--terra); background:rgba(217,97,58,.1); border:1px solid rgba(217,97,58,.25); border-radius:999px; padding:5px 12px; }
+  #diferenciais .bento .b.stat-chart{ background:var(--cafe); color:#fff; }
+  #diferenciais .bento .b.stat-chart h3{ color:#fff; } #diferenciais .bento .b.stat-chart p{ color:rgba(251,243,231,.7); }
+  #diferenciais .bantes{ display:flex; align-items:flex-end; gap:34px; margin-top:auto; padding-top:18px; }
+  #diferenciais .bcol{ display:flex; flex-direction:column; align-items:center; gap:9px; }
+  #diferenciais .bcol .bn{ font-family:var(--display); font-weight:800; font-size:15px; line-height:1; }
+  #diferenciais .bcol .bar{ width:66px; border-radius:7px 7px 0 0; }
+  #diferenciais .bcol .bl{ font-size:11px; color:rgba(251,243,231,.6); }
+  #diferenciais .bcap{ font-size:11px; color:rgba(251,243,231,.5); margin-top:12px; }
+  #diferenciais .bento .b.bigstat{ background:linear-gradient(135deg,var(--terra),var(--terra-up)); color:#fff; justify-content:center; }
+  #diferenciais .bento .b.bigstat .big{ font-family:var(--display); font-weight:800; font-size:26px; line-height:1.18; }
+  #diferenciais .bento .b.bigstat p{ color:rgba(255,255,255,.85); margin-top:8px; font-size:15px; }
+  @media (max-width:860px){ #diferenciais .bento{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:560px){ #diferenciais .bento{ grid-template-columns:1fr; } #diferenciais .bento .b.w2{ grid-column:span 1; } }
+
+  /* ============ como funciona (stepper) ============ */
+  #como .flow{ position:relative; margin-top:46px; display:grid; grid-template-columns:repeat(4,1fr); gap:24px; }
+  #como .flow::before{ content:""; position:absolute; left:12%; right:12%; top:38px; height:2px; background:repeating-linear-gradient(90deg, rgba(217,97,58,.4) 0 6px, transparent 6px 12px); z-index:0; }
+  #como .step{ position:relative; z-index:1; text-align:center; padding:0; }
+  #como .step .circ{ width:76px; height:76px; border-radius:50%; background:#fff; border:1px solid var(--hairline); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; position:relative; box-shadow:0 12px 28px -16px rgba(36,27,21,.3); }
+  #como .step .circ svg{ width:32px; height:32px; stroke:var(--terra); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  #como .step .circ .bd{ position:absolute; top:-4px; right:-4px; width:26px; height:26px; border-radius:50%; background:var(--terra); color:#fff; font-family:var(--display); font-weight:800; font-size:13px; display:flex; align-items:center; justify-content:center; }
+  #como .step h3{ font-family:var(--display); font-weight:700; font-size:18px; }
+  #como .step p{ font-size:14.5px; color:var(--soft); line-height:1.45; margin-top:7px; }
+  @media (max-width:860px){ #como .flow{ grid-template-columns:1fr 1fr; } #como .flow::before{ display:none; } }
+  @media (max-width:560px){ #como .flow{ grid-template-columns:1fr; } }
+
   /* ============ features ============ */
   .feat .ic { width: 46px; height: 46px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 22px; background: var(--cream); border: 1px solid var(--hairline); margin-bottom: 18px; }
   .band-cafe .feat .ic { background: rgba(251,243,231,0.06); border-color: rgba(251,243,231,0.16); }
@@ -519,7 +555,7 @@
 </script>
 
 <!-- ============ SEGMENTS ============ -->
-<section class="band-areia" id="segmentos" data-screen-label="Segmentos">
+<section id="segmentos" data-screen-label="Segmentos">
   <div class="wrap">
     <div class="section-head" style="max-width:740px">
       <span class="eyebrow">Para o seu negócio</span>
@@ -560,20 +596,44 @@
 </script>
 
 <!-- ============ FEATURES ============ -->
-<section class="band-cafe" id="diferenciais" data-screen-label="O que faz">
+<section class="band-areia" id="diferenciais" data-screen-label="O que faz">
   <div class="wrap">
     <div class="section-head">
       <span class="eyebrow">Recuperação de faturamento</span>
-      <h2>Cada falta é dinheiro saindo. Eu fecho o buraco.</h2>
-      <p class="lede">Uma falta por semana, no seu ticket médio, é um rombo no mês. Eu conheço o seu negócio e trabalho pra sua agenda ficar cheia e confirmada.</p>
+      <h2>Eu recupero o dinheiro <span class="hl">que ia embora</span>.</h2>
+      <p class="lede">Cliente que não responde some. Quem falta deixa a agenda vazia. Eu trabalho pra esse dinheiro voltar pra você.</p>
     </div>
-    <div class="grid cols-3">
-      <div class="card feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/><path d="M7.5 13.5h3M7.5 17h3M14 13.5h2.5"/></svg></div><h3>Agenda de verdade, em tempo real</h3><p>Consulto sua agenda, ofereço o horário livre e marco na hora, sem dupla marcação. Não tem sistema? Eu já trago o meu, sem custo extra.</p></div>
-      <div class="card feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.6"/><path d="M6 9.5v5M18 9.5v5"/></svg></div><h3>Confirma com um sinal</h3><p>Quando você quiser, informo os dados de pagamento (Pix ou link) e peço um sinal pra garantir o horário. Quem paga não falta, e o valor abate do serviço.</p></div>
-      <div class="card feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14-4.5L4 8M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14 4.5L20 16M20 20v-4h-4"/></svg></div><h3>Cancelou? A vaga não fica vazia</h3><p>Vagou um horário? Eu ofereço na hora pra quem está na lista de espera. O buraco na agenda fecha sozinho.</p></div>
-      <div class="card feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8.5a6 6 0 1 0-12 0c0 6-2.5 7.5-2.5 7.5h17S18 14.5 18 8.5Z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></div><h3>Trago o cliente de volta</h3><p>Chamo no momento certo do retorno (já faz um tempo da sua última visita). Faturamento recorrente que ia embora volta pra sua agenda.</p></div>
-      <div class="card feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3Z"/><path d="M9 11.5l2 2 4-4"/></svg></div><h3>Não invento</h3><p>Quando não sei, assumo e te passo a conversa com o resumo do que o cliente quis. Sem respostas erradas em nome do seu negócio.</p></div>
-      <div class="card feat"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V4M4 20h16"/><path d="M8 20v-5M12.5 20V9M17 20v-8"/></svg></div><h3>Relatório do que eu fiz</h3><p>Atendimentos, agendamentos e horários de pico, sem planilha. Você vê o que eu resolvi enquanto você atendia.</p></div>
+    <div class="bento">
+      <div class="b stat-chart w2">
+        <h3>Corto as faltas</h3>
+        <p>Confirmo e lembro cada agendamento, sozinha. Menos buraco na agenda.</p>
+        <div class="bantes">
+          <div class="bcol"><span class="bn" style="color:#C9B7A2">100%</span><div class="bar" style="height:66px;background:#5b5046"></div><span class="bl">sem a Lena</span></div>
+          <div class="bcol"><span class="bn" style="color:#E8784E">~50%</span><div class="bar" style="height:33px;background:linear-gradient(180deg,#E8784E,#D9613A)"></div><span class="bl">comigo</span></div>
+        </div>
+        <span class="bcap">faltas por mês, com lembrete e confirmação</span>
+      </div>
+      <div class="b">
+        <div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3>Respondo na hora, 24h</h3><p>Nenhum cliente espera, nem de madrugada. Lead nenhum esfria.</p>
+      </div>
+      <div class="b">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14-4.5L4 8M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14 4.5L20 16M20 20v-4h-4"/></svg></div>
+        <h3>Encho vaga cancelada</h3><p>Cancelou? Ofereço na hora pra lista de espera. A vaga não fica vazia.</p>
+      </div>
+      <div class="b">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9Z"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg></div>
+        <h3>Trago o cliente de volta</h3><p>Chamo no momento do retorno. Faturamento recorrente que ia embora volta.</p>
+        <span class="chip">faz 30 dias 🔔</span>
+      </div>
+      <div class="b">
+        <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3Z"/><path d="M9 11.5l2 2 4-4"/></svg></div>
+        <h3>Não invento</h3><p>Quando não sei, passo a conversa com o resumo do que o cliente quis.</p>
+      </div>
+      <div class="b bigstat w2">
+        <div class="big">Uma venda ou uma falta evitada por semana já me paga.</div>
+        <p>O retorno aparece já nas primeiras semanas.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -581,15 +641,28 @@
 <!-- ============ HOW IT WORKS ============ -->
 <section id="como" data-screen-label="Como funciona">
   <div class="wrap">
-    <div class="section-head">
+    <div class="section-head" style="text-align:center;max-width:680px;margin:0 auto">
       <span class="eyebrow">Como funciona</span>
-      <h2>Em poucos dias, sem você tocar em código</h2>
-      <p class="lede">Setup é com a gente. Você só acompanha os agendamentos chegando.</p>
+      <h2>Pronta em poucos dias. <span class="hl">Você não toca em nada técnico.</span></h2>
+      <p class="lede" style="margin:15px auto 0">O setup é com a gente. Você só acompanha os agendamentos chegando.</p>
     </div>
-    <div class="grid cols-3">
-      <div class="step"><div class="n">1</div><h3>Conversamos</h3><p>Uma conversa rápida pra entender seu negócio, seus serviços e como você atende hoje.</p></div>
-      <div class="step"><div class="n">2</div><h3>Montamos e treinamos</h3><p>Construímos a Lena com as suas informações e testamos com situações reais do seu dia a dia.</p></div>
-      <div class="step"><div class="n">3</div><h3>Colocamos no ar</h3><p>Publicamos e cuidamos da manutenção. Sua agenda começa a encher.</p></div>
+    <div class="flow">
+      <div class="step">
+        <div class="circ"><span class="bd">1</span><svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12 7.7L3 21l1.8-6A8.5 8.5 0 1 1 21 11.5Z"/></svg></div>
+        <h3>Conversamos</h3><p>Eu entendo seu negócio, seus serviços e como você atende hoje.</p>
+      </div>
+      <div class="step">
+        <div class="circ"><span class="bd">2</span><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>Eu aprendo</h3><p>Montamos meu cérebro com as suas informações e testamos com casos reais.</p>
+      </div>
+      <div class="step">
+        <div class="circ"><span class="bd">3</span><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.5A10 10 0 1 0 12 2Z"/></svg></div>
+        <h3>Entro no seu WhatsApp</h3><p>Começo a atender e agendar seus clientes, 24 horas por dia.</p>
+      </div>
+      <div class="step">
+        <div class="circ"><span class="bd">4</span><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg></div>
+        <h3>Você acompanha</h3><p>Vê tudo na Central e assume a conversa quando quiser.</p>
+      </div>
     </div>
   </div>
 </section>
