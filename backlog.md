@@ -31,6 +31,18 @@ Itens deferidos para retomar depois.
 - [x] **Sessão de restrições no brain (o que a Lena NÃO pode falar).** FEITO 2026-06-08: colunas `restrictions` + `escalation_triggers` em tenant_brains, bloco RESTRIÇÕES OBRIGATÓRIAS no prompt, aba Cérebro → Limites.
 - [x] **Política de identificação pessoal no atendimento (público vs privado).** FEITO 2026-06-08: colunas `team_public` (jsonb nome/função) + `team_private`, bloco EQUIPE E IDENTIFICAÇÃO no prompt, mesma aba Limites com aviso de responsabilidade LGPD do contratante.
 
+## Pilotos + depoimentos (2026-06-08) — primeiros clientes reais
+- [ ] **2 pilotos via indicação do Roberto** (amigos donos de negócio, toparam testar a Lena sem compromisso e dar depoimento). Tratar como **programa piloto 30-60 dias grátis** em troca de: feedback, depoimento (texto+foto+negócio+resultado) e ser referência.
+  - **Capturar baseline ANTES de ligar a Lena** (faltas/mês, tempo de resposta) → depoimento com número ("cortei faltas pela metade").
+  - Preferir segmentos-alvo (Arquétipo B clínica/consultório ou A salão) pra virar case do arquétipo certo.
+- [ ] **Depoimentos no site (curados)** — coletar frase+nome+negócio+foto/logo+resultado e publicar bonito na seção "Para quem"/nova seção de prova social. É o que converte.
+- [ ] **Google Business Profile** da Averse/Lena — pedir review aos pilotos (prova de terceiro); avaliar embutir reviews no site.
+- [ ] Substituir o placeholder "sem clientes ainda" do hero/redes por **logos e depoimentos reais** assim que os pilotos derem retorno.
+
+## Pós-site (2026-06-08)
+- [ ] **Revisar imagens de perfil das redes** (Facebook, Instagram, LinkedIn) com o avatar/selo finais — gerar versão revisada do pacote `produto/material/redes/` assim que o site estiver fechado. Pedido do Roberto.
+- [ ] **Aplicar o selo "L." na versão exata que o Roberto enviou** (o do site foi recriado em SVG, pode diferir do original dele). Pendente Roberto mandar o arquivo. Trocar `lena-selo.svg` (e PNGs) pela versão dele em todo o site/favicon/redes.
+
 ## Sessão de planejamento estratégico (2026-06-08) — 18 frentes levantadas por Roberto
 
 **Prospecção / marketing (destrava captação)**
@@ -109,6 +121,7 @@ Itens deferidos para retomar depois.
 
 ## Ideias de produto (em desenho)
 - 💡 **Add-on Campanhas de Reativação** (WhatsApp) — serviço extra, pacote de créditos mensal. v1 = reativação de base quente. Brief: `produto/campanhas-reativacao.md`. Depende do WhatsApp Cloud API (#2). Confirmar custo real Meta/BSP antes de fechar pricing.
+  - [ ] **Aba "Campanhas e promoções" na Central (site + produto)** (ideia Roberto 2026-06-08): 5º painel do carrossel da Central mostrando criar promoção → escolher público (ex: clientes sumidos há 30d) → resultado (enviadas/responderam/agendaram). Posiciona a Lena como motor de receita (proativa), não só reativa. No site: mostrar como funcionalidade, marcar "em breve" (depende de template de marketing Meta + opt-in/LGPD). Vira vitrine do add-on. Guardrail de opt-in = argumento de venda ("campanhas sem queimar seu número").
 
 ## Site (reestruturado 2026-06-01 para validação)
 - Reestruturado em 2 páginas de conversão: `/` (index.html) enxuta (hero resultado → diferenciais de recuperação de faturamento → demo clínica → como funciona → teaser planos → early adopter → FAQ → CTA) e `/precos` (precos.html, comparativo 3 planos + add-on campanhas "sob consulta"). Form `/interesse.html` enxugado (acaba após volume) + checkbox `interesse_campanhas`. OG/meta em todas; demo só clínica (com beat de sinal Pix); prova social = ângulo honesto de early adopter (sem depoimento/número falso). Recursos reais hoje: sinal Pix, reabastecimento/lista de espera, recorrência. "Relatório faturamento recuperado em R$" e "voz" = em breve.
