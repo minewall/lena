@@ -19,11 +19,18 @@ importado na base ([[lena-crm-supabase]] → tabela `public.prospects`).
 `<segmento>_<zona>.md` — minúsculo, sem acento, hifenizado.
 Ex.: `escola_zona-leste.md`, `odontologia_centro.md`.
 
+## De onde vêm os prompts
+
+A maioria é **gerada** por `../scripts/gen_prompts.py` (fonte única: a taxonomia
+de 28 segmentos × o mapa de zonas). Para regenerar/estender, edite o script e rode
+`python gen_prompts.py`. Exceções **mantidas à mão** (mais afinadas, com exemplo
+de linha): `escola_*`, `odontologia_*`, `terapias_*`.
+
 ## Mapa de cobertura (2026-06-08) — ✅ feito · 🟡 parcial · ⬜ vazio
 
 | Segmento | Sul | Norte | Centro | Leste | Oeste | Outras |
 |---|---|---|---|---|---|---|
-| Escola | ✅ | ✅ | ⬜ | ⬜ | ⬜ | — |
+| Escola | ✅ | ✅ | ✅ | ⬜ | ⬜ | — |
 | Odontologia | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | — |
 | Terapias | ✅ | ⬜ | ⬜ | ⬜ | ⬜ | — |
 | Petshop | ✅ | ✅ | ⬜ | ⬜ | ✅ | — |

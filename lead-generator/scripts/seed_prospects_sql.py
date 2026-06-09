@@ -4,13 +4,36 @@ Normaliza telefones para dígitos com prefixo 55 e quebra campos multivalor em a
 import csv, re, sys, glob, os
 
 SEG = {
-    "CLINICA_ESTETICA": "Clínica Estética",
-    "CLINICA_MEDICA":   "Clínica Médica",
-    "ESCOLA":           "Escola",
-    "ODONTOLOGIA":      "Odontologia",
-    "PETSHOP":          "Petshop",
-    "SALAO_BELEZA":     "Salão",
-    "TERAPIAS":         "Terapias",
+    "CLINICA_ESTETICA":   "Clínica Estética",
+    "CLINICA_MEDICA":     "Clínica Médica",
+    "ESCOLA":             "Escola",
+    "ODONTOLOGIA":        "Odontologia",
+    "PETSHOP":            "Petshop",
+    "SALAO_BELEZA":       "Salão",
+    "TERAPIAS":           "Terapias",
+    # novos (taxonomia granular — ver prompts/README.md)
+    "BARBEARIA":          "Barbearia",
+    "FISIOTERAPIA":       "Fisioterapia",
+    "PSICOLOGIA":         "Psicologia",
+    "NUTRICAO":           "Nutrição",
+    "VETERINARIA":        "Veterinária",
+    "OFICINA":            "Oficina",
+    "LOCADORA":           "Locadora",
+    "IDIOMAS":            "Idiomas",
+    "ACADEMIA":           "Academia",
+    "PILATES_YOGA":       "Pilates e Yoga",
+    "STUDIO":             "Studio",
+    "IMOBILIARIA":        "Imobiliária",
+    "ADVOCACIA":          "Advocacia",
+    "CONTABILIDADE":      "Contabilidade",
+    "AUTOESCOLA":         "Autoescola",
+    "EVENTOS_BUFFET":     "Eventos e Buffet",
+    "SPA":                "Spa",
+    "TATUAGEM":           "Tatuagem",
+    "TRANSPORTADORA":     "Transportadora",
+    "INDUSTRIA":          "Indústria",
+    "ASSISTENCIA_TECNICA":"Assistência Técnica",
+    "SALAO_FESTA":        "Salão de Festa",
 }
 
 def norm_phone(s):
@@ -56,7 +79,14 @@ cols = ("nome","segmento","bairros","telefones","whatsapps","emails","website",
         "instagram","facebook","linkedin","tiktok","fonte","coletado_em","observacao")
 rows = []
 data_dir = os.path.join(os.path.dirname(__file__), "..", "data")
-for f in sorted(glob.glob(os.path.join(data_dir, "prospects_*.csv"))):
+# Sem argumentos: processa todos os CSVs. Com argumentos: só os arquivos dados
+# (caminho relativo ao data_dir ou absoluto) — usado para importar incrementos.
+if len(sys.argv) > 1:
+    files = [a if os.path.isabs(a) else os.path.join(data_dir, os.path.basename(a))
+             for a in sys.argv[1:]]
+else:
+    files = sorted(glob.glob(os.path.join(data_dir, "prospects_*.csv")))
+for f in files:
     with open(f, newline="", encoding="utf-8") as fh:
         for r in csv.DictReader(fh):
             seg = SEG.get((r.get("segmento") or "").strip(), (r.get("segmento") or "").strip())
