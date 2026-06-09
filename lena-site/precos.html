@@ -60,6 +60,20 @@
   .btn-lg{padding:15px 28px;font-size:1rem}
   .back{font-size:.92rem;color:var(--muted);font-weight:500}
   .back:hover{color:var(--dark)}
+  .nav-links{display:flex;gap:26px;font-size:.95rem;font-weight:600}
+  .nav-links a{color:var(--body)}
+  .nav-links a:hover,.nav-links a.active{color:var(--primary)}
+  .nav-cta{padding:9px 18px;font-size:.9rem}
+  @media(max-width:920px){.nav-links{display:none}}
+  .site-footer{background:var(--dark);color:#897866;padding:52px 0 26px;font-size:.9rem;text-align:left}
+  .site-footer .ftop{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:40px;padding-bottom:28px;border-bottom:1px solid rgba(255,255,255,.1)}
+  .site-footer .logo{color:#fff;font-size:1.3rem}
+  .site-footer .fbrand p{margin-top:14px;color:rgba(255,255,255,.6);max-width:340px;line-height:1.6;font-size:.92rem}
+  .site-footer h4{color:#fff;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;margin-bottom:14px;font-family:'Bricolage Grotesque',sans-serif}
+  .site-footer ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+  .site-footer a{color:#C7B49A}.site-footer a:hover{color:#fff}
+  .site-footer .flegal{padding-top:20px;color:rgba(255,255,255,.45);font-size:.82rem}
+  @media(max-width:760px){.site-footer .ftop{grid-template-columns:1fr;gap:26px}}
 
   .head{text-align:center;padding:64px 0 8px}
   .eyebrow{display:inline-block;background:rgba(217,97,58,.1);color:var(--primary);font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:7px 14px;border-radius:999px;margin-bottom:18px}
@@ -122,7 +136,14 @@
       <img src="/assets/lena-selo.svg" alt="" width="34" height="34" class="logo-mark" />
       Lena<span class="dot">.</span>
     </a>
-    <a href="/" class="back">← Voltar ao site</a>
+    <div class="nav-links">
+      <a href="/#capacidades">O que ela faz</a>
+      <a href="/#como">Como funciona</a>
+      <a href="/#central">A Central</a>
+      <a href="/precos.html" class="active">Planos</a>
+      <a href="/#faq">Dúvidas</a>
+    </div>
+    <a class="btn btn-primary nav-cta" href="https://wa.me/5511939615168?text=Oi%2C%20queria%20saber%20sobre%20a%20Lena" target="_blank" rel="noopener">Falar com a Lena</a>
   </div>
 </nav>
 
@@ -231,8 +252,34 @@
   </div>
 </section>
 
-<footer>
-  © 2026 Lena &middot; AVERSE Tecnologia LTDA &middot; CNPJ 63.832.744/0001-92 &middot; <a href="/">Início</a> &middot; <a href="/privacidade.html">Privacidade</a> &middot; <a href="/termos.html">Termos</a> &middot; <a href="mailto:contato@lena.ia.br">contato@lena.ia.br</a>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="ftop">
+      <div class="fbrand">
+        <a href="/" class="logo"><img src="/assets/lena-selo.svg" alt="" width="30" height="30" class="logo-mark" />Lena<span class="dot">.</span></a>
+        <p>A recepcionista virtual do seu negócio: atende no WhatsApp 24h, marca na sua agenda e confirma. Menos cliente perdido, menos falta, mais agenda cheia.</p>
+      </div>
+      <div>
+        <h4>Produto</h4>
+        <ul>
+          <li><a href="/#capacidades">O que ela faz</a></li>
+          <li><a href="/#central">A Central</a></li>
+          <li><a href="/precos.html">Planos</a></li>
+          <li><a href="/#faq">Dúvidas</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href="https://wa.me/5511939615168?text=Oi%2C%20queria%20saber%20sobre%20a%20Lena" target="_blank" rel="noopener">Falar com a Lena</a></li>
+          <li><a href="mailto:contato@lena.ia.br">contato@lena.ia.br</a></li>
+          <li><a href="/privacidade.html">Privacidade</a></li>
+          <li><a href="/termos.html">Termos</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="flegal">© 2026 Lena &middot; AVERSE Tecnologia LTDA &middot; CNPJ 63.832.744/0001-92 &middot; Curitiba, PR</div>
+  </div>
 </footer>
 
 <script>
@@ -250,7 +297,6 @@
 
 <!-- Cloudflare Web Analytics (sem cookies). TODO: trocar TOKEN_CLOUDFLARE pelo token real. -->
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "TOKEN_CLOUDFLARE"}'></script>
-  {TAG}
-  <script src="assets/wa-fab.js" defer></script>
+<script src="assets/wa-fab.js" defer></script>
 </body>
 </html>
