@@ -1,4 +1,4 @@
-import type { ComponentType } from "react";
+import { useEffect, useState, type ComponentType } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../store/auth";
 import {
@@ -21,10 +21,18 @@ const FULL_BLEED_PREFIXES = ["/conversas"];
 /** Páginas de formulário leem melhor estreitas; o resto (operação) usa a tela. */
 const FORM_PREFIXES = ["/cerebro", "/configuracoes", "/criar-tenant"];
 
+interface NavChild {
+  to: string;
+  label: string;
+  end?: boolean;
+}
+
 interface NavItem {
   to: string;
   label: string;
   icon: ComponentType<{ size?: number; className?: string }>;
+  /** Sub-abas: o item vira acordeão (clique abre/fecha; navegação nas filhas). */
+  children?: NavChild[];
   adminOnly?: boolean;
   platformOnly?: boolean;
 }
@@ -48,8 +56,30 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: "Lena",
     items: [
-      { to: "/cerebro", label: "Cérebro", icon: IconBrain, adminOnly: true },
-      { to: "/configuracoes", label: "Configurações", icon: IconSettings, adminOnly: true },
+      {
+        to: "/cerebro",
+        label: "Cérebro",
+        icon: IconBrain,
+        adminOnly: true,
+        children: [
+          { to: "/cerebro", label: "Dados gerais", end: true },
+          { to: "/cerebro/servicos", label: "Serviços" },
+          { to: "/cerebro/tom", label: "Tom e IA" },
+          { to: "/cerebro/faq", label: "FAQ" },
+          { to: "/cerebro/limites", label: "Limites" },
+        ],
+      },
+      {
+        to: "/configuracoes",
+        label: "Configurações",
+        icon: IconSettings,
+        adminOnly: true,
+        children: [
+          { to: "/configuracoes", label: "Geral", end: true },
+          { to: "/configuracoes/whatsapp", label: "WhatsApp" },
+          { to: "/configuracoes/equipe", label: "Equipe" },
+        ],
+      },
     ],
   },
   {
@@ -87,6 +117,18 @@ export function Layout() {
       : "mx-auto w-full max-w-[1480px] px-8 py-7";
 
   const currentTenant = tenants.find((t) => t.id === currentTenantId) ?? null;
+
+  // Acordeão: itens com filhas abrem/fecham no clique; rota ativa abre sozinha.
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  useEffect(() => {
+    for (const g of NAV_GROUPS) {
+      for (const item of g.items) {
+        if (item.children && pathname.startsWith(item.to)) {
+          setExpanded((prev) => (prev[item.to] ? prev : { ...prev, [item.to]: true }));
+        }
+      }
+    }
+  }, [pathname]);
 
   const visibleGroups = NAV_GROUPS.map((g) => ({
     ...g,
@@ -168,22 +210,73 @@ export function Layout() {
               </div>
               {group.items.map((item) => {
                 const Icon = item.icon;
+
+                if (!item.children) {
+                  return (
+                    <NavLink
+                      key={item.to}
+                      to={item.to}
+                      end={item.to === "/"}
+                      className={({ isActive }) =>
+                        `flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13.5px] transition ${
+                          isActive
+                            ? "bg-terracota font-semibold text-white shadow-[0_6px_18px_-8px_rgba(227,91,46,0.7)]"
+                            : "text-creme/70 hover:bg-white/5 hover:text-creme"
+                        }`
+                      }
+                    >
+                      <Icon size={16} />
+                      {item.label}
+                    </NavLink>
+                  );
+                }
+
+                const isOpen = expanded[item.to] ?? false;
+                const sectionActive = pathname.startsWith(item.to);
                 return (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    end={item.to === "/"}
-                    className={({ isActive }) =>
-                      `flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13.5px] transition ${
-                        isActive
-                          ? "bg-terracota font-semibold text-white shadow-[0_6px_18px_-8px_rgba(227,91,46,0.7)]"
+                  <div key={item.to} className="flex flex-col gap-0.5">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setExpanded((prev) => ({ ...prev, [item.to]: !isOpen }))
+                      }
+                      className={`flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13.5px] transition ${
+                        sectionActive && !isOpen
+                          ? "bg-white/10 font-semibold text-creme"
                           : "text-creme/70 hover:bg-white/5 hover:text-creme"
-                      }`
-                    }
-                  >
-                    <Icon size={16} />
-                    {item.label}
-                  </NavLink>
+                      }`}
+                    >
+                      <Icon size={16} />
+                      {item.label}
+                      <span
+                        className={`ml-auto text-[10px] text-creme/40 transition-transform ${
+                          isOpen ? "rotate-90" : ""
+                        }`}
+                      >
+                        ›
+                      </span>
+                    </button>
+                    {isOpen ? (
+                      <div className="ml-[17px] flex flex-col gap-0.5 border-l border-white/10 pl-3">
+                        {item.children.map((child) => (
+                          <NavLink
+                            key={child.to}
+                            to={child.to}
+                            end={child.end}
+                            className={({ isActive }) =>
+                              `rounded-md px-2 py-1.5 text-[12.5px] transition ${
+                                isActive
+                                  ? "bg-terracota font-semibold text-white"
+                                  : "text-creme/60 hover:bg-white/5 hover:text-creme"
+                              }`
+                            }
+                          >
+                            {child.label}
+                          </NavLink>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
                 );
               })}
             </div>
