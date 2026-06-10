@@ -1,7 +1,9 @@
 import { supabase } from "./supabase";
 
 // RPCs e tabelas de agenda ainda não estão nos tipos gerados; cast localizado.
-const rpc = supabase.rpc as unknown as (
+// .bind(supabase) preserva o `this` — sem ele, supabase.rpc perde o contexto e
+// tenta acessar `undefined.rest`, quebrando qualquer chamada de RPC.
+const rpc = supabase.rpc.bind(supabase) as unknown as (
   fn: string,
   args: Record<string, unknown>,
 ) => Promise<{ data: unknown; error: { message: string } | null }>;
