@@ -13,6 +13,8 @@ interface AuthState {
   isPlatformAdmin: boolean;
   currentTenantId: string | null;
   status: "loading" | "anon" | "signed-in";
+  /** true depois que tenants/roles/perfil chegaram; rotas protegidas esperam isto */
+  tenantsLoaded: boolean;
   init: () => Promise<void>;
   loadTenants: () => Promise<void>;
   setCurrentTenant: (id: string) => void;
@@ -33,6 +35,7 @@ export const useAuth = create<AuthState>((set, get) => ({
   isPlatformAdmin: false,
   currentTenantId: null,
   status: "loading",
+  tenantsLoaded: false,
 
   init: async () => {
     const { data } = await supabase.auth.getSession();
@@ -57,7 +60,7 @@ export const useAuth = create<AuthState>((set, get) => ({
         await acceptMyInvitations();
         await get().loadTenants();
       } else {
-        set({ tenants: [], roles: {}, isPlatformAdmin: false, currentTenantId: null });
+        set({ tenants: [], roles: {}, isPlatformAdmin: false, currentTenantId: null, tenantsLoaded: false });
         localStorage.removeItem(STORAGE_KEY);
       }
     });
@@ -90,6 +93,7 @@ export const useAuth = create<AuthState>((set, get) => ({
 
     if (tenantsRes.error) {
       console.error("erro ao carregar tenants:", tenantsRes.error.message);
+      set({ tenantsLoaded: true }); // não deixa rotas protegidas esperando para sempre
       return;
     }
 
@@ -113,6 +117,7 @@ export const useAuth = create<AuthState>((set, get) => ({
       roles,
       isPlatformAdmin,
       currentTenantId: validStored ?? fallback,
+      tenantsLoaded: true,
     });
   },
 

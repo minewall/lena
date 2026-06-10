@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "central",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "central", "--", "--port", "5199", "--host", "127.0.0.1"],
+      "port": 5199
+    }
+  ]
+}

@@ -1,5 +1,8 @@
-import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../store/auth";
+
+/** Rotas que ocupam a área inteira (sem container nem breadcrumb). */
+const FULL_BLEED_PREFIXES = ["/conversas"];
 
 const navItems: {
   to: string;
@@ -32,6 +35,8 @@ export function Layout() {
   const currentRole = useAuth((s) => s.currentRole());
   const isPlatformAdmin = useAuth((s) => s.isPlatformAdmin);
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const fullBleed = FULL_BLEED_PREFIXES.some((p) => pathname.startsWith(p));
 
   const currentTenant = tenants.find((t) => t.id === currentTenantId) ?? null;
   const visibleNav = navItems.filter(
@@ -114,8 +119,8 @@ export function Layout() {
       </aside>
 
       <main className="overflow-auto">
-        <div className="mx-auto max-w-5xl px-8 py-8">
-          {currentTenant ? (
+        <div className={fullBleed ? "h-full" : "mx-auto max-w-5xl px-8 py-8"}>
+          {currentTenant && !fullBleed ? (
             <div className="mb-6 text-sm text-cafe-muted">
               {currentTenant.segment} ·{" "}
               <span className="text-cafe">{currentTenant.name}</span>

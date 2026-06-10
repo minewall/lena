@@ -12,10 +12,11 @@ import { Card } from "./ui";
 export function AdminRoute({ children }: { children: ReactNode }) {
   const isAdmin = useAuth((s) => s.isAdmin());
   const status = useAuth((s) => s.status);
+  const tenantsLoaded = useAuth((s) => s.tenantsLoaded);
   const hasTenant = useAuth((s) => s.currentTenantId !== null);
 
-  // ainda carregando sessão/tenants: não decide nada
-  if (status === "loading") return null;
+  // ainda carregando sessão/tenants: não decide nada (evita redirect em deep-link/refresh)
+  if (status === "loading" || (status === "signed-in" && !tenantsLoaded)) return null;
 
   // sem tenant: deixa a home decidir (mostra criar-tenant)
   if (!hasTenant) return <Navigate to="/" replace />;
