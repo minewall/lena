@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap');
+  @page { size: 33.867cm 19.05cm; margin: 0; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root{ --terra:#D9613A; --terra-tint:#F4E2D4; --cream:#FBF3E7; --ink:#241B15;
+    --muted:#6f6457; --line:#EADBC6; --sage:#4E9E78; --sage-tint:#DCEBE0; }
+  body{ font-family:'Hanken Grotesk',-apple-system,Arial,sans-serif; color:var(--ink); }
+  .slide{ width:33.867cm; height:19.05cm; position:relative; overflow:hidden;
+    page-break-after:always; padding:84px 120px 88px; display:flex; flex-direction:column; }
+  .slide:last-child{ page-break-after:auto; }
+  .cream{ background:var(--cream); } .white{ background:#FFFFFF; } .terra{ background:var(--terra); color:#fff; }
+
+  h1{ font-family:'Bricolage Grotesque'; font-weight:800; font-size:60px; line-height:1.08; letter-spacing:-1.5px; }
+  h2{ font-family:'Bricolage Grotesque'; font-weight:800; font-size:46px; line-height:1.1; letter-spacing:-1px; }
+  .hl{ color:var(--terra); }
+  .kicker{ font-size:14px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--terra); margin-bottom:15px; }
+  .terra .kicker{ color:#F7D9C7; }
+  .lead{ font-size:20px; line-height:1.5; color:var(--muted); max-width:88%; margin-top:14px; }
+  .terra .lead{ color:#FBE7DA; }
+
+  .foot{ position:absolute; left:120px; right:120px; bottom:52px; display:flex; justify-content:space-between;
+    align-items:center; border-top:1px solid var(--line); padding-top:16px; font-size:13px; color:#9a8f80; }
+  .terra .foot{ border-top-color:rgba(255,255,255,.25); color:#F7D9C7; }
+  .foot .l{ display:flex; align-items:center; gap:9px; font-weight:600; }
+  .foot .r{ font-weight:700; color:#8a7f70; } .terra .foot .r{ color:#FBE7DA; }
+  .seal{ width:22px; height:22px; display:block; }
+
+  /* cover */
+  .cover-mark{ display:flex; align-items:center; gap:14px; position:absolute; top:84px; left:120px; }
+  .cover-mark .wm{ font-family:'Bricolage Grotesque'; font-weight:800; font-size:34px; letter-spacing:-1px; }
+  .cover-mark .wm .dot{ color:var(--terra); }
+  .circ{ position:absolute; border-radius:50%; }
+  .c1{ width:520px; height:520px; right:-150px; top:-120px; background:var(--terra-tint); }
+  .c2{ width:200px; height:200px; right:330px; bottom:-60px; background:var(--sage-tint); }
+  .av-cover{ position:absolute; right:118px; top:50%; transform:translateY(-46%); width:312px; height:312px;
+    border-radius:50%; object-fit:cover; border:9px solid #fff; box-shadow:0 6px 16px rgba(36,27,21,.16); z-index:3; }
+  .cover-body{ margin-top:auto; position:relative; z-index:2; max-width:62%; }
+
+  /* cards */
+  .grid{ display:grid; gap:18px; margin-top:26px; }
+  .g3{ grid-template-columns:repeat(3,1fr); }
+  .card{ background:#fff; border:1px solid var(--line); border-radius:18px; padding:20px 22px 18px; }
+  .cream .card{ background:#FFFDFA; }
+  .chip{ width:46px; height:46px; border-radius:12px; background:var(--terra-tint); display:flex; align-items:center; justify-content:center; margin-bottom:11px; }
+  .chip svg{ width:24px; height:24px; stroke:var(--terra); fill:none; stroke-width:2.1; stroke-linecap:round; stroke-linejoin:round; }
+  .card h3{ font-family:'Bricolage Grotesque'; font-weight:700; font-size:19px; margin-bottom:5px; }
+  .card p{ font-size:14px; line-height:1.36; color:var(--muted); }
+
+  /* numbered */
+  .nums{ margin-top:30px; display:flex; flex-direction:column; gap:22px; max-width:1020px; }
+  .num{ display:flex; gap:20px; align-items:flex-start; }
+  .num .b{ flex:none; width:42px; height:42px; border-radius:50%; background:var(--terra); color:#fff;
+    font-family:'Bricolage Grotesque'; font-weight:800; font-size:20px; display:flex; align-items:center; justify-content:center; }
+  .num p{ font-size:21px; line-height:1.45; color:var(--ink); padding-top:5px; }
+  .punch{ margin-top:28px; font-family:'Bricolage Grotesque'; font-weight:700; font-size:24px; color:var(--terra); }
+
+  /* callout */
+  .callout{ background:var(--terra-tint); border-left:6px solid var(--terra); border-radius:0 14px 14px 0; padding:22px 26px; }
+  .callout b{ font-family:'Bricolage Grotesque'; font-weight:700; font-size:23px; line-height:1.3; }
+
+  /* statement pts */
+  .pts{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; margin-top:34px; }
+  .pt .k{ font-family:'Bricolage Grotesque'; font-weight:800; color:var(--terra); font-size:19px; margin-bottom:8px; }
+  .pt p{ font-size:16px; line-height:1.5; color:var(--muted); }
+
+  /* split */
+  .split{ display:flex; gap:50px; align-items:center; }
+  .split .lft{ flex:1; } .split .rgt{ flex:1.05; }
+  .feat{ display:flex; gap:13px; margin-top:14px; font-size:16px; color:var(--ink); align-items:flex-start; }
+  .feat svg{ width:21px; height:21px; stroke:var(--sage); fill:none; stroke-width:2.4; flex:none; margin-top:3px; }
+
+  /* agenda mock */
+  .cal{ background:#fff; border:1px solid var(--line); border-radius:18px; padding:18px; box-shadow:0 5px 14px rgba(36,27,21,.10); }
+  .cal-h{ display:flex; gap:8px; margin-bottom:10px; }
+  .cal-h .t{ width:46px; } .cal-h .col{ flex:1; text-align:center; font-size:13px; font-weight:700; display:flex; align-items:center; justify-content:center; gap:6px; }
+  .cal-h .col .d{ width:9px; height:9px; border-radius:50%; }
+  .cal-row{ display:flex; gap:8px; align-items:stretch; height:52px; }
+  .cal-row .t{ width:46px; font-size:12px; color:#9a8f80; }
+  .cal-row .col{ flex:1; border-top:1px solid #f0e7d8; position:relative; }
+  .blk{ position:absolute; left:3px; right:3px; top:4px; bottom:4px; border-radius:9px; padding:7px 9px; font-size:12px; font-weight:600; color:#fff; line-height:1.25; }
+
+  /* whatsapp mockup */
+  .wa-split{ display:flex; gap:54px; align-items:center; margin-top:6px; }
+  .wa-split .lft{ flex:1; } .wa-split .rgt{ flex:none; width:330px; display:flex; justify-content:center; }
+  .phone{ width:322px; border:10px solid #16120e; border-radius:42px; overflow:hidden; background:#ECE5DD; box-shadow:0 6px 16px rgba(36,27,21,.16); }
+  .wa-head{ background:#075E54; color:#fff; padding:11px 14px; display:flex; align-items:center; gap:10px; }
+  .wa-head .bk{ font-size:20px; opacity:.85; }
+  .wa-head img{ width:38px; height:38px; border-radius:50%; object-fit:cover; }
+  .wa-head .nm{ font-weight:700; font-size:15px; line-height:1.15; }
+  .wa-head .st{ font-size:11px; color:#bfe9dd; }
+  .wa-body{ padding:14px 12px 10px; display:flex; flex-direction:column; gap:8px; background:#ECE5DD; }
+  .bubble{ max-width:82%; padding:8px 11px; border-radius:11px; font-size:13px; line-height:1.38; box-shadow:0 1px 1px rgba(0,0,0,.08); }
+  .bubble.in{ background:#fff; align-self:flex-start; border-top-left-radius:3px; }
+  .bubble.out{ background:#DCF8C6; align-self:flex-end; border-top-right-radius:3px; }
+  .bubble .tm{ display:block; font-size:9.5px; color:#7c8a82; text-align:right; margin-top:2px; }
+  .wa-input{ display:flex; align-items:center; gap:8px; padding:9px 12px 11px; background:#ECE5DD; }
+  .wa-input .box{ flex:1; background:#fff; border-radius:18px; padding:8px 12px; font-size:12px; color:#aaa; }
+  .wa-input .snd{ width:32px; height:32px; border-radius:50%; background:#075E54; flex:none; display:flex;align-items:center;justify-content:center; }
+  .wa-input .snd svg{ width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.4; }
+
+  /* flow diagram */
+  .flow{ display:flex; align-items:flex-start; justify-content:space-between; margin-top:48px; }
+  .fstep{ width:21%; text-align:center; }
+  .fcirc{ width:88px; height:88px; border-radius:50%; background:var(--terra-tint); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; position:relative; }
+  .fcirc svg{ width:38px; height:38px; stroke:var(--terra); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .fcirc .bdg{ position:absolute; top:-4px; right:-4px; width:28px;height:28px;border-radius:50%; background:var(--ink); color:#fff; font-family:'Bricolage Grotesque'; font-weight:800; font-size:14px; display:flex;align-items:center;justify-content:center; }
+  .fstep h4{ font-family:'Bricolage Grotesque'; font-weight:700; font-size:18px; margin-bottom:6px; }
+  .fstep p{ font-size:14px; color:var(--muted); line-height:1.4; }
+  .farrow{ flex:none; width:4%; text-align:center; padding-top:30px; color:#e0b59a; font-size:30px; font-weight:300; }
+
+  /* donut */
+  .donut{ width:178px; height:178px; border-radius:50%; flex:none;
+    background:conic-gradient(var(--terra) 0 33%, #E7D8C3 33% 100%); display:flex; align-items:center; justify-content:center; }
+  .donut .hole{ width:116px; height:116px; border-radius:50%; background:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .donut .hole .b{ font-family:'Bricolage Grotesque'; font-weight:800; font-size:32px; color:var(--ink); line-height:1; }
+  .donut .hole .s{ font-size:11px; color:var(--muted); margin-top:3px; letter-spacing:.5px; }
+  .leg{ margin-top:16px; font-size:13px; color:var(--muted); display:flex; flex-direction:column; gap:7px; }
+  .leg .it{ display:flex; align-items:center; gap:8px; }
+  .leg .sw{ width:12px; height:12px; border-radius:3px; }
+
+  /* indicadores */
+  .ind-split{ display:flex; gap:30px; margin-top:24px; align-items:stretch; }
+  .chart{ flex:none; width:372px; background:#FFFDFA; border:1px solid var(--line); border-radius:18px; padding:20px 26px 22px; }
+  .chart .ct{ font-size:14px; font-weight:700; color:var(--ink); margin-bottom:6px; }
+  .chart .csub{ font-size:12px; color:var(--muted); margin-bottom:16px; }
+  .bars{ display:flex; align-items:flex-end; gap:46px; height:150px; padding-left:8px; }
+  .barwrap{ display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; }
+  .bar2{ width:78px; border-radius:10px 10px 0 0; display:flex; align-items:flex-start; justify-content:center; color:#fff; font-family:'Bricolage Grotesque'; font-weight:800; font-size:17px; padding-top:7px; }
+  .barlbl{ font-size:12px; color:var(--muted); margin-top:9px; text-align:center; line-height:1.25; }
+  .ind-right{ flex:1; display:flex; flex-direction:column; gap:14px; }
+  .kpis2{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+  .kpi2{ background:#FFFDFA; border:1px solid var(--line); border-radius:14px; padding:15px 17px; }
+  .kpi2 .n{ font-family:'Bricolage Grotesque'; font-weight:800; font-size:30px; color:var(--terra); line-height:1; letter-spacing:-.5px; }
+  .kpi2 .lbl{ font-size:12.5px; color:var(--muted); margin-top:6px; line-height:1.3; }
+  .roiband{ background:var(--ink); color:#fff; border-radius:14px; padding:16px 22px; }
+  .roiband .big{ font-family:'Bricolage Grotesque'; font-weight:800; font-size:18px; line-height:1.3; }
+  .roiband .big .hl{ color:#F7B58E; }
+  .fnote{ margin-top:14px; font-size:12px; color:#a99c8b; }
+
+  /* planos */
+  .plans{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:34px; }
+  .plan{ background:#FFFDFA; border:1px solid var(--line); border-radius:18px; padding:26px 24px; }
+  .cream .plan{ background:#fff; }
+  .plan.feat{ border:2px solid var(--terra); position:relative; }
+  .plan .badge{ position:absolute; top:-12px; left:24px; background:var(--terra); color:#fff; font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; }
+  .plan .nm{ font-size:14px; font-weight:700; letter-spacing:1px; }
+  .plan .pr{ font-family:'Bricolage Grotesque'; font-weight:800; font-size:38px; color:var(--terra); margin:8px 0 2px; }
+  .plan .pr span{ font-size:16px; color:#9a8f80; font-weight:600; }
+  .plan .lim{ font-size:14px; color:var(--muted); padding-bottom:13px; border-bottom:1px solid var(--line); margin-bottom:13px; }
+  .plan ul{ list-style:none; } .plan li{ font-size:13.5px; padding:4px 0 4px 20px; position:relative; }
+  .plan li::before{ content:'✓'; position:absolute; left:0; color:var(--sage); font-weight:800; }
+  .note{ font-size:15px; color:var(--muted); } .note b{ color:var(--ink); }
+
+  /* CTA */
+  .av-cta{ position:absolute; right:120px; top:50%; transform:translateY(-50%); width:240px; height:240px;
+    border-radius:50%; object-fit:cover; border:8px solid rgba(255,255,255,.5); }
+  .cta-contact{ margin-top:30px; display:flex; flex-direction:column; gap:9px; font-size:19px; max-width:60%; }
+  .cta-contact .row span{ display:inline-block; width:120px; color:#F7D9C7; font-weight:600; }
+  .cta-contact .row b{ font-weight:700; }
+</style>
+</head>
+<body>
+
+  <!-- 1 CAPA -->
+  <div class="slide cream">
+    <div class="circ c1"></div><div class="circ c2"></div>
+    <img class="av-cover" src="../../lena-site/assets/lena-avatar-1024.png" alt="Lena">
+    <div class="cover-mark">
+      <svg class="seal" style="width:38px;height:38px" viewBox="0 0 512 512"><rect x="16" y="16" width="480" height="480" rx="132" fill="#D9613A"/><path d="M198 132 V292 C198 356 238 384 296 380 C338 377 360 356 366 324" stroke="#FBF3E7" stroke-width="64" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="372" cy="300" r="40" fill="#4E9E78"/></svg>
+      <div class="wm">lena<span class="dot">.</span></div>
+    </div>
+    <div class="cover-body">
+      <div class="kicker">Recepcionista virtual com IA</div>
+      <h1>Atende e agenda seus clientes <span class="hl">24 horas por dia</span>, no WhatsApp.</h1>
+      <p class="lead" style="max-width:100%">Ela responde na hora, agenda sozinha e organiza tudo num painel pra você. Sem robô de menuzinho, sem ninguém preso no celular.</p>
+    </div>
+    <div class="foot"><div class="l"><svg class="seal" viewBox="0 0 512 512"><rect x="16" y="16" width="480" height="480" rx="132" fill="#D9613A"/><path d="M198 132 V292 C198 356 238 384 296 380 C338 377 360 356 366 324" stroke="#FBF3E7" stroke-width="64" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="372" cy="300" r="40" fill="#4E9E78"/></svg> lena.ia.br</div><div class="r">Apresentação comercial</div></div>
+  </div>
+
+  <!-- 2 PROBLEMA -->
+  <div class="slide white">
+    <div class="kicker">O que acontece hoje</div>
+    <h2>O seu cliente <span class="hl">não espera</span>. Quem responde primeiro, vende.</h2>
+    <div class="split" style="margin-top:30px">
+      <div class="lft">
+        <p class="lead" style="max-width:100%">As pessoas mandam mensagem a qualquer hora: à noite, no fim de semana, no intervalo do trabalho. Quando a dúvida sobre horário, valor ou disponibilidade fica sem resposta, o cliente fecha com quem respondeu primeiro. E quem agenda e não recebe lembrete, falta.</p>
+        <div class="callout" style="margin-top:24px"><b>Cada mensagem sem resposta e cada falta é dinheiro saindo do caixa.</b></div>
+      </div>
+      <div class="rgt" style="flex:none; width:300px; display:flex; flex-direction:column; align-items:center">
+        <div class="donut"><div class="hole"><div class="b">8h</div><div class="s">ABERTO/DIA</div></div></div>
+        <div class="leg">
+          <div class="it"><span class="sw" style="background:#D9613A"></span> Horário comercial (cerca de 8h)</div>
+          <div class="it"><span class="sw" style="background:#E7D8C3"></span> As outras 16h o cliente continua mandando</div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><div class="l"><svg class="seal" viewBox="0 0 512 512"><rect x="16" y="16" width="480" height="480" rx="132" fill="#D9613A"/><path d="M198 132 V292 C198 356 238 384 296 380 C338 377 360 356 366 324" stroke="#FBF3E7" stroke-width="64" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="372" cy="300" r="40" fill="#4E9E78"/></svg> lena.ia.br</div><div class="r">Recepcionista virtual com IA</div></div>
+  </div>
+
+  <!-- 3 VEJA A LENA EM ACAO (WHATSAPP) -->
+  <div class="slide cream">
+    <div class="kicker">Veja a Lena em ação</div>
+    <h2>Do <span class="hl">"oi"</span> ao agendamento, sozinha.</h2>
+    <div class="wa-split">
+      <div class="lft">
+        <div class="feat"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Entende o que o cliente quer e responde na hora</div>
+        <div class="feat"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Oferece os horários livres de verdade, em tempo real</div>
+        <div class="feat"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Confirma o agendamento e já avisa que vai lembrar</div>
+        <div class="feat"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Tom acolhedor, em português natural, com a cara do seu negócio</div>
+      </div>
+      <div class="rgt">
+        <div class="phone">
+          <div class="wa-head">
+            <span class="bk">&#8249;</span>
+            <img src="../../lena-site/assets/lena-avatar-1024.png" alt="Lena">
+            <div><div class="nm">Lena</div><div class="st">online agora</div></div>
+          </div>
+          <div class="wa-body">
+            <div class="bubble in">Oi! Vocês têm horário pra amanhã à tarde?<span class="tm">14:02</span></div>
+            <div class="bubble out">Oi! 😊 Amanhã tenho 14h, 15h30 e 16h. Qual fica melhor pra você?<span class="tm">14:02</span></div>
+            <div class="bubble in">15h30 👍<span class="tm">14:03</span></div>
+            <div class="bubble out">Fechado! Agendei pra amanhã às 15h30 e te lembro um dia antes. Posso ajudar em mais alguma coisa?<span class="tm">14:03</span></div>
+          </div>
+          <div class="wa-input"><div class="box">Mensagem</div><div class="snd"><svg viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7Z"/></svg></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><div class="l"><svg class="seal" viewBox="0 0 512 512"><rect x="16" y="16" width="480" height="480" rx="132" fill="#D9613A"/><path d="M198 132 V292 C198 356 238 384 296 380 C338 377 360 356 366 324" stroke="#FBF3E7" stroke-width="64" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="372" cy="300" r="40" fill="#4E9E78"/></svg> lena.ia.br</div><div class="r">Conversa de exemplo</div></div>
+  </div>
+
+  <!-- 4 SOLUCAO -->
+  <div class="slide white">
+    <div class="kicker">A solução</div>
+    <h2>A Lena <span class="hl">resolve</span>, não enrola.</h2>
+    <div class="grid g3">
+      <div class="card"><div class="chip"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><h3>Responde na hora, 24h</h3><p>Tira dúvidas sobre serviços, valores e horários a qualquer momento, sem deixar ninguém no vácuo.</p></div>
+      <div class="card"><div class="chip"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></div><h3>Agenda sozinha</h3><p>Consulta os horários livres, oferece, confirma e bloqueia em tempo real. Sem dupla marcação.</p></div>
+      <div class="card"><div class="chip"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12 7.7L3 21l1.8-6A8.5 8.5 0 1 1 21 11.5Z"/></svg></div><h3>Conversa natural</h3><p>Fala português de gente, com o tom do seu negócio. Não é robô de menuzinho e nunca inventa.</p></div>
+      <div class="card"><div class="chip"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z"/><path d="M9 12l2 2 4-4"/></svg></div><h3>Treinada com você</h3><p>Aprende as informações reais do seu negócio. As respostas saem certas porque são as suas.</p></div>
+      <div class="card"><div class="chip"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/></svg></div><h3>Qualifica e transfere</h3><p>Filtra o interessado e, quando o caso pede um humano, passa para a equipe com um resumo.</p></div>
+      <div class="card"><div class="chip"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9Z"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg></div><h3>Lembra e confirma</h3><p>Avisa o cliente antes do compromisso e reduz as faltas. Remarca ou cancela com uma mensagem.</p></div>
+    </div>
+    <div class="foot"><div class="l"><svg class="seal" viewBox="0 0 512 512"><rect x="16" y="16" width="480" height="480" rx="132" fill="#D9613A"/><path d="M198 132 V292 C198 356 238 384 296 380 C338 377 360 356 366 324" stroke="#FBF3E7" stroke-width="64" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="372" cy="300" r="40" fill="#4E9E78"/></svg> lena.ia.br</div><div class="r">Recepcionista virtual com IA</div></div>
+  </div>
+
+  <!-- 5 COMO A LENA TRABALHA (FLUXO) -->
+  <div class="slide cream">
+    <div class="kicker">Como a Lena trabalha</div>
+    <h2>Quatro passos, <span class="hl">do contato à venda.</span></h2>
+    <div class="flow">
+      <div class="fstep">
+        <div class="fcirc"><span class="bdg">1</span><svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12 7.7L3 21l1.8-6A8.5 8.5 0 1 1 21 11.5Z"/></svg></div>
+        <h4>Cliente chama</h4><p>Manda mensagem no WhatsApp, a qualquer hora do dia ou da noite.</p>
+      </div>
+      <div class="farrow">&#10142;</div>
+      <div class="fstep">
+        <div class="fcirc"><span class="bdg">2</span><svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M6 6l2 2M16 16l2 2M18 6l-2 2M8 16l-2 2"/><circle cx="12" cy="12" r="4"/></svg></div>
+        <h4>A Lena entende</h4><p>A IA lê o pedido, responde a dúvida e conduz a conversa com naturalidade.</p>
+      </div>
+      <div class="farrow">&#10142;</div>
+      <div class="fstep">
+        <div class="fcirc"><span class="bdg">3</span><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M9 14l2 2 4-4"/></svg></div>
+        <h4>Agenda e confirma</h4><p>Oferece o horário livre, marca na agenda e avisa que vai lembrar.</p>
+      </div>
+      <div class="farrow">&#10142;</div>
+      <div class="fstep">
+        <div class="fcirc"><span class="bdg">4</span><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg></div>
+        <h4>Você acompanha</h4><p>Tudo cai no seu painel: conversas, agendamentos e os números do negócio.</p>
+      </div>
+    </div>
+    <div class="foot"><div class="l"><svg class="seal" viewBox="0 0 512 512"><rect x="16" y="16" width="480" height="480" rx="132" fill="#D9613A"/><path d="M198 132 V292 C198 356 238 384 296 380 C338 377 360 356 366 324" stroke="#FBF3E7" stroke-width="64" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="372" cy="300" r="40" fill="#4E9E78"/></svg> lena.ia.br</div><div class="r">Como funciona</div></div>
+  </div>
+
+  <!-- 6 IA -->
+  <div class="slide white">
+    <div class="kicker">Inteligência de verdade</div>
+    <h2>Movida por <span class="hl">IA de última geração</span> que aprende o seu negócio.</h2>
+    <p class="lead">A Lena entende o que o cliente quer dizer, se adapta ao jeito de cada pessoa e melhora com o tempo. Quanto mais ela conhece o seu negócio, melhor conversa com seus clientes e mais ela te ajuda a vender.</p>
+    <div class="pts">
+      <div class="pt"><div class="k">Se adapta ao cliente</div><p>Lê o contexto da conversa e responde no tom certo, seja uma dúvida rápida ou um cliente indeciso.</p></div>
+      <div class="pt"><div class="k">Aprendizado contínuo</div><p>Cada interação refina o atendimento. Ela fica mais afiada conforme o seu negócio cresce.</p></div>
+      <div class="pt"><div class="k">Ajuda a vender</div><p>Não só informa: conduz o cliente até o agendamento e abre espaço para oferecer seus serviços.</p></div>
+    </div>
+    <div class="foot"><div class="l"><svg class="seal" viewBox="0 0 512 512"><rect x="16" y="16" width="480" height="480" rx="132" fill="#D9613A"/><path d="M198 132 V292 C198 356 238 384 296 380 C338 377 360 356 366 324" stroke="#FBF3E7" stroke-width="64" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="372" cy="300" r="40" fill="#4E9E78"/></svg> lena.ia.br</div><div class="r">Recepcionista virtual com IA</div></div>
+  </div>
+
+  <!-- 7 VOCE NO CONTROLE -->
+  <div class="slide cream">
+    <div class="kicker">Você no controle</div>
+    <h2>Não é uma caixa-preta. <span class="hl">A Lena é sua.</span></h2>
+    <p class="lead">Um painel completo pra você comandar tudo, sem depender de ninguém e sem entender de tecnologia.</p>
+    <div class="grid" style="grid-template-columns:repeat(4,1fr); margin-top:30px;">
+      <div class="card"><div class="chip"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg></div><h3>Painel e relatórios</h3><p>Veja conversas, agendamentos e o desempenho do atendimento em um lugar.</p></div>
+      <div class="card"><div class="chip"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg></div><h3>Controle das informações</h3><p>Edite serviços, horários e respostas quando quiser. Mudou o preço? Atualiza na hora.</p></div>
+      <div class="card"><div class="chip"><svg viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3"/><circle cx="4" cy="12" r="2"/><circle cx="12" cy="10" r="2"/><circle cx="20" cy="14" r="2"/></svg></div><h3>Tom de voz</h3><p>Escolhe como a Lena fala: mais formal ou mais próxima, com a cara do negócio.</p></div>
+      <div class="card"><div class="chip"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z"/><path d="M12 8v4M12 15.5v.5"/></svg></div><h3>Restrições e limites</h3><p>Define o que ela pode e não pode falar, e quando deve chamar uma pessoa.</p></div>
+    </div>
+    <div class="foot"><div class="l"><svg class="seal" viewBox="0 0 512 512"><rect x="16" y="16" width="480" height="480" rx="132" fill="#D9613A"/><path d="M198 132 V292 C198 356 238 384 296 380 C338 377 360 356 366 324" stroke="#FBF3E7" stroke-width="64" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="372" cy="300" r="40" fill="#4E9E78"/></svg> lena.ia.br</div><div class="r">Gestão da Lena</div></div>
+  </div>
+
+  <!-- 8 AGENDA -->
+  <div class="slide white">
+    <div class="kicker">Agenda em tempo real</div>
+    <h2>Vários profissionais, <span class="hl">zero dupla marcação.</span></h2>
+    <div class="split" style="margin-top:24px">
+      <div class="lft">
+        <p class="lead" style="max-width:100%">A Lena marca direto na agenda do seu negócio e você acompanha tudo ao vivo, por dia, semana ou mês.</p>
+        <div class="feat"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Marcações por profissional, cada um com sua cor</div>
+        <div class="feat"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Mesmo horário com profissionais diferentes, sem conflito</div>
+        <div class="feat"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Trava automática que impede agendar duas vezes no mesmo lugar</div>
+        <div class="feat"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Dias especiais, folgas e horários extras com poucos cliques</div>
+      </div>
+      <div class="rgt">
+        <div class="cal">
+          <div class="cal-h"><div class="t"></div>
+            <div class="col"><span class="d" style="background:#D9613A"></span>Ana</div>
+            <div class="col"><span class="d" style="background:#4E9E78"></span>Bruno</div>
+            <div class="col"><span class="d" style="background:#C9A227"></span>Carla</div>
+          </div>
+          <div class="cal-row"><div class="t">09h</div>
+            <div class="col"><div class="blk" style="background:#D9613A">Corte<br>Ana</div></div>
+            <div class="col"></div>
+            <div class="col"><div class="blk" style="background:#C9A227">Avaliação<br>Carla</div></div>
+          </div>
+          <div class="cal-row"><div class="t">10h</div>
+            <div class="col"></div>
+            <div class="col"><div class="blk" style="background:#4E9E78">Consulta<br>Bruno</div></div>
+            <div class="col"></div>
+          </div>
+          <div class="cal-row"><div class="t">11h</div>
+            <div class="col"><div class="blk" style="background:#D9613A">Retorno<br>Ana</div></div>
+            <div class="col"><div class="blk" style="background:#4E9E78">Encaixe<br>Bruno</div></div>
+            <div class="col"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><div class="l"><svg class="seal" viewBox="0 0 512 512"><rect x="16" y="16" width="480" height="480" rx="132" fill="#D9613A"/><path d="M198 132 V292 C198 356 238 384 296 380 C338 377 360 356 366 324" stroke="#FBF3E7" stroke-width="64" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="372" cy="300" r="40" fill="#4E9E78"/></svg> lena.ia.br</div><div class="r">Gestão da Lena</div></div>
+  </div>
+
+  <!-- 9 NAO E SO ROBO -->
+  <div class="slide cream">
+    <div class="kicker">Por que não é só mais um robô</div>
+    <h2>Feita pra parecer <span class="hl">parte da equipe</span>, não uma máquina.</h2>
+    <div class="nums">
+      <div class="num"><div class="b">1</div><p><b>Treinada com as informações reais do negócio.</b> Quando não sabe, ela não inventa: transfere para a equipe.</p></div>
+      <div class="num"><div class="b">2</div><p><b>Fala como gente,</b> com o tom que o seu cliente espera desde o primeiro olá.</p></div>
+      <div class="num"><div class="b">3</div><p><b>Funciona em poucos dias,</b> sem a equipe precisar entender de tecnologia.</p></div>
+    </div>
+    <div class="punch">A mesma atenção de portas abertas, às 22h ou num domingo.</div>
+    <div class="foot"><div class="l"><svg class="seal" viewBox="0 0 512 512"><rect x="16" y="16" width="480" height="480" rx="132" fill="#D9613A"/><path d="M198 132 V292 C198 356 238 384 296 380 C338 377 360 356 366 324" stroke="#FBF3E7" stroke-width="64" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="372" cy="300" r="40" fill="#4E9E78"/></svg> lena.ia.br</div><div class="r">Recepcionista virtual com IA</div></div>
+  </div>
+
+  <!-- 10 CASOS DE USO -->
+  <div class="slide white">
+    <div class="kicker">Feita para o seu negócio</div>
+    <h2>Uma Lena, <span class="hl">vários negócios</span> atendidos com excelência.</h2>
+    <div class="grid" style="grid-template-columns:repeat(5,1fr); margin-top:28px;">
+      <div class="card"><div class="chip"><svg viewBox="0 0 24 24"><path d="M3 9l9-5 9 5-9 5-9-5Z"/><path d="M7 11v5c0 1 2 2 5 2s5-1 5-2v-5"/></svg></div><h3>Escolas</h3><p>Matrícula, vagas e valores. Agenda visitas fora do horário.</p></div>
+      <div class="card"><div class="chip"><svg viewBox="0 0 24 24"><path d="M12 3v6M9 6h6"/><rect x="4" y="9" width="16" height="11" rx="2"/></svg></div><h3>Clínicas</h3><p>Confirma e lembra consultas, corta faltas, agenda 24h.</p></div>
+      <div class="card"><div class="chip"><svg viewBox="0 0 24 24"><path d="M6 3v6a6 6 0 0 0 12 0V3"/><path d="M12 15v6"/></svg></div><h3>Salões e estética</h3><p>Agenda de cada profissional e chama de volta quem sumiu.</p></div>
+      <div class="card"><div class="chip"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="5"/><path d="M5 8c-1-2-1-4 0-4s2 2 1 4M19 8c1-2 1-4 0-4s-2 2-1 4"/></svg></div><h3>Petshops</h3><p>Banho e tosa e lembra da recorrência mensal do pet.</p></div>
+      <div class="card"><div class="chip"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div><h3>Escritórios</h3><p>Filtra contatos, responde dúvidas e marca reuniões.</p></div>
+    </div>
+    <p class="note" style="margin-top:24px"><b>Pensada por padrão de atendimento, não por ramo:</b> se o seu negócio atende e agenda pelo WhatsApp, a Lena se encaixa.</p>
+    <div class="foot"><div class="l"><svg class="seal" viewBox="0 0 512 512"><rect x="16" y="16" width="480" height="480" rx="132" fill="#D9613A"/><path d="M198 132 V292 C198 356 238 384 296 380 C338 377 360 356 366 324" stroke="#FBF3E7" stroke-width="64" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="372" cy="300" r="40" fill="#4E9E78"/></svg> lena.ia.br</div><div class="r">Casos de uso</div></div>
+  </div>
+
+  <!-- 11 INDICADORES / ROI -->
+  <div class="slide cream">
+    <div class="kicker">Quanto você ganha</div>
+    <h2>O retorno aparece já <span class="hl">nas primeiras semanas.</span></h2>
+    <div class="ind-split">
+      <div class="chart">
+        <div class="ct">Faltas por mês</div>
+        <div class="csub">com lembrete e confirmação automáticos</div>
+        <div class="bars">
+          <div class="barwrap"><div class="bar2" style="height:130px; background:#C9B7A2">100%</div><div class="barlbl">Sem a Lena</div></div>
+          <div class="barwrap"><div class="bar2" style="height:65px; background:#D9613A">~50%</div><div class="barlbl">Com a Lena</div></div>
+        </div>
+      </div>
+      <div class="ind-right">
+        <div class="kpis2">
+          <div class="kpi2"><div class="n">24h</div><div class="lbl">de atendimento, todos os dias</div></div>
+          <div class="kpi2"><div class="n">segundos</div><div class="lbl">de tempo de resposta</div></div>
+          <div class="kpi2"><div class="n">100%</div><div class="lbl">das mensagens respondidas</div></div>
+          <div class="kpi2"><div class="n">0</div><div class="lbl">cliente deixado no vácuo</div></div>
+        </div>
+        <div class="roiband"><div class="big">Uma venda recuperada ou uma falta evitada por semana <span class="hl">já paga a Lena.</span></div></div>
+      </div>
+    </div>
+    <div class="fnote">Estimativas de referência. O resultado varia conforme o volume e o tipo de cada negócio.</div>
+    <div class="foot"><div class="l"><svg class="seal" viewBox="0 0 512 512"><rect x="16" y="16" width="480" height="480" rx="132" fill="#D9613A"/><path d="M198 132 V292 C198 356 238 384 296 380 C338 377 360 356 366 324" stroke="#FBF3E7" stroke-width="64" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="372" cy="300" r="40" fill="#4E9E78"/></svg> lena.ia.br</div><div class="r">Retorno do investimento</div></div>
+  </div>
+
+  <!-- 12 PLANOS -->
+  <div class="slide white">
+    <div class="kicker">Planos</div>
+    <h2>A partir de <span class="hl">R$ 333 por mês</span>. Sem fidelidade.</h2>
+    <div class="plans">
+      <div class="plan"><div class="nm">ESSENCIAL</div><div class="pr">R$ 333<span>/mês</span></div><div class="lim">até 500 conversas/mês</div><ul><li>Atendimento e dúvidas</li><li>Agendamento</li><li>Lembretes</li></ul></div>
+      <div class="plan feat"><div class="badge">mais escolhido</div><div class="nm">PROFISSIONAL</div><div class="pr">R$ 750<span>/mês</span></div><div class="lim">até 1.500 conversas/mês</div><ul><li>Tudo do Essencial</li><li>Qualificação de leads</li><li>Integração de agenda</li><li>Suporte 24h</li></ul></div>
+      <div class="plan"><div class="nm">PREMIUM</div><div class="pr">R$ 1.500<span>/mês</span></div><div class="lim">até 4.000 conversas/mês</div><ul><li>Tudo do Profissional</li><li>WhatsApp, Instagram e site</li><li>Relatórios semanais</li></ul></div>
+    </div>
+    <p class="note" style="margin-top:22px">Valores no plano anual (equivale a 2 meses grátis). Mensal sem fidelidade também disponível. Implantação a partir de R$ 1.500.</p>
+    <div class="foot"><div class="l"><svg class="seal" viewBox="0 0 512 512"><rect x="16" y="16" width="480" height="480" rx="132" fill="#D9613A"/><path d="M198 132 V292 C198 356 238 384 296 380 C338 377 360 356 366 324" stroke="#FBF3E7" stroke-width="64" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="372" cy="300" r="40" fill="#4E9E78"/></svg> lena.ia.br</div><div class="r">Planos</div></div>
+  </div>
+
+  <!-- 13 CTA -->
+  <div class="slide terra">
+    <img class="av-cta" src="../../lena-site/assets/lena-avatar-1024.png" alt="Lena">
+    <div class="kicker">Próximo passo</div>
+    <h1 style="max-width:58%">Vamos colocar a Lena pra atender o seu negócio?</h1>
+    <p class="lead" style="max-width:56%">Uma conversa rápida, sem compromisso. Em poucos dias ela já está respondendo e agendando os seus clientes.</p>
+    <div class="cta-contact">
+      <div class="row"><span>Falar com</span><b>Roberto Cardano</b></div>
+      <div class="row"><span>WhatsApp</span><b>(11) 99860-2717</b></div>
+      <div class="row"><span>Site</span><b>lena.ia.br</b></div>
+      <div class="row"><span>E-mail</span><b>contato@lena.ia.br</b></div>
+    </div>
+    <div class="foot"><div class="l">lena.ia.br</div><div class="r">AVERSE</div></div>
+  </div>
+
+</body>
+</html>
