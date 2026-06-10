@@ -30,3 +30,11 @@ lead-generator/logs/
 
 # Protótipos de design (mantidos apenas localmente)
 prototipos/
+
+# Referências e protótipos locais (não publicar)
+prototipos-gitignore/
+_ref/
+
+# Screenshots temporários de preview do site
+lena-site/_*.png
+lena-site/_*.html
