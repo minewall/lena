@@ -13,7 +13,6 @@ import {
   IconSettings,
   IconTarget,
   IconUsers,
-  LenaSelo,
 } from "./icons";
 
 /** Rotas que ocupam a área inteira (sem container nem breadcrumb). */
@@ -108,7 +107,11 @@ export function Layout() {
       {/* ── Sidebar café ─────────────────────────────────────────────── */}
       <aside className="flex flex-col gap-4 bg-cafe px-3.5 py-5 text-creme">
         <Link to="/" className="flex items-center gap-2.5 px-2">
-          <LenaSelo size={28} />
+          <img
+            src="/lena-avatar.png"
+            alt="Lena"
+            className="h-8 w-8 rounded-full object-cover ring-2 ring-terracota/60"
+          />
           <span className="font-display text-[21px] font-bold tracking-tight">
             lena<span className="text-terracota">.</span>
           </span>
