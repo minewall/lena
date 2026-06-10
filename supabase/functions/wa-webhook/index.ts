@@ -144,6 +144,7 @@ Deno.serve(async (req) => {
             method: "POST",
             headers: {
               Authorization: `Bearer ${env.supabaseServiceRoleKey}`,
+              apikey: env.supabaseServiceRoleKey,
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ webhook_event_id: id }),

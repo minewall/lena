@@ -77,9 +77,14 @@ interface InboundContext {
 Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method not allowed" }, 405);
 
+  // Aceita a service key como Bearer (formato JWT legado) ou no header
+  // apikey (formato novo sb_secret_..., que o gateway não trata como JWT).
+  const srk = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   const auth = req.headers.get("authorization");
-  const expected = `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`;
-  if (auth !== expected) return json({ error: "forbidden" }, 403);
+  const apikey = req.headers.get("apikey");
+  if (auth !== `Bearer ${srk}` && apikey !== srk) {
+    return json({ error: "forbidden" }, 403);
+  }
 
   let body: { webhook_event_id?: string };
   try {

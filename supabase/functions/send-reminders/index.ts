@@ -34,8 +34,10 @@ interface ApptRow {
 
 Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "method not allowed" }, 405);
+  const srk = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   const auth = req.headers.get("authorization");
-  if (auth !== `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`) {
+  const apikey = req.headers.get("apikey");
+  if (auth !== `Bearer ${srk}` && apikey !== srk) {
     return json({ error: "forbidden" }, 403);
   }
 
