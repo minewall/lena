@@ -13,6 +13,7 @@ const navItems: {
   { to: "/agenda", label: "Agenda" },
   { to: "/cerebro", label: "Cérebro da Lena", adminOnly: true },
   { to: "/prospeccao", label: "Prospecção", platformOnly: true },
+  { to: "/averse/tenants", label: "Tenants", platformOnly: true },
   { to: "/configuracoes", label: "Configurações", adminOnly: true },
 ];
 

@@ -21,6 +21,8 @@ import { Login } from "./pages/Login";
 import { Prospeccao } from "./pages/Prospeccao";
 import { ClientesPage } from "./pages/Clientes";
 import { ClientePerfil } from "./pages/Clientes/Perfil";
+import { AverseTenants } from "./pages/Averse/Tenants";
+import { AverseTenantPerfil } from "./pages/Averse/TenantPerfil";
 
 export function App() {
   return (
@@ -57,6 +59,8 @@ export function App() {
           <Route path="/conversas" element={<ConversasPage />} />
           <Route path="/agenda" element={<Agenda />} />
           <Route path="/prospeccao" element={<Prospeccao />} />
+          <Route path="/averse/tenants" element={<AverseTenants />} />
+          <Route path="/averse/tenants/:id" element={<AverseTenantPerfil />} />
           <Route
             path="/configuracoes"
             element={
