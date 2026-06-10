@@ -14,7 +14,7 @@ import { ConfiguracoesGeral } from "./pages/Configuracoes/Geral";
 import { ConfiguracoesLayout } from "./pages/Configuracoes/Layout";
 import { ConfiguracoesWhatsapp } from "./pages/Configuracoes/Whatsapp";
 import { ConversasPage } from "./pages/Conversas";
-import { Agenda } from "./pages/Agenda";
+import { Agenda } from "./pages/Agenda/index";
 import { CreateTenant } from "./pages/CreateTenant";
 import { Dashboard } from "./pages/Dashboard";
 import { Login } from "./pages/Login";
