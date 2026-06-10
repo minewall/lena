@@ -1,5 +1,5 @@
-import { type FormEvent, useEffect, useState } from "react";
-import { bookAppointmentManual } from "../../lib/agenda";
+import { type FormEvent, useEffect, useMemo, useState } from "react";
+import { bookAppointmentManual, type Availability } from "../../lib/agenda";
 import { type Staff } from "../../lib/staff";
 import { supabase } from "../../lib/supabase";
 import { Button, Field, Select, StatusPill, TextInput } from "../../components/ui";
@@ -23,6 +23,7 @@ interface Contact {
 interface Props {
   tenantId: string;
   staffList: Staff[];
+  availability?: Availability[];
   /** Slot pré-selecionado ao clicar no grid. */
   preselectedDate?: Date;
   preselectedTime?: string;   // "HH:MM"
@@ -36,9 +37,33 @@ function fmtPrice(cents: number | null): string {
   return ` · R$ ${(cents / 100).toFixed(2).replace(".", ",")}`;
 }
 
+/** Converte "HH:MM" → minutos desde meia-noite. */
+function timeToMins(t: string): number {
+  const [h, m] = t.split(":").map(Number);
+  return h * 60 + m;
+}
+
+/** Verifica se o slot (startMins, startMins+duration) está coberto por alguma janela do dia. */
+function isWithinAvailability(
+  avail: Availability[],
+  weekday: number,
+  startMins: number,
+  durationMins: number,
+): boolean {
+  const endMins = startMins + durationMins;
+  return avail.some(
+    (a) =>
+      a.weekday === weekday &&
+      a.active &&
+      a.start_minute <= startMins &&
+      a.end_minute >= endMins,
+  );
+}
+
 export function BookingModal({
   tenantId,
   staffList,
+  availability = [],
   preselectedDate,
   preselectedTime,
   preselectedStaffId,
@@ -61,6 +86,28 @@ export function BookingModal({
   const [duration, setDuration] = useState(60);
   const [state, setState] = useState<"idle" | "saving" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [outsideHoursWarning, setOutsideHoursWarning] = useState(false);
+
+  // Horário mínimo: se for hoje, não permite horário passado
+  const today = new Date().toISOString().slice(0, 10);
+  const minTime = useMemo(() => {
+    if (date !== today) return undefined;
+    const now = new Date();
+    // arredonda para o próximo slot de 5 min
+    const mins = now.getHours() * 60 + now.getMinutes() + 5;
+    const hh = String(Math.floor(mins / 60)).padStart(2, "0");
+    const mm = String(mins % 60).padStart(2, "0");
+    return `${hh}:${mm}`;
+  }, [date, today]);
+
+  // Detecta se o horário selecionado está fora do expediente configurado
+  const isOutsideHours = useMemo(() => {
+    if (!availability.length) return false;
+    const d = new Date(`${date}T${time}:00`);
+    const weekday = d.getDay();
+    const startMins = timeToMins(time);
+    return !isWithinAvailability(availability, weekday, startMins, duration);
+  }, [availability, date, time, duration]);
 
   useEffect(() => {
     db.from("tenant_services")
@@ -95,8 +142,23 @@ export function BookingModal({
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
+
+    // Bloqueia horário passado antes de chamar o backend
+    if (minTime && time < minTime) {
+      setErrorMsg("Este horário já passou. Escolha um horário futuro.");
+      setState("error");
+      return;
+    }
+
+    // Fora do expediente → pede confirmação (primeira tentativa mostra aviso)
+    if (isOutsideHours && !outsideHoursWarning) {
+      setOutsideHoursWarning(true);
+      return;
+    }
+
     setState("saving");
     setErrorMsg(null);
+    setOutsideHoursWarning(false);
     try {
       const startsAt = new Date(`${date}T${time}:00`);
       const result = await bookAppointmentManual(
@@ -184,19 +246,39 @@ export function BookingModal({
             <TextInput
               type="date"
               required
+              min={today}
               value={date}
-              onChange={(e) => setDate(e.target.value)}
+              onChange={(e) => { setDate(e.target.value); setOutsideHoursWarning(false); }}
             />
           </Field>
           <Field label="Horário">
             <TextInput
               type="time"
               required
+              min={minTime}
               value={time}
-              onChange={(e) => setTime(e.target.value)}
+              onChange={(e) => { setTime(e.target.value); setOutsideHoursWarning(false); }}
             />
           </Field>
         </div>
+
+        {/* Aviso fora do expediente — aparece ANTES do botão confirmar */}
+        {isOutsideHours && (
+          <div className={`rounded-xl px-3 py-2.5 text-sm ${
+            outsideHoursWarning
+              ? "border border-amber-300 bg-amber-50 text-amber-800"
+              : "bg-creme-edge text-cafe-soft"
+          }`}>
+            {outsideHoursWarning ? (
+              <>
+                ⚠️ <strong>Confirmar fora do horário?</strong> Este horário está fora do expediente
+                configurado. Clique em "Confirmar" para agendar mesmo assim.
+              </>
+            ) : (
+              <>🕐 Fora do horário comercial configurado.</>
+            )}
+          </div>
+        )}
 
         <div className="grid grid-cols-2 gap-3">
           <Field label="Serviço">
@@ -233,8 +315,16 @@ export function BookingModal({
         )}
 
         <div className="flex items-center justify-between gap-3">
-          <Button type="submit" disabled={state === "saving"}>
-            {state === "saving" ? "Agendando…" : "Confirmar agendamento"}
+          <Button
+            type="submit"
+            disabled={state === "saving"}
+            className={outsideHoursWarning ? "bg-amber-500 hover:bg-amber-600" : ""}
+          >
+            {state === "saving"
+              ? "Agendando…"
+              : outsideHoursWarning
+                ? "Confirmar mesmo assim"
+                : "Confirmar agendamento"}
           </Button>
           {errorMsg ? (
             <StatusPill kind="error">{errorMsg}</StatusPill>

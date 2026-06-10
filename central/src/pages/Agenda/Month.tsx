@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { addDays, isSameDay, startOfDay, type Appointment } from "../../lib/agenda";
+import { addDays, isSameDay, startOfDay, type Appointment, type Availability } from "../../lib/agenda";
 import { type Staff } from "../../lib/staff";
 import { AppointmentCard } from "./AppointmentCard";
 import { BookingModal } from "./BookingModal";
@@ -9,6 +9,7 @@ interface Props {
   monthStart: Date;    // 1º dia do mês
   appointments: Appointment[];
   staffList: Staff[];
+  availability: Availability[];
   onDayClick: (d: Date) => void;
   onChanged: () => void;
 }
@@ -20,6 +21,7 @@ export function AgendaMonth({
   monthStart,
   appointments,
   staffList,
+  availability,
   onDayClick,
   onChanged,
 }: Props) {
@@ -116,6 +118,7 @@ export function AgendaMonth({
         <BookingModal
           tenantId={tenantId}
           staffList={staffList}
+          availability={availability}
           preselectedDate={booking.date}
           onBooked={() => { setBooking(null); onChanged(); }}
           onClose={() => setBooking(null)}

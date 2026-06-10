@@ -4,6 +4,7 @@ import {
   isSameDay,
   startOfDay,
   type Appointment,
+  type Availability,
 } from "../../lib/agenda";
 import { type Staff } from "../../lib/staff";
 import { AppointmentCard } from "./AppointmentCard";
@@ -11,9 +12,10 @@ import { BookingModal } from "./BookingModal";
 
 interface Props {
   tenantId: string;
-  weekStart: Date;   // segunda-feira da semana
+  weekStart: Date;
   appointments: Appointment[];
   staffList: Staff[];
+  availability: Availability[];
   onDayClick: (d: Date) => void;
   onChanged: () => void;
 }

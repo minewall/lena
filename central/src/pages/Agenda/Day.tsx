@@ -4,6 +4,7 @@ import {
   moveAppointment,
   startOfDay,
   type Appointment,
+  type Availability,
 } from "../../lib/agenda";
 import { type Staff } from "../../lib/staff";
 import { AppointmentCard } from "./AppointmentCard";
@@ -31,6 +32,40 @@ function heightPx(appt: Appointment): number {
   return Math.max((dur / 30) * SLOT_H, SLOT_H * 0.6);
 }
 
+/* Agendamentos sobrepostos dividem a coluna em "lanes" lado a lado
+   (estilo Google Calendar) — essencial agora que a agenda permite paralelos. */
+function layoutLanes(appts: Appointment[]): Map<string, { lane: number; lanes: number }> {
+  const sorted = [...appts].sort((a, b) => a.starts_at.localeCompare(b.starts_at));
+  const result = new Map<string, { lane: number; lanes: number }>();
+  let cluster: { id: string; lane: number }[] = [];
+  let laneEnds: number[] = []; // fim (ms) do último appt em cada lane do cluster atual
+  let clusterEnd = -1;
+
+  const flush = () => {
+    for (const item of cluster) result.set(item.id, { lane: item.lane, lanes: laneEnds.length || 1 });
+    cluster = [];
+    laneEnds = [];
+    clusterEnd = -1;
+  };
+
+  for (const a of sorted) {
+    const s = new Date(a.starts_at).getTime();
+    const e = new Date(a.ends_at).getTime();
+    if (cluster.length && s >= clusterEnd) flush();
+    let lane = laneEnds.findIndex((end) => end <= s);
+    if (lane === -1) {
+      lane = laneEnds.length;
+      laneEnds.push(e);
+    } else {
+      laneEnds[lane] = e;
+    }
+    cluster.push({ id: a.id, lane });
+    clusterEnd = Math.max(clusterEnd, e);
+  }
+  flush();
+  return result;
+}
+
 // slots de 30min para os time-labels
 const TIME_LABELS: string[] = [];
 for (let h = START_HOUR; h <= END_HOUR; h++) {
@@ -43,10 +78,11 @@ interface Props {
   day: Date;
   appointments: Appointment[];
   staffList: Staff[];
+  availability: Availability[];
   onChanged: () => void;
 }
 
-export function AgendaDay({ tenantId, day, appointments, staffList, onChanged }: Props) {
+export function AgendaDay({ tenantId, day, appointments, staffList, availability, onChanged }: Props) {
   const [dragId, setDragId]     = useState<string | null>(null);
   const [overCol, setOverCol]   = useState<string | null>(null);   // staffId|"__none__"
   const [booking, setBooking]   = useState<{
@@ -95,6 +131,16 @@ export function AgendaDay({ tenantId, day, appointments, staffList, onChanged }:
     const minsFromStart = slotIndex * 30;
     const targetMins = START_HOUR * 60 + minsFromStart;
 
+    // não permite arrastar para horário que já passou
+    if (isSameDay(day, new Date())) {
+      const now = new Date();
+      if (targetMins < now.getHours() * 60 + now.getMinutes()) {
+        setDragId(null);
+        setOverCol(null);
+        return;
+      }
+    }
+
     const orig   = new Date(appt.starts_at);
     const dur    = (new Date(appt.ends_at).getTime() - orig.getTime()) / 60000;
     const newStart = startOfDay(day);
@@ -112,7 +158,17 @@ export function AgendaDay({ tenantId, day, appointments, staffList, onChanged }:
     }
   }
 
+  function slotIsPast(slotIdx: number): boolean {
+    if (!isSameDay(day, new Date())) return false;
+    const minsFromStart = slotIdx * 30;
+    const totalMins = START_HOUR * 60 + minsFromStart;
+    const now = new Date();
+    const nowMins = now.getHours() * 60 + now.getMinutes();
+    return totalMins < nowMins;
+  }
+
   function onSlotClick(slotIdx: number, staffId: string) {
+    if (slotIsPast(slotIdx)) return; // bloqueia slots passados
     const minsFromStart = slotIdx * 30;
     const totalMins = START_HOUR * 60 + minsFromStart;
     const hh = String(Math.floor(totalMins / 60)).padStart(2, "0");
@@ -152,17 +208,6 @@ export function AgendaDay({ tenantId, day, appointments, staffList, onChanged }:
         <div className="flex" ref={gridRef}>
           {/* Coluna de horas */}
           <div className="w-14 flex-shrink-0" style={{ height: TOTAL_H }}>
-            {TIME_LABELS.map((t, i) => (
-              <div
-                key={t}
-                style={{ height: SLOT_H, top: i * SLOT_H }}
-                className="absolute flex items-start pt-1 pr-2 text-right text-[10px] text-cafe-muted"
-                // relative to grid column, so use margin-based layout instead
-              >
-                {t.endsWith(":00") ? t : ""}
-              </div>
-            ))}
-            {/* Versão simples: time labels como flex */}
             <div className="flex flex-col">
               {TIME_LABELS.map((t, i) => (
                 <div
@@ -191,29 +236,46 @@ export function AgendaDay({ tenantId, day, appointments, staffList, onChanged }:
               onDrop={(e) => onDrop(e, col.id)}
             >
               {/* Linhas de slot */}
-              {TIME_LABELS.map((_, i) => (
-                <div
-                  key={i}
-                  style={{ top: i * SLOT_H, height: SLOT_H }}
-                  className={`absolute left-0 right-0 border-t cursor-pointer ${
-                    i % 2 === 0 ? "border-creme-edge" : "border-creme-edge/40"
-                  } hover:bg-terracota-soft/30`}
-                  onClick={() => onSlotClick(i, col.id)}
-                />
-              ))}
+              {TIME_LABELS.map((_, i) => {
+                const past = slotIsPast(i);
+                return (
+                  <div
+                    key={i}
+                    style={{ top: i * SLOT_H, height: SLOT_H }}
+                    className={`absolute left-0 right-0 border-t ${
+                      i % 2 === 0 ? "border-creme-edge" : "border-creme-edge/40"
+                    } ${past
+                      ? "bg-creme-edge/40 cursor-not-allowed"
+                      : "cursor-pointer hover:bg-terracota-soft/30"
+                    }`}
+                    onClick={() => onSlotClick(i, col.id)}
+                  />
+                );
+              })}
 
-              {/* Cards de agendamento */}
-              {col.appts.map((a) => (
-                <AppointmentCard
-                  key={a.id}
-                  appt={a}
-                  staffList={staffList}
-                  style={{ top: topPx(a), height: heightPx(a) }}
-                  onDragStart={() => setDragId(a.id)}
-                  onDragEnd={() => { setDragId(null); setOverCol(null); }}
-                  onChanged={onChanged}
-                />
-              ))}
+              {/* Cards de agendamento — sobrepostos dividem a coluna em lanes */}
+              {(() => {
+                const lanes = layoutLanes(col.appts);
+                return col.appts.map((a) => {
+                  const pos = lanes.get(a.id) ?? { lane: 0, lanes: 1 };
+                  return (
+                    <AppointmentCard
+                      key={a.id}
+                      appt={a}
+                      staffList={staffList}
+                      style={{
+                        top: topPx(a),
+                        height: heightPx(a),
+                        left: `calc(${(pos.lane * 100) / pos.lanes}% + 2px)`,
+                        width: `calc(${100 / pos.lanes}% - 4px)`,
+                      }}
+                      onDragStart={() => setDragId(a.id)}
+                      onDragEnd={() => { setDragId(null); setOverCol(null); }}
+                      onChanged={onChanged}
+                    />
+                  );
+                });
+              })()}
 
               {/* Indicador de hora atual */}
               {isSameDay(day, new Date()) && (() => {
@@ -241,6 +303,7 @@ export function AgendaDay({ tenantId, day, appointments, staffList, onChanged }:
         <BookingModal
           tenantId={tenantId}
           staffList={staffList}
+          availability={availability}
           preselectedDate={booking.date}
           preselectedTime={booking.time}
           preselectedStaffId={booking.staffId}

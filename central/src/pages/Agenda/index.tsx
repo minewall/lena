@@ -1,9 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   addDays,
   loadAppointmentsForRange,
+  loadAvailability,
   startOfDay,
   type Appointment,
+  type Availability,
 } from "../../lib/agenda";
 import { loadStaff, type Staff } from "../../lib/staff";
 import { useAuth } from "../../store/auth";
@@ -71,21 +73,25 @@ export function Agenda() {
   const [anchor,       setAnchor]       = useState(startOfDay(new Date()));
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [staffList,    setStaffList]    = useState<Staff[]>([]);
+  const [availability, setAvailability] = useState<Availability[]>([]);
   const [loading,      setLoading]      = useState(true);
   const [error,        setError]        = useState<string | null>(null);
   const [showStaff,    setShowStaff]    = useState(false);
   const [showBooking,  setShowBooking]  = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const reload = useCallback(async () => {
     if (!tenantId) return;
     try {
       const [from, to] = rangeForView(anchor, view);
-      const [appts, staff] = await Promise.all([
+      const [appts, staff, avail] = await Promise.all([
         loadAppointmentsForRange(tenantId, from, to),
         loadStaff(tenantId),
+        loadAvailability(tenantId),
       ]);
       setAppointments(appts);
       setStaffList(staff);
+      setAvailability(avail);
     } catch (e) {
       setError((e as Error).message);
     }
@@ -94,6 +100,12 @@ export function Agenda() {
   useEffect(() => {
     setLoading(true);
     reload().finally(() => setLoading(false));
+  }, [reload]);
+
+  // Auto-refresh a cada 60s — agenda sempre reflete o estado atual
+  useEffect(() => {
+    intervalRef.current = setInterval(() => { void reload(); }, 60_000);
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [reload]);
 
   if (!tenantId) return null;
@@ -182,6 +194,7 @@ export function Agenda() {
               day={anchor}
               appointments={appointments}
               staffList={staffList}
+              availability={availability}
               onChanged={reload}
             />
           )}
@@ -191,6 +204,7 @@ export function Agenda() {
               weekStart={mondayOf(anchor)}
               appointments={appointments}
               staffList={staffList}
+              availability={availability}
               onDayClick={(d) => { setAnchor(d); setView("dia"); }}
               onChanged={reload}
             />
@@ -201,6 +215,7 @@ export function Agenda() {
               monthStart={firstOfMonth(anchor)}
               appointments={appointments}
               staffList={staffList}
+              availability={availability}
               onDayClick={(d) => { setAnchor(d); setView("dia"); }}
               onChanged={reload}
             />
@@ -220,6 +235,7 @@ export function Agenda() {
         <BookingModal
           tenantId={tenantId}
           staffList={staffList}
+          availability={availability}
           onBooked={() => { setShowBooking(false); reload(); }}
           onClose={() => setShowBooking(false)}
         />
