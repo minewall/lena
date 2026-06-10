@@ -54,10 +54,18 @@ states com personalidade.
   - SubNav (componente) no padrão Haile aplicado em Cérebro (Negócio/
     Atendimento) e Configurações (Negócio/Integrações/Time).
   - Tipos do @lena/shared atualizados (novas tabelas/colunas/enum).
-- Fase 2 (Hoje: Lena inline + hero "Receita recuperada" + agenda do dia +
-  conversas recentes) — próxima. Memória por contato (resumo derivado p/
-  contexto da Lena) entra junto: transcript bruto expira, resumo persiste,
-  eliminação LGPD apaga os dois em cascata.
+- ✅ **Fase 2 (Hoje) aplicada em 2026-06-10**: Lena inline (insight contextual
+  rule-based: atenção pendente > próximo agendamento > tudo em dia, com avatar
+  e ação), hero "Receita agendada pela Lena" (soma price_cents dos appointments
+  origin=lena no período), painéis Agenda de hoje + Conversas recentes,
+  KPIs reorganizados. "Mensagens recebidas" saiu (redundante com Conversas).
+- ✅ **Ajustes pós-Fase-1 (2026-06-10)**: container fluido por tipo de página
+  (operação 1480px / formulário 1024px / conversas full-bleed); sub-barra
+  ABANDONADA (decisão Roberto) → sub-abas viram ACORDEÃO na sidebar
+  (Cérebro e Configurações expandem no clique); avatar da Lena na sidebar.
+- Próximas: memória por contato (resumo derivado p/ contexto da Lena —
+  transcript expira, resumo persiste, eliminação LGPD em cascata),
+  Fase 3 (componentes página a página), Fase 4 (⌘K, mobile).
 
 ## Organização da navegação (IA)
 
