@@ -192,7 +192,7 @@ export function AgendaDay({ tenantId, day, appointments, staffList, availability
           {effectiveCols.map((col) => (
             <div
               key={col.id}
-              className="flex min-w-[160px] flex-1 items-center gap-2 border-l border-creme-edge px-3 py-2"
+              className="flex min-w-[200px] flex-1 items-center gap-2 border-l border-creme-edge px-3 py-2"
             >
               <span
                 className="h-3 w-3 rounded-full flex-shrink-0"
@@ -227,7 +227,7 @@ export function AgendaDay({ tenantId, day, appointments, staffList, availability
           {effectiveCols.map((col) => (
             <div
               key={col.id}
-              className={`relative min-w-[160px] flex-1 border-l border-creme-edge transition ${
+              className={`relative min-w-[200px] flex-1 border-l border-creme-edge transition ${
                 overCol === col.id ? "bg-creme-soft" : ""
               }`}
               style={{ height: TOTAL_H }}

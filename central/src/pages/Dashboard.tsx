@@ -87,7 +87,7 @@ export function Dashboard() {
       ) : null}
 
       {/* KPIs principais */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
         <Kpi
           label="Conversas no período"
           value={loading ? null : stats?.conversations_period ?? 0}
@@ -112,7 +112,7 @@ export function Dashboard() {
       </div>
 
       {/* segunda linha */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
         <Kpi
           label="Respostas da Lena"
           value={loading ? null : stats?.lena_out ?? 0}
@@ -183,16 +183,16 @@ function Kpi({
 }) {
   return (
     <div
-      className={`rounded-[var(--radius-card)] border p-5 ${
+      className={`rounded-[var(--radius-card)] border px-5 py-[18px] ${
         highlight
           ? "border-terracota bg-terracota-soft"
-          : "border-creme-edge bg-creme-soft"
+          : "border-creme-edge bg-creme-soft shadow-[0_18px_44px_-32px_rgba(36,27,21,0.3)]"
       }`}
     >
-      <div className="text-xs uppercase tracking-wide text-cafe-muted">
+      <div className="text-[10px] font-bold uppercase tracking-[0.1em] text-cafe-muted">
         {label}
       </div>
-      <div className="mt-1 font-display text-3xl text-cafe">
+      <div className="mt-2 font-display text-[32px] font-bold leading-none tracking-tight text-cafe tabular-nums">
         {value === null ? (
           <span className="animate-pulse-soft text-cafe-muted">…</span>
         ) : (

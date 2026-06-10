@@ -18,6 +18,9 @@ import {
 /** Rotas que ocupam a área inteira (sem container nem breadcrumb). */
 const FULL_BLEED_PREFIXES = ["/conversas"];
 
+/** Páginas de formulário leem melhor estreitas; o resto (operação) usa a tela. */
+const FORM_PREFIXES = ["/cerebro", "/configuracoes", "/criar-tenant"];
+
 interface NavItem {
   to: string;
   label: string;
@@ -76,6 +79,12 @@ export function Layout() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const fullBleed = FULL_BLEED_PREFIXES.some((p) => pathname.startsWith(p));
+  const isForm = FORM_PREFIXES.some((p) => pathname.startsWith(p));
+  const containerClass = fullBleed
+    ? "h-full"
+    : isForm
+      ? "mx-auto w-full max-w-5xl px-8 py-7"
+      : "mx-auto w-full max-w-[1480px] px-8 py-7";
 
   const currentTenant = tenants.find((t) => t.id === currentTenantId) ?? null;
 
@@ -225,7 +234,7 @@ export function Layout() {
         </div>
 
         <div className="overflow-auto">
-          <div className={fullBleed ? "h-full" : "mx-auto max-w-5xl px-8 py-7"}>
+          <div className={containerClass}>
             <Outlet />
           </div>
         </div>
