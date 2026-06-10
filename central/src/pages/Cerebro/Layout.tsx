@@ -1,11 +1,22 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import { SubNav, type SubNavGroup } from "../../components/SubNav";
 
-const tabs = [
-  { to: "/cerebro", label: "Dados gerais", end: true },
-  { to: "/cerebro/tom", label: "Tom e IA" },
-  { to: "/cerebro/servicos", label: "Serviços" },
-  { to: "/cerebro/faq", label: "FAQ" },
-  { to: "/cerebro/limites", label: "Limites" },
+const groups: SubNavGroup[] = [
+  {
+    label: "Negócio",
+    items: [
+      { to: "/cerebro", label: "Dados gerais", desc: "Nome, horários, endereço", end: true },
+      { to: "/cerebro/servicos", label: "Serviços", desc: "O que a Lena oferece e agenda" },
+    ],
+  },
+  {
+    label: "Atendimento",
+    items: [
+      { to: "/cerebro/tom", label: "Tom e IA", desc: "Personalidade e modelo" },
+      { to: "/cerebro/faq", label: "FAQ", desc: "Perguntas e respostas prontas" },
+      { to: "/cerebro/limites", label: "Limites", desc: "Restrições e quando escalar" },
+    ],
+  },
 ];
 
 export function CerebroLayout() {
@@ -19,26 +30,12 @@ export function CerebroLayout() {
         </p>
       </header>
 
-      <nav className="flex gap-1 border-b border-creme-edge">
-        {tabs.map((tab) => (
-          <NavLink
-            key={tab.to}
-            to={tab.to}
-            end={tab.end}
-            className={({ isActive }) =>
-              `border-b-2 px-4 py-2 text-sm transition ${
-                isActive
-                  ? "border-terracota text-cafe"
-                  : "border-transparent text-cafe-soft hover:text-cafe"
-              }`
-            }
-          >
-            {tab.label}
-          </NavLink>
-        ))}
-      </nav>
-
-      <Outlet />
+      <div className="grid grid-cols-[250px_1fr] items-start gap-6">
+        <SubNav groups={groups} />
+        <div className="min-w-0">
+          <Outlet />
+        </div>
+      </div>
     </div>
   );
 }

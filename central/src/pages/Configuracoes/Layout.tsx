@@ -1,9 +1,25 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import { SubNav, type SubNavGroup } from "../../components/SubNav";
 
-const tabs = [
-  { to: "/configuracoes", label: "Geral", end: true },
-  { to: "/configuracoes/whatsapp", label: "WhatsApp" },
-  { to: "/configuracoes/equipe", label: "Equipe" },
+const groups: SubNavGroup[] = [
+  {
+    label: "Negócio",
+    items: [
+      { to: "/configuracoes", label: "Geral", desc: "Dados, fuso e billing", end: true },
+    ],
+  },
+  {
+    label: "Integrações",
+    items: [
+      { to: "/configuracoes/whatsapp", label: "WhatsApp", desc: "Número, Cloud API e saúde" },
+    ],
+  },
+  {
+    label: "Time",
+    items: [
+      { to: "/configuracoes/equipe", label: "Equipe", desc: "Membros, papéis e convites" },
+    ],
+  },
 ];
 
 export function ConfiguracoesLayout() {
@@ -11,31 +27,15 @@ export function ConfiguracoesLayout() {
     <div className="flex flex-col gap-6">
       <header>
         <h1 className="text-3xl text-cafe">Configurações</h1>
-        <p className="mt-1 text-cafe-soft">
-          Integrações e dados do negócio.
-        </p>
+        <p className="mt-1 text-cafe-soft">Integrações e dados do negócio.</p>
       </header>
 
-      <nav className="flex gap-1 border-b border-creme-edge">
-        {tabs.map((tab) => (
-          <NavLink
-            key={tab.to}
-            to={tab.to}
-            end={tab.end}
-            className={({ isActive }) =>
-              `border-b-2 px-4 py-2 text-sm transition ${
-                isActive
-                  ? "border-terracota text-cafe"
-                  : "border-transparent text-cafe-soft hover:text-cafe"
-              }`
-            }
-          >
-            {tab.label}
-          </NavLink>
-        ))}
-      </nav>
-
-      <Outlet />
+      <div className="grid grid-cols-[250px_1fr] items-start gap-6">
+        <SubNav groups={groups} />
+        <div className="min-w-0">
+          <Outlet />
+        </div>
+      </div>
     </div>
   );
 }

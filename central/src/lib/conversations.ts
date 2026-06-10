@@ -5,15 +5,25 @@ import type {
 } from "@lena/shared/db";
 import { supabase } from "./supabase";
 
+export type ConversationLifecycle = "open" | "resolved" | "archived";
+
+export interface ConversationTag {
+  id: string;
+  name: string;
+  color: string;
+}
+
 export interface ConversationListItem {
   id: string;
   tenant_id: string;
   contact_id: string;
   state: ConversationState;
+  lifecycle: ConversationLifecycle;
   assigned_to: string | null;
   last_message_at: string | null;
   opened_at: string;
   closed_at: string | null;
+  tags: ConversationTag[];
   contact: Pick<Contact, "id" | "phone_e164" | "name">;
   last_message?: {
     body: string | null;
@@ -23,29 +33,32 @@ export interface ConversationListItem {
   };
 }
 
-// Carrega a lista de conversas do tenant (apenas abertas), ordenadas pela
-// última mensagem (mais recentes primeiro), com o contato embutido.
+// Carrega a lista de conversas do tenant no ciclo de vida pedido, ordenadas
+// pela última mensagem (mais recentes primeiro), com contato e tags embutidos.
 export async function loadConversations(
   tenantId: string,
+  lifecycle: ConversationLifecycle = "open",
 ): Promise<ConversationListItem[]> {
   const { data, error } = await supabase
     .from("conversations")
     .select(
       `
-      id, tenant_id, contact_id, state, assigned_to,
+      id, tenant_id, contact_id, state, lifecycle, assigned_to,
       last_message_at, opened_at, closed_at,
-      contact:contacts ( id, phone_e164, name )
+      contact:contacts ( id, phone_e164, name ),
+      conversation_tags ( tag:tenant_tags ( id, name, color ) )
     `,
     )
     .eq("tenant_id", tenantId)
-    .is("closed_at", null)
+    .eq("lifecycle", lifecycle)
     .order("last_message_at", { ascending: false, nullsFirst: false });
 
   if (error) throw error;
 
   const list = (data ?? []) as unknown as Array<
-    Omit<ConversationListItem, "contact" | "last_message"> & {
+    Omit<ConversationListItem, "contact" | "last_message" | "tags"> & {
       contact: Pick<Contact, "id" | "phone_e164" | "name"> | null;
+      conversation_tags: { tag: ConversationTag | null }[] | null;
     }
   >;
 
@@ -55,11 +68,84 @@ export async function loadConversations(
 
   return list
     .filter((c) => c.contact)
-    .map((c) => ({
+    .map(({ conversation_tags, ...c }) => ({
       ...c,
       contact: c.contact!,
+      tags: (conversation_tags ?? [])
+        .map((t) => t.tag)
+        .filter((t): t is ConversationTag => t !== null),
       last_message: lastMap[c.id],
     }));
+}
+
+/** Muda o ciclo de vida (resolver / reabrir / arquivar). Nada é apagado. */
+export async function setConversationLifecycle(
+  conversationId: string,
+  lifecycle: ConversationLifecycle,
+): Promise<void> {
+  const patch: {
+    lifecycle: ConversationLifecycle;
+    resolved_at?: string | null;
+    archived_at?: string | null;
+    closed_at?: string | null;
+  } = { lifecycle };
+  if (lifecycle === "resolved") patch.resolved_at = new Date().toISOString();
+  if (lifecycle === "archived") patch.archived_at = new Date().toISOString();
+  if (lifecycle === "open") {
+    patch.resolved_at = null;
+    patch.archived_at = null;
+    patch.closed_at = null;
+  }
+  const { error } = await supabase
+    .from("conversations")
+    .update(patch)
+    .eq("id", conversationId);
+  if (error) throw error;
+}
+
+// ── Tags ─────────────────────────────────────────────────────────────────
+
+const TAG_PALETTE = ["#E35B2E", "#599372", "#F2A93C", "#8A5A9C", "#5B7FB5", "#B5536B"];
+
+export async function loadTenantTags(tenantId: string): Promise<ConversationTag[]> {
+  const { data, error } = await supabase
+    .from("tenant_tags")
+    .select("id, name, color")
+    .eq("tenant_id", tenantId)
+    .order("name");
+  if (error) throw error;
+  return (data ?? []) as ConversationTag[];
+}
+
+export async function createTenantTag(
+  tenantId: string,
+  name: string,
+  existingCount: number,
+): Promise<ConversationTag> {
+  const color = TAG_PALETTE[existingCount % TAG_PALETTE.length];
+  const { data, error } = await supabase
+    .from("tenant_tags")
+    .insert({ tenant_id: tenantId, name: name.trim(), color })
+    .select("id, name, color")
+    .single();
+  if (error) throw error;
+  return data as ConversationTag;
+}
+
+export async function tagConversation(conversationId: string, tagId: string): Promise<void> {
+  const { error } = await supabase
+    .from("conversation_tags")
+    .insert({ conversation_id: conversationId, tag_id: tagId });
+  if (error && error.code !== "23505") throw error; // ignora duplicado
+}
+
+export async function untagConversation(conversationId: string, tagId: string): Promise<void> {
+  const { error } = await supabase
+    .from("conversation_tags")
+    .delete()
+    .eq("conversation_id", conversationId)
+    .eq("tag_id", tagId);
+  if (error) throw error;
 }
 
 async function loadLastMessages(conversationIds: string[]) {

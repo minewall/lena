@@ -41,8 +41,23 @@ states com personalidade.
   topbar com breadcrumb + ação "Agendar", rodapé com usuário/papel/sair,
   fontes trocadas, terracota alinhado ao selo (#E35B2E), "Visão geral"→"Hoje",
   "Tenants"→"Clientes Averse". Busca ⌘K ficou para a Fase 4 (não shipar UI morta).
+- ✅ **Fase 2.5 (conversas + sub-barra) aplicada em 2026-06-10**:
+  - Migration `conversation_lifecycle_tags_lgpd` (registrada 20260610033453):
+    lifecycle open/resolved/archived em conversations, tenant_tags +
+    conversation_tags (RLS), lgpd_requests, trigger de reabertura por mensagem
+    inbound, housekeeping via pg_cron (auto-resolve 48h / auto-arquiva 30d).
+    Eliminação automática de transcripts (retenção 24m/5a) NÃO agendada —
+    decisão explícita, ativar quando a política de privacidade dos tenants
+    estiver publicada.
+  - UI Conversas: abas Abertas/Resolvidas/Arquivadas, filtro e chips de tag,
+    criação de tag inline, ações Resolver/Reabrir/Arquivar no Detail.
+  - SubNav (componente) no padrão Haile aplicado em Cérebro (Negócio/
+    Atendimento) e Configurações (Negócio/Integrações/Time).
+  - Tipos do @lena/shared atualizados (novas tabelas/colunas/enum).
 - Fase 2 (Hoje: Lena inline + hero "Receita recuperada" + agenda do dia +
-  conversas recentes) — próxima.
+  conversas recentes) — próxima. Memória por contato (resumo derivado p/
+  contexto da Lena) entra junto: transcript bruto expira, resumo persiste,
+  eliminação LGPD apaga os dois em cascata.
 
 ## Organização da navegação (IA)
 

@@ -1,10 +1,22 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { loadConversations, type ConversationListItem } from "../../lib/conversations";
+import {
+  loadConversations,
+  loadTenantTags,
+  type ConversationLifecycle,
+  type ConversationListItem,
+  type ConversationTag,
+} from "../../lib/conversations";
 import { supabase } from "../../lib/supabase";
 import { useAuth } from "../../store/auth";
 import { Card } from "../../components/ui";
 import { Detail } from "./Detail";
 import { List } from "./List";
+
+const LIFECYCLE_TABS: { key: ConversationLifecycle; label: string }[] = [
+  { key: "open", label: "Abertas" },
+  { key: "resolved", label: "Resolvidas" },
+  { key: "archived", label: "Arquivadas" },
+];
 
 export function ConversasPage() {
   const tenantId = useAuth((s) => s.currentTenantId);
@@ -12,17 +24,26 @@ export function ConversasPage() {
   const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [lifecycle, setLifecycle] = useState<ConversationLifecycle>("open");
+  const [tags, setTags] = useState<ConversationTag[]>([]);
+  const [tagFilter, setTagFilter] = useState<string>("");
 
   const reload = useCallback(async () => {
     if (!tenantId) return;
     try {
-      const list = await loadConversations(tenantId);
+      const [list, tenantTags] = await Promise.all([
+        loadConversations(tenantId, lifecycle),
+        loadTenantTags(tenantId),
+      ]);
       setConversations(list);
-      setSelectedId((cur) => cur ?? list[0]?.id ?? null);
+      setTags(tenantTags);
+      setSelectedId((cur) =>
+        cur && list.some((c) => c.id === cur) ? cur : (list[0]?.id ?? null),
+      );
     } catch (e) {
       setError((e as Error).message);
     }
-  }, [tenantId]);
+  }, [tenantId, lifecycle]);
 
   useEffect(() => {
     setLoading(true);
@@ -64,9 +85,17 @@ export function ConversasPage() {
     };
   }, [tenantId, reload]);
 
+  const visible = useMemo(
+    () =>
+      tagFilter
+        ? conversations.filter((c) => c.tags.some((t) => t.id === tagFilter))
+        : conversations,
+    [conversations, tagFilter],
+  );
+
   const selected = useMemo(
-    () => conversations.find((c) => c.id === selectedId) ?? null,
-    [conversations, selectedId],
+    () => visible.find((c) => c.id === selectedId) ?? null,
+    [visible, selectedId],
   );
 
   if (!tenantId) return null;
@@ -74,20 +103,46 @@ export function ConversasPage() {
   return (
     <div className="grid h-full grid-cols-[340px_1fr] overflow-hidden border-creme-edge">
       <aside className="flex flex-col overflow-hidden border-r border-creme-edge bg-creme-soft">
-        <header className="flex items-center justify-between border-b border-creme-edge px-4 py-3">
-          <div>
-            <div className="font-display text-base text-cafe">Conversas</div>
-            <div className="text-xs text-cafe-muted">
-              {conversations.length} aberta{conversations.length === 1 ? "" : "s"}
-            </div>
+        <header className="flex flex-col gap-2.5 border-b border-creme-edge px-4 py-3">
+          <div className="font-display text-base text-cafe">Conversas</div>
+          <div className="flex gap-1 rounded-full border border-creme-edge bg-white p-0.5">
+            {LIFECYCLE_TABS.map((t) => (
+              <button
+                key={t.key}
+                type="button"
+                onClick={() => setLifecycle(t.key)}
+                className={`flex-1 rounded-full px-2 py-1 text-[11.5px] font-semibold transition ${
+                  lifecycle === t.key
+                    ? "bg-terracota text-white"
+                    : "text-cafe-soft hover:bg-creme-edge/60"
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
           </div>
+          {tags.length > 0 ? (
+            <select
+              value={tagFilter}
+              onChange={(e) => setTagFilter(e.target.value)}
+              className="rounded-lg border border-creme-edge bg-white px-2 py-1 text-xs text-cafe-soft"
+            >
+              <option value="">Todas as tags</option>
+              {tags.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name}
+                </option>
+              ))}
+            </select>
+          ) : null}
         </header>
         <div className="flex-1 overflow-y-auto">
           <List
-            conversations={conversations}
+            conversations={visible}
             selectedId={selectedId}
             onSelect={setSelectedId}
             loading={loading}
+            lifecycle={lifecycle}
           />
         </div>
         {error ? (

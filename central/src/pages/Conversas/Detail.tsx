@@ -2,9 +2,15 @@ import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import type { Message } from "@lena/shared/db";
 import type { ConversationListItem } from "../../lib/conversations";
 import {
+  createTenantTag,
   loadMessages,
+  loadTenantTags,
   operatorSend,
+  setConversationLifecycle,
   setConversationState,
+  tagConversation,
+  untagConversation,
+  type ConversationTag,
 } from "../../lib/conversations";
 import { dayLabel } from "../../lib/time";
 import { supabase } from "../../lib/supabase";
@@ -24,6 +30,9 @@ export function Detail({
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
   const [actionState, setActionState] = useState<"idle" | "saving" | "error">("idle");
+  const [tagOpen, setTagOpen] = useState(false);
+  const [allTags, setAllTags] = useState<ConversationTag[]>([]);
+  const [newTag, setNewTag] = useState("");
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   // Carrega histórico ao trocar de conversa
@@ -129,6 +138,52 @@ export function Detail({
     }
   }
 
+  async function changeLifecycle(next: "open" | "resolved" | "archived") {
+    setActionState("saving");
+    try {
+      await setConversationLifecycle(conversation.id, next);
+      onConversationChanged();
+      setActionState("idle");
+    } catch (e) {
+      setError((e as Error).message);
+      setActionState("error");
+    }
+  }
+
+  async function openTagPicker() {
+    setTagOpen((v) => !v);
+    if (allTags.length === 0) {
+      try {
+        setAllTags(await loadTenantTags(conversation.tenant_id));
+      } catch { /* lista vazia segue ok */ }
+    }
+  }
+
+  async function toggleTag(tag: ConversationTag) {
+    const has = conversation.tags.some((t) => t.id === tag.id);
+    try {
+      if (has) await untagConversation(conversation.id, tag.id);
+      else await tagConversation(conversation.id, tag.id);
+      onConversationChanged();
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  }
+
+  async function createAndApplyTag() {
+    const name = newTag.trim();
+    if (!name) return;
+    try {
+      const tag = await createTenantTag(conversation.tenant_id, name, allTags.length);
+      setAllTags((prev) => [...prev, tag]);
+      setNewTag("");
+      await tagConversation(conversation.id, tag.id);
+      onConversationChanged();
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  }
+
   const stateLabel =
     conversation.state === "lena"
       ? "Lena está atendendo"
@@ -170,9 +225,82 @@ export function Detail({
                 Pausar
               </Button>
             )}
+            {conversation.lifecycle === "open" ? (
+              <Button
+                variant="ghost"
+                onClick={() => changeLifecycle("resolved")}
+                disabled={actionState === "saving"}
+              >
+                Resolver
+              </Button>
+            ) : (
+              <Button
+                variant="ghost"
+                onClick={() => changeLifecycle("open")}
+                disabled={actionState === "saving"}
+              >
+                Reabrir
+              </Button>
+            )}
+            {conversation.lifecycle !== "archived" && (
+              <Button
+                variant="ghost"
+                onClick={() => changeLifecycle("archived")}
+                disabled={actionState === "saving"}
+              >
+                Arquivar
+              </Button>
+            )}
           </div>
         </div>
-        <div className="text-xs text-cafe-soft">{stateLabel}</div>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="text-xs text-cafe-soft">{stateLabel}</span>
+          <span className="text-creme-edge">·</span>
+          {conversation.tags.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              title="Remover tag"
+              onClick={() => toggleTag(t)}
+              className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
+              style={{ backgroundColor: t.color + "20", color: t.color }}
+            >
+              {t.name} ✕
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={openTagPicker}
+            className="rounded-full border border-dashed border-creme-edge px-2 py-0.5 text-[10px] font-semibold text-cafe-muted hover:border-terracota hover:text-terracota"
+          >
+            + tag
+          </button>
+        </div>
+        {tagOpen ? (
+          <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-creme-edge bg-white px-3 py-2">
+            {allTags.map((t) => {
+              const has = conversation.tags.some((x) => x.id === t.id);
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => toggleTag(t)}
+                  className={`rounded-full px-2 py-0.5 text-[10px] font-semibold transition ${has ? "ring-1" : "opacity-60 hover:opacity-100"}`}
+                  style={{ backgroundColor: t.color + "20", color: t.color }}
+                >
+                  {t.name}
+                </button>
+              );
+            })}
+            <input
+              value={newTag}
+              onChange={(e) => setNewTag(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void createAndApplyTag(); } }}
+              placeholder="nova tag + Enter"
+              className="w-28 rounded-lg border border-creme-edge px-2 py-0.5 text-[11px] outline-none focus:border-terracota"
+            />
+          </div>
+        ) : null}
       </header>
 
       <main className="flex-1 overflow-y-auto bg-creme px-6 py-6">

@@ -1,5 +1,11 @@
-import type { ConversationListItem } from "../../lib/conversations";
+import type { ConversationLifecycle, ConversationListItem } from "../../lib/conversations";
 import { relativeTime } from "../../lib/time";
+
+const EMPTY_BY_LIFECYCLE: Record<ConversationLifecycle, string> = {
+  open: "Sem conversas abertas. Quando alguém mandar mensagem no WhatsApp da Lena, aparece aqui.",
+  resolved: "Nenhuma conversa resolvida ainda. Conversas sem resposta há 48h são resolvidas automaticamente.",
+  archived: "Nada arquivado. Conversas resolvidas há mais de 30 dias são arquivadas automaticamente.",
+};
 
 const STATE_LABEL: Record<ConversationListItem["state"], { label: string; cls: string }> = {
   lena: { label: "Lena", cls: "bg-terracota-soft text-terracota-dark" },
@@ -12,11 +18,13 @@ export function List({
   selectedId,
   onSelect,
   loading,
+  lifecycle,
 }: {
   conversations: ConversationListItem[];
   selectedId: string | null;
   onSelect: (id: string) => void;
   loading: boolean;
+  lifecycle: ConversationLifecycle;
 }) {
   if (loading) {
     return (
@@ -26,10 +34,7 @@ export function List({
 
   if (conversations.length === 0) {
     return (
-      <div className="p-6 text-cafe-soft text-sm">
-        Sem conversas ainda. Quando alguém mandar mensagem no WhatsApp da
-        Lena, aparece aqui.
-      </div>
+      <div className="p-6 text-cafe-soft text-sm">{EMPTY_BY_LIFECYCLE[lifecycle]}</div>
     );
   }
 
@@ -69,6 +74,19 @@ export function List({
                   {stateMeta.label}
                 </span>
               </div>
+              {c.tags.length > 0 ? (
+                <div className="flex flex-wrap gap-1">
+                  {c.tags.map((t) => (
+                    <span
+                      key={t.id}
+                      className="rounded-full px-1.5 py-px text-[9.5px] font-semibold"
+                      style={{ backgroundColor: t.color + "20", color: t.color }}
+                    >
+                      {t.name}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
             </button>
           </li>
         );

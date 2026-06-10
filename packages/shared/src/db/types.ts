@@ -91,8 +91,124 @@ export type Database = {
         };
         Relationships: [];
       };
+      conversation_tags: {
+        Row: {
+          conversation_id: string;
+          created_at: string;
+          tag_id: string;
+        };
+        Insert: {
+          conversation_id: string;
+          created_at?: string;
+          tag_id: string;
+        };
+        Update: {
+          conversation_id?: string;
+          created_at?: string;
+          tag_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "conversation_tags_conversation_id_fkey";
+            columns: ["conversation_id"];
+            isOneToOne: false;
+            referencedRelation: "conversations";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "conversation_tags_tag_id_fkey";
+            columns: ["tag_id"];
+            isOneToOne: false;
+            referencedRelation: "tenant_tags";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      tenant_tags: {
+        Row: {
+          color: string;
+          created_at: string;
+          id: string;
+          name: string;
+          tenant_id: string;
+        };
+        Insert: {
+          color?: string;
+          created_at?: string;
+          id?: string;
+          name: string;
+          tenant_id: string;
+        };
+        Update: {
+          color?: string;
+          created_at?: string;
+          id?: string;
+          name?: string;
+          tenant_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "tenant_tags_tenant_id_fkey";
+            columns: ["tenant_id"];
+            isOneToOne: false;
+            referencedRelation: "tenants";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      lgpd_requests: {
+        Row: {
+          completed_at: string | null;
+          contact_id: string | null;
+          id: string;
+          kind: string;
+          notes: string | null;
+          requested_at: string;
+          status: string;
+          tenant_id: string;
+        };
+        Insert: {
+          completed_at?: string | null;
+          contact_id?: string | null;
+          id?: string;
+          kind: string;
+          notes?: string | null;
+          requested_at?: string;
+          status?: string;
+          tenant_id: string;
+        };
+        Update: {
+          completed_at?: string | null;
+          contact_id?: string | null;
+          id?: string;
+          kind?: string;
+          notes?: string | null;
+          requested_at?: string;
+          status?: string;
+          tenant_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "lgpd_requests_contact_id_fkey";
+            columns: ["contact_id"];
+            isOneToOne: false;
+            referencedRelation: "contacts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "lgpd_requests_tenant_id_fkey";
+            columns: ["tenant_id"];
+            isOneToOne: false;
+            referencedRelation: "tenants";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       conversations: {
         Row: {
+          archived_at: string | null;
+          lifecycle: Database["public"]["Enums"]["conversation_lifecycle"];
+          resolved_at: string | null;
           assigned_to: string | null;
           channel: string;
           closed_at: string | null;
@@ -104,6 +220,9 @@ export type Database = {
           tenant_id: string;
         };
         Insert: {
+          archived_at?: string | null;
+          lifecycle?: Database["public"]["Enums"]["conversation_lifecycle"];
+          resolved_at?: string | null;
           assigned_to?: string | null;
           channel?: string;
           closed_at?: string | null;
@@ -115,6 +234,9 @@ export type Database = {
           tenant_id: string;
         };
         Update: {
+          archived_at?: string | null;
+          lifecycle?: Database["public"]["Enums"]["conversation_lifecycle"];
+          resolved_at?: string | null;
           assigned_to?: string | null;
           channel?: string;
           closed_at?: string | null;
@@ -629,6 +751,7 @@ export type Database = {
       };
     };
     Enums: {
+      conversation_lifecycle: "open" | "resolved" | "archived";
       conversation_state: "lena" | "human" | "paused";
       invitation_status: "pending" | "accepted" | "revoked";
       message_direction: "in" | "out";
@@ -666,6 +789,7 @@ export type Database = {
 export const Constants = {
   public: {
     Enums: {
+      conversation_lifecycle: ["open", "resolved", "archived"],
       conversation_state: ["lena", "human", "paused"],
       invitation_status: ["pending", "accepted", "revoked"],
       message_direction: ["in", "out"],
