@@ -2,24 +2,26 @@
 
 /* ── Design tokens da Lena ─────────────────────────────────────────────── */
 @theme {
-  /* Paleta */
-  --color-terracota: #d9613a;
-  --color-terracota-dark: #b54e2e;
+  /* Paleta (terracota alinhado à cor exata do selo oficial) */
+  --color-terracota: #e35b2e;
+  --color-terracota-dark: #c04a22;
   --color-terracota-soft: #f4d6c8;
   --color-creme: #fbf3e7;
   --color-creme-soft: #fffdfa;
   --color-creme-edge: #f0e2ce;
-  --color-salvia: #4e9e78;
+  --color-salvia: #599372;
   --color-salvia-soft: #d6ecde;
   --color-cafe: #241b15;
+  --color-cafe-2: #2e231b;
+  --color-cafe-3: #3a2d22;
   --color-cafe-soft: #5b4a3a;
   --color-cafe-muted: #897866;
   --color-ambar: #f2a93c;
   --color-ameia: #8a5a9c;
 
-  /* Tipografia */
-  --font-display: "Bricolage Grotesque", system-ui, -apple-system, sans-serif;
-  --font-sans: "Hanken Grotesk", system-ui, -apple-system, sans-serif;
+  /* Tipografia — sans comercial; o site mantém a dupla editorial dele */
+  --font-display: "Montserrat", system-ui, -apple-system, sans-serif;
+  --font-sans: "Open Sans", system-ui, -apple-system, sans-serif;
 
   /* Radius e sombras */
   --radius-card: 18px;

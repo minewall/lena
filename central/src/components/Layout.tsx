@@ -1,23 +1,63 @@
+import type { ComponentType } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../store/auth";
+import {
+  IconBrain,
+  IconBuilding,
+  IconCalendar,
+  IconChevrons,
+  IconDashboard,
+  IconLogout,
+  IconMessage,
+  IconPlus,
+  IconSettings,
+  IconTarget,
+  IconUsers,
+  LenaSelo,
+} from "./icons";
 
 /** Rotas que ocupam a área inteira (sem container nem breadcrumb). */
 const FULL_BLEED_PREFIXES = ["/conversas"];
 
-const navItems: {
+interface NavItem {
   to: string;
   label: string;
+  icon: ComponentType<{ size?: number; className?: string }>;
   adminOnly?: boolean;
   platformOnly?: boolean;
-}[] = [
-  { to: "/", label: "Visão geral" },
-  { to: "/clientes", label: "Clientes" },
-  { to: "/conversas", label: "Conversas" },
-  { to: "/agenda", label: "Agenda" },
-  { to: "/cerebro", label: "Cérebro da Lena", adminOnly: true },
-  { to: "/prospeccao", label: "Prospecção", platformOnly: true },
-  { to: "/averse/tenants", label: "Tenants", platformOnly: true },
-  { to: "/configuracoes", label: "Configurações", adminOnly: true },
+}
+
+interface NavGroup {
+  label: string;
+  items: NavItem[];
+  platformOnly?: boolean;
+}
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    label: "Operação",
+    items: [
+      { to: "/", label: "Hoje", icon: IconDashboard },
+      { to: "/conversas", label: "Conversas", icon: IconMessage },
+      { to: "/agenda", label: "Agenda", icon: IconCalendar },
+      { to: "/clientes", label: "Clientes", icon: IconUsers },
+    ],
+  },
+  {
+    label: "Lena",
+    items: [
+      { to: "/cerebro", label: "Cérebro", icon: IconBrain, adminOnly: true },
+      { to: "/configuracoes", label: "Configurações", icon: IconSettings, adminOnly: true },
+    ],
+  },
+  {
+    label: "Averse",
+    platformOnly: true,
+    items: [
+      { to: "/prospeccao", label: "Prospecção", icon: IconTarget, platformOnly: true },
+      { to: "/averse/tenants", label: "Clientes Averse", icon: IconBuilding, platformOnly: true },
+    ],
+  },
 ];
 
 const ROLE_LABEL: Record<string, string> = {
@@ -39,11 +79,14 @@ export function Layout() {
   const fullBleed = FULL_BLEED_PREFIXES.some((p) => pathname.startsWith(p));
 
   const currentTenant = tenants.find((t) => t.id === currentTenantId) ?? null;
-  const visibleNav = navItems.filter(
-    (item) =>
-      (!item.adminOnly || isAdmin) &&
-      (!item.platformOnly || isPlatformAdmin),
-  );
+
+  const visibleGroups = NAV_GROUPS.map((g) => ({
+    ...g,
+    items: g.items.filter(
+      (item) =>
+        (!item.adminOnly || isAdmin) && (!item.platformOnly || isPlatformAdmin),
+    ),
+  })).filter((g) => g.items.length > 0 && (!g.platformOnly || isPlatformAdmin));
 
   const roleLabel = isPlatformAdmin
     ? "Averse"
@@ -51,25 +94,51 @@ export function Layout() {
       ? ROLE_LABEL[currentRole]
       : null;
 
+  const userName = user?.email?.split("@")[0] ?? "";
+  const userInitial = (userName[0] ?? "?").toUpperCase();
+  const tenantInitials = (currentTenant?.name ?? "?")
+    .split(" ")
+    .map((w) => w[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
   return (
-    <div className="grid h-full grid-cols-[260px_1fr] bg-creme">
-      <aside className="flex flex-col gap-6 border-r border-creme-edge bg-creme-soft px-5 py-6">
-        <Link to="/" className="font-display text-2xl text-cafe">
-          lena<span className="text-terracota">.</span>
+    <div className="grid h-full grid-cols-[248px_1fr] bg-creme">
+      {/* ── Sidebar café ─────────────────────────────────────────────── */}
+      <aside className="flex flex-col gap-4 bg-cafe px-3.5 py-5 text-creme">
+        <Link to="/" className="flex items-center gap-2.5 px-2">
+          <LenaSelo size={28} />
+          <span className="font-display text-[21px] font-bold tracking-tight">
+            lena<span className="text-terracota">.</span>
+          </span>
         </Link>
 
         {tenants.length > 0 ? (
-          <select
-            value={currentTenantId ?? ""}
-            onChange={(e) => setCurrentTenant(e.target.value)}
-            className="rounded-xl border border-creme-edge bg-white px-3 py-2 text-sm text-cafe"
-          >
-            {tenants.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name}
-              </option>
-            ))}
-          </select>
+          <label className="flex cursor-pointer items-center gap-2.5 rounded-xl border border-white/10 bg-white/[0.07] px-3 py-2">
+            <span className="grid h-[26px] w-[26px] flex-shrink-0 place-items-center rounded-lg bg-terracota text-[11px] font-bold text-white">
+              {tenantInitials}
+            </span>
+            <span className="min-w-0 flex-1">
+              <select
+                value={currentTenantId ?? ""}
+                onChange={(e) => setCurrentTenant(e.target.value)}
+                className="w-full cursor-pointer appearance-none truncate border-none bg-transparent text-[13px] font-semibold text-creme outline-none"
+              >
+                {tenants.map((t) => (
+                  <option key={t.id} value={t.id} className="text-cafe">
+                    {t.name}
+                  </option>
+                ))}
+              </select>
+              {currentTenant?.segment ? (
+                <span className="block text-[10.5px] leading-tight text-creme/50">
+                  {currentTenant.segment}
+                </span>
+              ) : null}
+            </span>
+            <IconChevrons size={14} className="flex-shrink-0 opacity-45" />
+          </label>
         ) : (
           <Link
             to="/criar-tenant"
@@ -79,54 +148,83 @@ export function Layout() {
           </Link>
         )}
 
-        <nav className="flex flex-col gap-1 text-sm">
-          {visibleNav.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.to === "/"}
-              className={({ isActive }) =>
-                `rounded-lg px-3 py-2 transition ${
-                  isActive
-                    ? "bg-terracota-soft text-cafe"
-                    : "text-cafe-soft hover:bg-creme-edge"
-                }`
-              }
-            >
-              {item.label}
-            </NavLink>
+        <nav className="flex flex-col gap-0.5">
+          {visibleGroups.map((group) => (
+            <div key={group.label} className="flex flex-col gap-0.5">
+              <div className="px-2.5 pb-1 pt-3.5 text-[9.5px] font-bold uppercase tracking-[0.12em] text-creme/35">
+                {group.label}
+              </div>
+              {group.items.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    end={item.to === "/"}
+                    className={({ isActive }) =>
+                      `flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13.5px] transition ${
+                        isActive
+                          ? "bg-terracota font-semibold text-white shadow-[0_6px_18px_-8px_rgba(227,91,46,0.7)]"
+                          : "text-creme/70 hover:bg-white/5 hover:text-creme"
+                      }`
+                    }
+                  >
+                    <Icon size={16} />
+                    {item.label}
+                  </NavLink>
+                );
+              })}
+            </div>
           ))}
         </nav>
 
-        <div className="mt-auto flex flex-col gap-2 text-xs text-cafe-muted">
-          <span className="truncate">{user?.email}</span>
-          {roleLabel ? (
-            <span className="w-fit rounded-full bg-creme-edge px-2 py-0.5 text-[11px] text-cafe-soft">
-              {roleLabel}
-            </span>
-          ) : null}
+        <div className="mt-auto flex items-center gap-2.5 border-t border-white/10 px-1.5 pt-3">
+          <span className="grid h-[30px] w-[30px] flex-shrink-0 place-items-center rounded-full bg-salvia text-[12px] font-bold text-white">
+            {userInitial}
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block truncate text-[12.5px] font-semibold text-creme">{userName}</span>
+            {roleLabel ? (
+              <span className="block text-[10.5px] text-creme/45">{roleLabel}</span>
+            ) : null}
+          </span>
           <button
             type="button"
+            title="Sair"
             onClick={async () => {
               await signOut();
               navigate("/login", { replace: true });
             }}
-            className="text-left underline hover:text-cafe"
+            className="rounded-lg p-1.5 text-creme/45 transition hover:bg-white/5 hover:text-creme"
           >
-            sair
+            <IconLogout size={15} />
           </button>
         </div>
       </aside>
 
-      <main className="overflow-auto">
-        <div className={fullBleed ? "h-full" : "mx-auto max-w-5xl px-8 py-8"}>
-          {currentTenant && !fullBleed ? (
-            <div className="mb-6 text-sm text-cafe-muted">
-              {currentTenant.segment} ·{" "}
-              <span className="text-cafe">{currentTenant.name}</span>
-            </div>
-          ) : null}
-          <Outlet />
+      {/* ── Conteúdo ─────────────────────────────────────────────────── */}
+      <main className="grid grid-rows-[auto_1fr] overflow-hidden">
+        <div className="flex items-center gap-3 border-b border-creme-edge bg-creme-soft px-7 py-3">
+          <span className="text-[13px] text-cafe-muted">
+            {currentTenant ? (
+              <>
+                {currentTenant.segment} · <b className="font-semibold text-cafe">{currentTenant.name}</b>
+              </>
+            ) : null}
+          </span>
+          <Link
+            to="/agenda"
+            className="ml-auto flex items-center gap-1.5 rounded-[10px] bg-terracota px-4 py-2 text-[13px] font-semibold text-white shadow-[0_4px_16px_rgba(227,91,46,0.35)] transition hover:bg-terracota-dark"
+          >
+            <IconPlus size={14} />
+            Agendar
+          </Link>
+        </div>
+
+        <div className="overflow-auto">
+          <div className={fullBleed ? "h-full" : "mx-auto max-w-5xl px-8 py-7"}>
+            <Outlet />
+          </div>
         </div>
       </main>
     </div>

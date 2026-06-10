@@ -63,7 +63,7 @@ export function Dashboard() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl text-cafe">Visão geral</h1>
+        <h1 className="text-3xl text-cafe">Hoje</h1>
         <div className="flex gap-1 rounded-full border border-creme-edge bg-creme-soft p-1">
           {PERIODS.map((p) => (
             <button
