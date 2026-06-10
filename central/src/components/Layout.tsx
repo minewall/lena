@@ -8,9 +8,10 @@ const navItems: {
   platformOnly?: boolean;
 }[] = [
   { to: "/", label: "Visão geral" },
-  { to: "/cerebro", label: "Cérebro da Lena", adminOnly: true },
+  { to: "/clientes", label: "Clientes" },
   { to: "/conversas", label: "Conversas" },
   { to: "/agenda", label: "Agenda" },
+  { to: "/cerebro", label: "Cérebro da Lena", adminOnly: true },
   { to: "/prospeccao", label: "Prospecção", platformOnly: true },
   { to: "/configuracoes", label: "Configurações", adminOnly: true },
 ];

@@ -19,6 +19,8 @@ import { CreateTenant } from "./pages/CreateTenant";
 import { Dashboard } from "./pages/Dashboard";
 import { Login } from "./pages/Login";
 import { Prospeccao } from "./pages/Prospeccao";
+import { ClientesPage } from "./pages/Clientes";
+import { ClientePerfil } from "./pages/Clientes/Perfil";
 
 export function App() {
   return (
@@ -50,6 +52,8 @@ export function App() {
             <Route path="faq" element={<CerebroFaq />} />
             <Route path="limites" element={<CerebroLimites />} />
           </Route>
+          <Route path="/clientes" element={<ClientesPage />} />
+          <Route path="/clientes/:id" element={<ClientePerfil />} />
           <Route path="/conversas" element={<ConversasPage />} />
           <Route path="/agenda" element={<Agenda />} />
           <Route path="/prospeccao" element={<Prospeccao />} />
