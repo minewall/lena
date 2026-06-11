@@ -1,3 +1,5 @@
+import { EmptyState } from "../../components/EmptyState";
+import { IconBrain } from "../../components/icons";
 import { useEffect, useState } from "react";
 import type { TenantFaq } from "@lena/shared/db";
 import {
@@ -56,9 +58,13 @@ export function CerebroFaq() {
       {loading ? (
         <Card className="text-cafe-soft animate-pulse-soft">carregando…</Card>
       ) : items.length === 0 ? (
-        <Card className="text-cafe-soft">
-          FAQ ainda vazio. Cadastre as perguntas mais comuns dos seus
-          clientes.
+        <Card className="p-0">
+          <EmptyState
+            icon={IconBrain}
+            title="A FAQ ainda está vazia"
+            description="Cadastre as perguntas que mais chegam (preço, horário, como funciona). Cada resposta vira material que a Lena usa para responder na hora, sem inventar."
+            action={{ label: "+ Adicionar pergunta", onClick: add }}
+          />
         </Card>
       ) : (
         items.map((faq) => (

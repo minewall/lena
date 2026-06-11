@@ -8,6 +8,8 @@ import {
 } from "../../lib/clientes";
 import { useAuth } from "../../store/auth";
 import { Card, Select, StatusPill, TextInput } from "../../components/ui";
+import { EmptyState } from "../../components/EmptyState";
+import { IconUsers } from "../../components/icons";
 
 function fmtDate(iso: string | null): string {
   if (!iso) return "—";
@@ -131,12 +133,20 @@ export function ClientesPage() {
       {loading ? (
         <p className="text-cafe-soft animate-pulse-soft">carregando…</p>
       ) : filtrados.length === 0 ? (
-        <Card>
-          <p className="text-sm text-cafe-soft">
-            {clientes.length === 0
-              ? "Nenhum cliente ainda. Quando alguém mandar mensagem pelo WhatsApp, aparece aqui."
-              : "Nenhum cliente com esses filtros."}
-          </p>
+        <Card className="p-0">
+          {clientes.length === 0 ? (
+            <EmptyState
+              icon={IconUsers}
+              title="Seus clientes aparecem aqui"
+              description="Cada pessoa que conversa com a Lena no WhatsApp vira um cliente nesta lista, com histórico e tags. Ainda não chegou ninguém."
+            />
+          ) : (
+            <EmptyState
+              icon={IconUsers}
+              title="Nada com esses filtros"
+              description="Nenhum cliente bate com a busca ou as tags selecionadas. Tente limpar os filtros."
+            />
+          )}
         </Card>
       ) : (
         <div className="overflow-x-auto rounded-[var(--radius-card)] border border-creme-edge">

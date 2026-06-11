@@ -1,3 +1,5 @@
+import { EmptyState } from "../../components/EmptyState";
+import { IconCalendar } from "../../components/icons";
 import { useEffect, useState } from "react";
 import type { TenantService } from "@lena/shared/db";
 import {
@@ -71,9 +73,13 @@ export function CerebroServicos() {
       {loading ? (
         <Card className="text-cafe-soft animate-pulse-soft">carregando…</Card>
       ) : items.length === 0 ? (
-        <Card className="text-cafe-soft">
-          Sem serviços ainda. Adicione o primeiro para a Lena começar a
-          oferecer.
+        <Card className="p-0">
+          <EmptyState
+            icon={IconCalendar}
+            title="Nenhum serviço cadastrado"
+            description="Cada serviço (com preço e duração) entra na agenda e nas respostas da Lena. Adicione o primeiro para ela começar a oferecer e marcar."
+            action={{ label: "+ Adicionar serviço", onClick: add }}
+          />
         </Card>
       ) : (
         items.map((service) => (

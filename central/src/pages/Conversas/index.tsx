@@ -8,7 +8,8 @@ import {
 } from "../../lib/conversations";
 import { supabase } from "../../lib/supabase";
 import { useAuth } from "../../store/auth";
-import { Card } from "../../components/ui";
+import { EmptyState } from "../../components/EmptyState";
+import { IconMessage } from "../../components/icons";
 import { Detail } from "./Detail";
 import { List } from "./List";
 
@@ -157,9 +158,15 @@ export function ConversasPage() {
           <Detail conversation={selected} onConversationChanged={reload} />
         ) : (
           <div className="flex h-full items-center justify-center bg-creme">
-            <Card className="text-cafe-soft">
-              Selecione uma conversa à esquerda.
-            </Card>
+            <EmptyState
+              icon={IconMessage}
+              title={visible.length > 0 ? "Escolha uma conversa" : "Tudo tranquilo por aqui"}
+              description={
+                visible.length > 0
+                  ? "Selecione uma conversa à esquerda para ler o histórico, assumir o atendimento ou adicionar tags."
+                  : "Nenhuma conversa aberta agora. Quando chegar mensagem no WhatsApp da Lena, ela aparece aqui na hora."
+              }
+            />
           </div>
         )}
       </section>
