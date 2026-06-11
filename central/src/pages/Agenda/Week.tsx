@@ -27,6 +27,7 @@ export function AgendaWeek({
   weekStart,
   appointments,
   staffList,
+  availability,
   onDayClick,
   onChanged,
 }: Props) {
@@ -45,41 +46,61 @@ export function AgendaWeek({
   return (
     <>
       <div className="overflow-x-auto">
-        <div className="grid min-w-[640px] grid-cols-7 border-l border-t border-creme-edge">
+        <div className="grid min-w-[920px] grid-cols-7 overflow-hidden rounded-[var(--radius-card)] border border-creme-edge">
           {days.map((d) => {
             const isToday = isSameDay(d, today);
+            const isPast = startOfDay(d).getTime() < today.getTime();
             const dayAppts = apptsForDay(d);
             return (
-              <div key={d.toISOString()} className="border-b border-r border-creme-edge">
+              <div
+                key={d.toISOString()}
+                className={`flex flex-col border-l border-creme-edge first:border-l-0 ${
+                  isPast ? "bg-creme-edge/25" : ""
+                }`}
+              >
                 {/* header do dia */}
                 <button
                   type="button"
                   onClick={() => onDayClick(d)}
-                  className={`w-full px-2 py-2 text-left transition hover:bg-creme-soft ${
-                    isToday ? "bg-terracota-soft/30" : ""
+                  className={`w-full border-b border-creme-edge px-3 py-2.5 text-left transition hover:bg-creme-soft ${
+                    isToday ? "bg-terracota-soft/40" : ""
                   }`}
                 >
-                  <div className={`text-xs font-medium ${isToday ? "text-terracota" : "text-cafe-muted"}`}>
+                  <div
+                    className={`text-[11px] font-bold uppercase tracking-wide ${
+                      isToday ? "text-terracota" : isPast ? "text-cafe-muted/60" : "text-cafe-muted"
+                    }`}
+                  >
                     {WEEKDAY_SHORT[d.getDay()]}
                   </div>
-                  <div className={`text-lg font-display leading-tight ${isToday ? "text-terracota" : "text-cafe"}`}>
+                  <div
+                    className={`font-display text-xl font-bold leading-tight tabular-nums ${
+                      isToday ? "text-terracota" : isPast ? "text-cafe-muted" : "text-cafe"
+                    }`}
+                  >
                     {d.getDate()}
                   </div>
                 </button>
 
                 {/* agendamentos */}
-                <div className="flex min-h-[120px] flex-col gap-0.5 p-1">
+                <div className={`flex min-h-[160px] flex-1 flex-col gap-1 p-1.5 ${isPast ? "opacity-60" : ""}`}>
                   {dayAppts.length === 0 ? (
-                    <button
-                      type="button"
-                      onClick={() => setBooking({ date: d })}
-                      className="flex h-full items-center justify-center rounded-lg text-[10px] text-cafe-muted opacity-0 hover:opacity-100 hover:bg-creme-soft"
-                    >
-                      + agendar
-                    </button>
+                    isPast ? (
+                      <div className="flex h-full items-center justify-center text-[11px] text-cafe-muted/50">
+                        —
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setBooking({ date: d })}
+                        className="flex h-full items-center justify-center rounded-lg text-[11px] text-cafe-muted opacity-0 transition hover:bg-creme-soft hover:opacity-100"
+                      >
+                        + agendar
+                      </button>
+                    )
                   ) : (
                     <>
-                      {dayAppts.slice(0, 4).map((a) => (
+                      {dayAppts.slice(0, 6).map((a) => (
                         <AppointmentCard
                           key={a.id}
                           appt={a}
@@ -88,13 +109,13 @@ export function AgendaWeek({
                           onChanged={onChanged}
                         />
                       ))}
-                      {dayAppts.length > 4 && (
+                      {dayAppts.length > 6 && (
                         <button
                           type="button"
                           onClick={() => onDayClick(d)}
-                          className="rounded-md px-2 py-0.5 text-left text-[10px] text-cafe-soft hover:bg-creme-soft"
+                          className="rounded-md px-2 py-1 text-left text-[11px] font-medium text-terracota hover:bg-creme-soft"
                         >
-                          +{dayAppts.length - 4} mais
+                          +{dayAppts.length - 6} mais
                         </button>
                       )}
                     </>
@@ -110,6 +131,7 @@ export function AgendaWeek({
         <BookingModal
           tenantId={tenantId}
           staffList={staffList}
+          availability={availability}
           preselectedDate={booking.date}
           onBooked={() => { setBooking(null); onChanged(); }}
           onClose={() => setBooking(null)}

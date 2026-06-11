@@ -73,6 +73,11 @@ export function CerebroDados() {
             value={brain.segment}
             onChange={(e) => set("segment", e.target.value)}
           >
+            {/* Se o segmento salvo não for um dos canônicos (ex.: texto livre
+                histórico), mostra ele mesmo em vez de mentir na 1ª opção. */}
+            {!SEGMENTS.some((s) => s.value === brain.segment) && brain.segment ? (
+              <option value={brain.segment}>{brain.segment}</option>
+            ) : null}
             {SEGMENTS.map((s) => (
               <option key={s.value} value={s.value}>
                 {s.label}
