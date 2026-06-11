@@ -22,28 +22,75 @@ realidade alternativa em que a Lena respondeu.**
 A força está no realismo: nada de interface futurista, nada de robô. Pessoa,
 celular, cotidiano brasileiro.
 
+## Decisão de narrativa (Roberto, 2026-06-11): a Lena narra em 1ª pessoa
+
+A Lena conta a história e, no clímax, **quebra o quadro**: deixa de narrar e
+assume como personagem. A virada acontece exatamente em "a recepcionista tem
+hora pra chegar. **Eu não.**" — a frase-assinatura vira o punchline dito por
+ela mesma. Mais quente, com personalidade, sem cara de robô.
+
 ## Roteiro 1 — "A noite da Carla" (30-40s, Reels/Stories)
 
-> **[cena: cozinha de apartamento, 21h40, luz quente. Carla, 35, ainda de
-> roupa de trabalho, lembra de algo no meio do jantar.]**
+**Voz: a Lena, primeira pessoa, calma e próxima. Legenda sempre na tela
+(maioria assiste sem som).**
+
+> LENA: Deixa eu te contar uma história. Acontece toda noite, em algum negócio.
+> **[imagem: cozinha de apartamento à noite, mulher de ~35 com o celular]**
+> 21h40. A Carla lembrou que precisava marcar a sessão.
+> 21h41. Achou o número do estúdio.
+> 21h42. "Nosso atendimento é das 9h às 18h."
+> Ela pensou: será que dá às 7h, antes do trabalho? Mandou mensagem.
+> **[imagem: tela de WhatsApp, balão sem resposta, "visto" não chega]**
+> Ninguém respondeu.
+> 7h50, ela desistiu e foi trabalhar. A recepcionista chegou às 9h.
+> O horário das 7h ficou vazio.
 >
-> OFF: Às 21h40, a Carla lembrou que precisava marcar a sessão.
-> Às 21h41, ela achou o número do estúdio.
-> Às 21h42, veio o aviso: "nosso horário de atendimento é das 9h às 18h".
-> Ela pensou: será que dá antes do trabalho? 7h?
-> Ninguém para responder.
-> Às 7h50 do dia seguinte, ela desistiu e foi trabalhar.
-> A recepcionista chegou às 9h. O horário das 7h ficou vago.
+> **[beat — tela respira]**
 >
-> **[corte seco. Mesma cozinha, 21h42.]**
+> LENA: A recepcionista tem hora pra chegar.
+> **Eu não.**
+> **[vira: aparece o avatar da Lena; ela assume]**
+> Eu sou a Lena. Não durmo, não tiro folga, não deixo recado sem resposta.
+> 21h42, eu teria respondido: "Oi, Carla! Tenho 7h ou 7h30 amanhã. Qual prefere?"
+> 21h43, agendado.
 >
-> OFF: Mas não foi isso que aconteceu.
-> Às 21h42, a Lena respondeu: "Oi, Carla! Tenho 7h ou 7h30 amanhã. Qual prefere?"
-> Às 21h43, estava agendado. Com lembrete marcado.
->
-> **[tela final: balão de WhatsApp real da conversa + avatar da Lena]**
-> LETTERING: Seus clientes não têm hora para querer agendar.
-> A Lena também não. — lena.ia.br
+> **[tela final: balão real do WhatsApp + avatar]**
+> LENA: Seus clientes não têm hora pra querer agendar. Eu também não.
+> lena.ia.br
+
+## Formato (resposta às perguntas)
+
+**Vamos criar um vídeo, sim** — e o formato que recomendo é o mais barato e o
+mais forte ao mesmo tempo:
+
+- **Imagem + narração + texto, os três juntos.** Imagens realistas geradas
+  (a MESMA Carla nas duas realidades), voz da Lena por cima e legenda na tela
+  sincronizada. Som carrega a emoção; legenda garante quem vê sem áudio (a
+  maioria no feed).
+- **Não precisa de vídeo "filmado" nem de animação cara.** A estrutura "cadeia
+  de horários" funciona melhor com imagens quase paradas + leve movimento
+  (zoom/parallax) e cortes secos no ritmo do relógio. É o estilo de muito Reel
+  bom hoje, e é o que conseguimos produzir sem equipe.
+- **Voz da Lena**: dá para gerar com TTS (ex.: ElevenLabs, mesmo ecossistema
+  que já usamos no avatar) numa voz feminina BR calorosa, consistente em todas
+  as peças. Vira a "voz oficial" da Lena — ativo reutilizável.
+- **Pipeline**: gerar 6-8 frames no estilo (duas realidades da Carla) → gerar a
+  locução → montar no CapCut/edição simples com legendas → trilha discreta.
+
+## Direção visual — gente real em contexto (como a Meta faz)
+
+Ideia do Roberto a partir da página da Meta/WhatsApp Business: cercar a Lena de
+**pessoas reais em cenas de negócio**, não de interface/tecnologia. Vale para o
+vídeo, para o site e para os posts por segmento.
+
+- Pessoas brasileiras, luz natural, cotidiano (cozinha de apê, balcão de salão,
+  recepção de clínica, corredor de escola). Emoção contida, nada de stock
+  sorriso-falso. Mesmo princípio do Haile.
+- **Gerar por IA** (pipeline do avatar): garante rosto BR convincente,
+  consistência e — essencial aqui — a mesma pessoa nas duas realidades do corte.
+- A Lena aparece só como o avatar dela no balão de WhatsApp (real, do produto).
+- Aplicar também no site: hoje o lena.ia.br é forte em design mas pobre em
+  rosto humano; uma faixa de "gente sendo atendida" por segmento aproxima.
 
 ## Frases curtas (a do Roberto + variações por dor)
 
