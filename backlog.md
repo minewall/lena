@@ -119,6 +119,9 @@ Itens deferidos para retomar depois.
     - Total: **379 leads** em 10 arquivos. Único segmento ainda sem coleta: IMOBILIARIA. Segmento na coluna `segmento`. Enum: SALAO_BELEZA, CLINICA_ESTETICA, CLINICA_MEDICA, ODONTOLOGIA, TERAPIAS, IMOBILIARIA, ESCOLA, PETSHOP, OUTROS (odonto/terapias/imobiliária add 2026-06-01; pousada foi removida a pedido).
     - ⚠️ Duplicatas cross-segment a resolver na importação: "MF Cabeleireiro" (salões) ≈ "MF Cabeleireiro / Clínica Estética"; "Clínica ComVida (Facebook)" (médicas Osasco) ≈ "Clínica ComVida" (estética Osasco). Campinas usa DDD (19).
 
+## Pilotos
+- [ ] **Tenant de simulação da Clínica FWG na Central** (Roberto, 2026-06-10): criar o tenant "Clínica FWG" com o pré-preenchimento do dossiê (`produto/pilotos/piloto-clinica-fwg.md`) — 8 profissionais (3 nutrólogos, 2 nutris, 1 prep. físico, 1 biomédica, 1 fisio), serviços prováveis, FAQ, limites de saúde — **antes de ter o WhatsApp deles**. Serve como: (a) teste interno da agenda de 8 colunas + paralelos, (b) demo pronta para a sessão com a Jessica, (c) ensaio do onboarding. Quando o número chegar, é só conectar.
+
 ## Ideias de produto (em desenho)
 - 💡 **Add-on Campanhas de Reativação** (WhatsApp) — serviço extra, pacote de créditos mensal. v1 = reativação de base quente. Brief: `produto/campanhas-reativacao.md`. Depende do WhatsApp Cloud API (#2). Confirmar custo real Meta/BSP antes de fechar pricing.
   - [ ] **Aba "Campanhas e promoções" na Central (site + produto)** (ideia Roberto 2026-06-08): 5º painel do carrossel da Central mostrando criar promoção → escolher público (ex: clientes sumidos há 30d) → resultado (enviadas/responderam/agendaram). Posiciona a Lena como motor de receita (proativa), não só reativa. No site: mostrar como funcionalidade, marcar "em breve" (depende de template de marketing Meta + opt-in/LGPD). Vira vitrine do add-on. Guardrail de opt-in = argumento de venda ("campanhas sem queimar seu número").
