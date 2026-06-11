@@ -67,6 +67,7 @@ const NAV_GROUPS: NavGroup[] = [
           { to: "/cerebro", label: "Dados gerais", end: true },
           { to: "/cerebro/servicos", label: "Serviços" },
           { to: "/cerebro/combos", label: "Combos" },
+          { to: "/cerebro/local", label: "Local" },
           { to: "/cerebro/tom", label: "Tom e IA" },
           { to: "/cerebro/faq", label: "FAQ" },
           { to: "/cerebro/limites", label: "Limites" },

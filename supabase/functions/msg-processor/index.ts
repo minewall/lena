@@ -286,7 +286,7 @@ async function respondWithLena(
   }
 
   // load brain + services + categorias + combos + contact + tenant (timezone)
-  const [brainQ, servicesQ, categoriesQ, combosQ, contactQ, tenantQ] =
+  const [brainQ, servicesQ, categoriesQ, combosQ, unitsQ, contactQ, tenantQ] =
     await Promise.all([
       sb.from("tenant_brains").select("*").eq("tenant_id", tenantId).maybeSingle(),
       sb
@@ -305,6 +305,12 @@ async function respondWithLena(
         .eq("tenant_id", tenantId)
         .eq("active", true)
         .order("position", { ascending: true }),
+      sb
+        .from("tenant_units")
+        .select("name, is_primary, address, floor, landmark, parking, amenities, active")
+        .eq("tenant_id", tenantId)
+        .eq("active", true)
+        .order("position", { ascending: true }),
       sb.from("contacts").select("name, notes").eq("id", ctx.contactId).maybeSingle(),
       sb.from("tenants").select("timezone").eq("id", tenantId).maybeSingle(),
     ]);
@@ -313,6 +319,7 @@ async function respondWithLena(
   const services = (servicesQ.data ?? []) as unknown[];
   const categories = (categoriesQ.data ?? []) as unknown[];
   const combos = (combosQ.data ?? []) as unknown[];
+  const units = (unitsQ.data ?? []) as unknown[];
   const contact = contactQ.data as { name: string | null; notes: string | null } | null;
   const tenantTz =
     (tenantQ.data as { timezone?: string } | null)?.timezone || "America/Sao_Paulo";
@@ -398,6 +405,7 @@ async function respondWithLena(
     services as never,
     categories as never,
     combos as never,
+    units as never,
   );
   let system = buildDemoSystem(cfg);
 

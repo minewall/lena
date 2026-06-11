@@ -44,12 +44,18 @@ export interface TenantBrain {
   name?: string;
   segment?: string;
   hours?: string;
-  /** Endereço completo (rua, número, bairro, cidade). */
+  /** Endereço completo da unidade principal (rua, número, bairro, cidade). */
   address?: string;
   /** Estacionamento: tem/não tem, manobrista, conveniado etc. */
   parking?: string;
   /** Ponto de referência para chegar. */
   landmark?: string;
+  /** Andar da unidade principal (ex.: "Térreo", "3º andar"). */
+  floor?: string;
+  /** Comodidades da unidade principal, em rótulos legíveis (ex.: "café"). */
+  amenities?: string[];
+  /** Outras unidades ativas, para a Lena citar quando perguntarem. */
+  otherUnits?: { name: string; address?: string }[];
   services?: BrainService[];
   /** combos: pacotes fechados e ofertas condicionais */
   combos?: BrainCombo[];

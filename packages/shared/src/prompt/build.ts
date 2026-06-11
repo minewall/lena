@@ -131,10 +131,27 @@ function buildLocationBlock(cfg: TenantBrain): string {
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encoded}`;
   const wazeUrl = `https://waze.com/ul?q=${encoded}&navigate=yes`;
 
+  const floor = String(cfg.floor || "").trim();
+  const amenities = (cfg.amenities ?? []).map((a) => String(a).trim()).filter(Boolean);
+  const others = (cfg.otherUnits ?? []).filter((u) => u && String(u.name || "").trim());
+
   const parts: string[] = ["\n\nLOCALIZAÇÃO."];
-  parts.push(`Endereço: ${address}.`);
+  parts.push(`Endereço: ${address}${floor ? ` (${floor})` : ""}.`);
   if (parking) parts.push(`Estacionamento: ${parking}.`);
   if (landmark) parts.push(`Ponto de referência: ${landmark}.`);
+  if (amenities.length > 0) {
+    parts.push(
+      `No local tem: ${amenities.join(", ")}. Mencione quando o cliente perguntar o que encontra aí ou quando ajudar a confirmar a visita.`,
+    );
+  }
+  if (others.length > 0) {
+    const list = others
+      .map((u) => `${u.name}${u.address ? ` (${u.address})` : ""}`)
+      .join("; ");
+    parts.push(
+      `O negócio tem outras unidades: ${list}. Se o cliente perguntar por outra, ofereça e confirme qual fica melhor para ele.`,
+    );
+  }
   parts.push(
     `Quando perguntarem onde fica, como chegar ou sobre estacionamento: responda objetivo em uma frase com endereço${landmark ? ", referência" : ""}${parking ? " e estacionamento" : ""}, e em seguida envie os dois links de navegação, cada um em sua própria linha:`,
   );

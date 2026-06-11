@@ -15,6 +15,7 @@ export type TenantServiceCategory =
 export type TenantCombo = Database["public"]["Tables"]["tenant_combos"]["Row"];
 export type TenantComboItem =
   Database["public"]["Tables"]["tenant_combo_items"]["Row"];
+export type TenantUnit = Database["public"]["Tables"]["tenant_units"]["Row"];
 
 export type WaNumber = Database["public"]["Tables"]["wa_numbers"]["Row"];
 export type WaTemplate = Database["public"]["Tables"]["wa_templates"]["Row"];
@@ -31,6 +32,7 @@ export type TenantServiceCategoryInsert =
 export type TenantComboInsert = Database["public"]["Tables"]["tenant_combos"]["Insert"];
 export type TenantComboItemInsert =
   Database["public"]["Tables"]["tenant_combo_items"]["Insert"];
+export type TenantUnitInsert = Database["public"]["Tables"]["tenant_units"]["Insert"];
 
 // ── Enums ──────────────────────────────────────────────────────────────
 export type TenantRole = Database["public"]["Enums"]["tenant_role"];

@@ -43,9 +43,6 @@ export function CerebroDados() {
         business_name: brain.business_name,
         segment: brain.segment,
         hours: brain.hours,
-        address: brain.address,
-        parking: brain.parking,
-        landmark: brain.landmark,
         promo: brain.promo,
         extras: brain.extras,
       });
@@ -96,35 +93,10 @@ export function CerebroDados() {
           />
         </Field>
 
-        <Field label="Endereço">
-          <TextInput
-            value={brain.address ?? ""}
-            onChange={(e) => set("address", e.target.value)}
-            placeholder="Rua, número, bairro, cidade"
-          />
-        </Field>
-
-        <Field
-          label="Estacionamento"
-          hint="A Lena usa quando perguntam como chegar. Ex.: próprio e gratuito; manobrista R$ 25; sem estacionamento, Estapar na esquina."
-        >
-          <TextInput
-            value={brain.parking ?? ""}
-            onChange={(e) => set("parking", e.target.value)}
-            placeholder="Tem? É pago? Manobrista? Conveniado?"
-          />
-        </Field>
-
-        <Field
-          label="Ponto de referência"
-          hint="Como a Lena explica onde fica. Ex.: ao lado do Pão de Açúcar, prédio azul."
-        >
-          <TextInput
-            value={brain.landmark ?? ""}
-            onChange={(e) => set("landmark", e.target.value)}
-            placeholder="Referência que todo mundo conhece"
-          />
-        </Field>
+        <p className="rounded-[10px] border border-creme-edge bg-creme-soft/60 px-3 py-2 text-xs text-cafe-soft">
+          Endereço, estacionamento, andar e comodidades agora ficam na aba{" "}
+          <b className="text-cafe">Local</b> — dá pra cadastrar mais de uma unidade.
+        </p>
 
         <Field
           label="Promoção atual"

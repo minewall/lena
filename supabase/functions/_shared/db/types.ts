@@ -1213,6 +1213,68 @@ export type Database = {
           },
         ]
       }
+      tenant_units: {
+        Row: {
+          active: boolean
+          address: string | null
+          amenities: Json
+          capacity: number | null
+          created_at: string
+          floor: string | null
+          id: string
+          is_primary: boolean
+          landmark: string | null
+          name: string
+          notes: string | null
+          parking: string | null
+          position: number
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          address?: string | null
+          amenities?: Json
+          capacity?: number | null
+          created_at?: string
+          floor?: string | null
+          id?: string
+          is_primary?: boolean
+          landmark?: string | null
+          name: string
+          notes?: string | null
+          parking?: string | null
+          position?: number
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          address?: string | null
+          amenities?: Json
+          capacity?: number | null
+          created_at?: string
+          floor?: string | null
+          id?: string
+          is_primary?: boolean
+          landmark?: string | null
+          name?: string
+          notes?: string | null
+          parking?: string | null
+          position?: number
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_units_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tenants: {
         Row: {
           created_at: string

@@ -24,6 +24,38 @@ interface ComboLite {
   items: { service_id: string; qty: number }[];
 }
 
+/** Unidade mínima vinda do banco. */
+interface UnitLite {
+  name: string;
+  is_primary: boolean;
+  address: string | null;
+  floor: string | null;
+  landmark: string | null;
+  parking: string | null;
+  amenities: Record<string, boolean> | null;
+  active: boolean;
+}
+
+/** Comodidades: key → rótulo legível (mesma lista do front lib/unidades). */
+const AMENITY_LABELS: Record<string, string> = {
+  elevator: "elevador",
+  electronic_gate: "portaria eletrônica",
+  accessibility: "acessibilidade",
+  ac: "ar-condicionado",
+  wifi: "wi-fi",
+  coffee: "café",
+  drinks: "água e bebidas",
+  phone_charging: "carregador de celular",
+  workstation: "estação de trabalho",
+};
+
+function amenityLabels(amenities: Record<string, boolean> | null): string[] {
+  if (!amenities) return [];
+  return Object.entries(amenities)
+    .filter(([, on]) => on)
+    .map(([k]) => AMENITY_LABELS[k] ?? k);
+}
+
 function formatPriceBRL(cents: number | null | undefined): string {
   if (cents == null) return "";
   return (cents / 100).toLocaleString("pt-BR", {
@@ -113,17 +145,31 @@ export function brainRecordToPrompt(
   services: TenantService[],
   categories: CategoryLite[] = [],
   combos: ComboLite[] = [],
+  units: UnitLite[] = [],
 ): TenantBrain {
   const b = brain as BrainExtra;
   const catLabel = categoryLabels(categories);
   const serviceNames = new Map(services.map((s) => [s.id, s.name]));
+
+  // Localização: prefere a unidade primária; cai nos campos do brain (legado)
+  // quando não há unidades cadastradas.
+  const activeUnits = units.filter((u) => u.active);
+  const primary =
+    activeUnits.find((u) => u.is_primary) ?? activeUnits[0] ?? null;
+  const others = activeUnits
+    .filter((u) => u !== primary && String(u.address || "").trim())
+    .map((u) => ({ name: u.name, address: u.address ?? undefined }));
+
   return {
     name: brain.business_name,
     segment: brain.segment,
     hours: brain.hours ?? "",
-    address: brain.address ?? "",
-    parking: b.parking ?? "",
-    landmark: b.landmark ?? "",
+    address: (primary?.address ?? brain.address) ?? "",
+    parking: (primary?.parking ?? b.parking) ?? "",
+    landmark: (primary?.landmark ?? b.landmark) ?? "",
+    floor: primary?.floor ?? "",
+    amenities: amenityLabels(primary?.amenities ?? null),
+    otherUnits: others,
     tone: brain.tone,
     promo: brain.promo ?? "",
     extras: brain.extras ?? "",
