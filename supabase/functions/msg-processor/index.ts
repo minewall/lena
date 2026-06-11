@@ -285,21 +285,34 @@ async function respondWithLena(
     return;
   }
 
-  // load brain + services + contact + tenant (timezone)
-  const [brainQ, servicesQ, contactQ, tenantQ] = await Promise.all([
-    sb.from("tenant_brains").select("*").eq("tenant_id", tenantId).maybeSingle(),
-    sb
-      .from("tenant_services")
-      .select("*")
-      .eq("tenant_id", tenantId)
-      .eq("active", true)
-      .order("position", { ascending: true }),
-    sb.from("contacts").select("name, notes").eq("id", ctx.contactId).maybeSingle(),
-    sb.from("tenants").select("timezone").eq("id", tenantId).maybeSingle(),
-  ]);
+  // load brain + services + categorias + combos + contact + tenant (timezone)
+  const [brainQ, servicesQ, categoriesQ, combosQ, contactQ, tenantQ] =
+    await Promise.all([
+      sb.from("tenant_brains").select("*").eq("tenant_id", tenantId).maybeSingle(),
+      sb
+        .from("tenant_services")
+        .select("*")
+        .eq("tenant_id", tenantId)
+        .eq("active", true)
+        .order("position", { ascending: true }),
+      sb
+        .from("tenant_service_categories")
+        .select("id, parent_id, name")
+        .eq("tenant_id", tenantId),
+      sb
+        .from("tenant_combos")
+        .select("*, items:tenant_combo_items(service_id, qty)")
+        .eq("tenant_id", tenantId)
+        .eq("active", true)
+        .order("position", { ascending: true }),
+      sb.from("contacts").select("name, notes").eq("id", ctx.contactId).maybeSingle(),
+      sb.from("tenants").select("timezone").eq("id", tenantId).maybeSingle(),
+    ]);
 
   const brain = brainQ.data as Record<string, unknown> | null;
   const services = (servicesQ.data ?? []) as unknown[];
+  const categories = (categoriesQ.data ?? []) as unknown[];
+  const combos = (combosQ.data ?? []) as unknown[];
   const contact = contactQ.data as { name: string | null; notes: string | null } | null;
   const tenantTz =
     (tenantQ.data as { timezone?: string } | null)?.timezone || "America/Sao_Paulo";
@@ -380,7 +393,12 @@ async function respondWithLena(
   const dialogModel = ALLOWED_DIALOG_MODELS.has(brainModel) ? brainModel : DEFAULT_MODEL;
 
   // prompt
-  const cfg = brainRecordToPrompt(brain as never, services as never);
+  const cfg = brainRecordToPrompt(
+    brain as never,
+    services as never,
+    categories as never,
+    combos as never,
+  );
   let system = buildDemoSystem(cfg);
 
   if (contact?.notes && contact.notes.trim().length > 0) {

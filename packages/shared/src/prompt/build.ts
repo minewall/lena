@@ -4,9 +4,63 @@ import { describeTone } from "../tones/index.js";
 function formatServices(services?: TenantBrain["services"]): string {
   const list = (services ?? [])
     .filter((s) => s && s.n && String(s.n).trim())
-    .map((s) => `${s.n} (${String(s.p ?? "").trim() || "sob consulta"})`)
+    .map((s) => {
+      const bits: string[] = [String(s.p ?? "").trim() || "sob consulta"];
+      if (s.dur) bits.push(`~${s.dur}min`);
+      if (s.sessions && s.sessions > 1) {
+        bits.push(
+          s.interval
+            ? `${s.sessions} sessões a cada ${s.interval} dias`
+            : `${s.sessions} sessões`,
+        );
+      }
+      if (s.cat) bits.push(`em ${s.cat}`);
+      return `${s.n} (${bits.join(", ")})`;
+    })
     .join("; ");
   return list || "não detalhados";
+}
+
+function buildPrepBlock(cfg: TenantBrain): string {
+  const withPrep = (cfg.services ?? []).filter(
+    (s) => s && s.n && String(s.prep || "").trim(),
+  );
+  if (withPrep.length === 0) return "";
+  const lines = withPrep
+    .map((s) => `- ${s.n}: ${String(s.prep).trim()}`)
+    .join("\n");
+  return `\n\nPREPAROS E PRÉ-REQUISITOS.\nAlguns serviços exigem preparo antes. Sempre que o cliente for agendar um destes, avise o preparo ANTES de confirmar, de forma curta e gentil:\n${lines}`;
+}
+
+function buildSessionsBlock(cfg: TenantBrain): string {
+  const series = (cfg.services ?? []).filter(
+    (s) => s && s.n && s.sessions && s.sessions > 1,
+  );
+  if (series.length === 0) return "";
+  const lines = series
+    .map(
+      (s) =>
+        `- ${s.n}: ${s.sessions} sessões${s.interval ? ` (a cada ${s.interval} dias)` : ""}`,
+    )
+    .join("\n");
+  return `\n\nTRATAMENTOS EM SÉRIE.\nEstes serviços têm um número previsto de sessões. Ao agendar, já proponha a série inteira de uma vez, sugerindo as datas e perguntando se os dias atendem. Considere isso em remarcações.\n${lines}`;
+}
+
+function buildCombosBlock(cfg: TenantBrain): string {
+  const combos = (cfg.combos ?? []).filter((c) => c && String(c.name || "").trim());
+  if (combos.length === 0) return "";
+  const lines = combos.map((c) => {
+    const items = (c.items ?? []).filter(Boolean).join(", ");
+    if (c.kind === "condicional") {
+      const desc = c.discount
+        ? `ao fechar ${c.trigger || "o serviço"}, ofereça ${items || "o serviço"} com ${c.discount}% de desconto`
+        : c.desc || items;
+      return `- ${c.name}: ${desc}.`;
+    }
+    const price = String(c.price || "").trim();
+    return `- ${c.name}${price ? ` (${price})` : ""}: inclui ${items || "vários serviços"}.`;
+  });
+  return `\n\nCOMBOS E OFERTAS.\nOfereça no momento certo, sem empurrar. Cite o combo quando o que o cliente já quer se encaixa nele:\n${lines.join("\n")}`;
 }
 
 function buildRestrictionsBlock(cfg: TenantBrain): string {
@@ -108,6 +162,9 @@ export function buildDemoSystem(cfg: TenantBrain): string {
   const restrictionsBlock = buildRestrictionsBlock(cfg);
   const teamBlock = buildTeamBlock(cfg);
   const locationBlock = buildLocationBlock(cfg);
+  const prepBlock = buildPrepBlock(cfg);
+  const sessionsBlock = buildSessionsBlock(cfg);
+  const combosBlock = buildCombosBlock(cfg);
   return `Você é a Lena, a recepcionista virtual com IA do negócio "${cfg.name || "o negócio"}" (${cfg.segment || "negócio de serviço"}). Você atende clientes pelo WhatsApp e é ótima no que faz. Resolve, não enrola.
 
 Seu tom é ${tone}. Responda em português do Brasil, breve e natural (1 a 3 frases curtas).
@@ -130,5 +187,5 @@ COMO VOCÊ AGE
 • Seja proativa e resolvedora, como recepcionista experiente. Cite preço, horário e benefício quando o cliente perguntar. Não fique vaga.
 • Conduza para agendar ou para o próximo passo natural sempre que fizer sentido.
 • Se for sua primeira fala nesta conversa, apresente-se em uma frase curta antes de responder. Quando fizer sentido, ofereça caminhos curtos para o cliente escolher (por exemplo: "posso te contar sobre planos, agendar uma visita ou tirar uma dúvida específica, o que te ajuda mais?"). Sem listas longas.
-• Só envolva um humano em casos fora do alcance (reclamações sérias, situações sensíveis, questões médicas ou clínicas, pagamentos com problema).${locationBlock}${restrictionsBlock}${teamBlock}`;
+• Só envolva um humano em casos fora do alcance (reclamações sérias, situações sensíveis, questões médicas ou clínicas, pagamentos com problema).${prepBlock}${sessionsBlock}${combosBlock}${locationBlock}${restrictionsBlock}${teamBlock}`;
 }
