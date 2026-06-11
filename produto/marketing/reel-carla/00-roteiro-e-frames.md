@@ -15,10 +15,13 @@ monte no CapCut. Formato: vertical 9:16, ~35s, Reels/Stories.
 ## BLOCO PERSONAGEM (colar igual em todo frame de pessoa)
 
 ```
-A 35-year-old Brazilian woman named Carla, warm light-brown skin, dark wavy
-shoulder-length hair, soft natural everyday features, no heavy makeup, wearing
-a mustard-yellow knit sweater. Real, relatable, not a model.
+A 30-something Brazilian woman named Carla, warm light-brown skin, dark hair in
+a messy low bun with loose strands framing her face, soft natural everyday
+features, no heavy makeup, wearing a dark olive-green knit sweater. Real,
+relatable, not a model.
 ```
+*(Travado na imagem-mãe gerada — Frame 1 #2: sentada no balcão da cozinha,
+suéter verde-oliva, coque desfeito. Repita igual nos frames 3, 5 e 6.)*
 
 ## BLOCO ESTILO (colar igual em TODOS os frames)
 
@@ -57,8 +60,8 @@ depois. Horário 21h42. Montar no CapCut/Figma com a fonte real do WhatsApp.
 > the first slot of the day that stayed empty. No people. [BLOCO ESTILO]
 
 ### Frame 5 — A VIRADA (mesma cozinha, 21h42, resolvido)
-> [BLOCO PERSONAGEM] same apartment kitchen, same night, same mustard sweater,
-> same warm light — but now looking at her phone with a small relieved smile, a
+> [BLOCO PERSONAGEM] same apartment kitchen, same night, same olive-green
+> sweater, same warm light — but now looking at her phone with a small relieved smile, a
 > tiny exhale of relief, shoulders softening. [BLOCO ESTILO]
 *(Idêntico ao Frame 1 em cenário/roupa/luz — só a EMOÇÃO muda, de aflição para
 alívio. É o que faz o "e se" ler na hora.)*

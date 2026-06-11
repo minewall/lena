@@ -19,7 +19,7 @@ Saída: PNG/JPG, vertical 9:16, 1080×1920+. Salvar como `assets/frames/frame-N.
 **Gemini:**
 > Generate a photorealistic vertical 9:16 image. A 35-year-old Brazilian woman —
 > warm light-brown skin, dark wavy shoulder-length hair, soft natural everyday
-> features, minimal makeup, wearing a mustard-yellow knit sweater — stands in a
+> features, minimal makeup, wearing a dark olive-green knit sweater — stands in a
 > small São Paulo apartment kitchen at night. Warm overhead light, a dark window
 > behind her. She holds her phone and has just remembered something she forgot:
 > a soft "oh no" expression, eyebrows lifting, slightly worried. Intimate, quiet,
@@ -30,7 +30,7 @@ Saída: PNG/JPG, vertical 9:16, 1080×1920+. Salvar como `assets/frames/frame-N.
 **Midjourney:**
 > photorealistic candid portrait, 35-year-old Brazilian woman, warm light-brown
 > skin, dark wavy shoulder-length hair, soft natural features, minimal makeup,
-> mustard-yellow knit sweater, small São Paulo apartment kitchen at night, warm
+> dark olive-green knit sweater, small São Paulo apartment kitchen at night, warm
 > overhead light, dark window behind, holding phone, sudden "oh no" realization,
 > worried eyebrows, intimate quiet mood, shot on 35mm film, shallow depth of
 > field, muted warm palette cream terracotta brown, cinematic, no text --ar 9:16 --style raw --v 7
@@ -40,7 +40,7 @@ Saída: PNG/JPG, vertical 9:16, 1080×1920+. Salvar como `assets/frames/frame-N.
 ## Frame 3 — A desistência (manhã seguinte)
 
 **Gemini (edição — anexe o Frame 1):**
-> Using the same woman from this image (same face, same mustard-yellow sweater,
+> Using the same woman from this image (same face, same dark olive-green sweater,
 > same hair), now show her the next morning, dressed for work, in soft morning
 > light from a window, putting her phone into her bag with a small resigned sigh
 > and a flicker of frustration — she has given up. Keep the same photorealistic
@@ -48,7 +48,7 @@ Saída: PNG/JPG, vertical 9:16, 1080×1920+. Salvar como `assets/frames/frame-N.
 
 **Midjourney:**
 > photorealistic candid portrait, same 35-year-old Brazilian woman, dark wavy
-> hair, mustard-yellow knit sweater, next morning, dressed for work, soft morning
+> hair, dark olive-green knit sweater, next morning, dressed for work, soft morning
 > window light, putting phone into her bag, small resigned sigh, flicker of
 > frustration, giving up, 35mm film, shallow depth of field, muted warm palette
 > cream terracotta brown, cinematic, no text --ar 9:16 --style raw --v 7 --cref <URL_FRAME1> --cw 100
@@ -79,14 +79,14 @@ Saída: PNG/JPG, vertical 9:16, 1080×1920+. Salvar como `assets/frames/frame-N.
 > ler na hora do corte.
 
 **Gemini (edição — anexe o Frame 1):**
-> Using the exact same woman, same mustard-yellow sweater, same kitchen, same
+> Using the exact same woman, same dark olive-green sweater, same kitchen, same
 > night, same warm light and same framing as this image — but now she is looking
 > at her phone with a small relieved smile, a tiny exhale of relief, shoulders
 > softening. Change only her emotion, from worry to relief. Same photorealistic
 > 35mm style. Vertical 9:16, no text.
 
 **Midjourney:**
-> photorealistic candid portrait, same 35-year-old Brazilian woman, mustard-yellow
+> photorealistic candid portrait, same 35-year-old Brazilian woman, dark olive-green
 > knit sweater, same kitchen at night, warm overhead light, looking at her phone
 > with a small relieved smile, tiny exhale of relief, shoulders softening, 35mm
 > film, shallow depth of field, muted warm palette cream terracotta brown,
@@ -97,13 +97,13 @@ Saída: PNG/JPG, vertical 9:16, 1080×1920+. Salvar como `assets/frames/frame-N.
 ## Frame 6 — O alívio (agendado)
 
 **Gemini (edição — anexe o Frame 1):**
-> Using the same woman (same face, mustard-yellow sweater) in the same kitchen,
+> Using the same woman (same face, dark olive-green sweater) in the same kitchen,
 > show her setting her phone down on the counter, relaxed, reaching for a cup of
 > tea, calm and content, the worry gone. Same 35mm style and muted warm palette.
 > Vertical 9:16, no text.
 
 **Midjourney:**
-> photorealistic candid portrait, same 35-year-old Brazilian woman, mustard-yellow
+> photorealistic candid portrait, same 35-year-old Brazilian woman, dark olive-green
 > knit sweater, same kitchen, setting phone down on counter, relaxed, reaching for
 > a cup of tea, calm and content, worry gone, 35mm film, muted warm palette cream
 > terracotta brown, cinematic, no text --ar 9:16 --style raw --v 7 --cref <URL_FRAME1> --cw 100
