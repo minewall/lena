@@ -92,6 +92,85 @@ vídeo, para o site e para os posts por segmento.
 - Aplicar também no site: hoje o lena.ia.br é forte em design mas pobre em
   rosto humano; uma faixa de "gente sendo atendida" por segmento aproxima.
 
+## Os dois eixos da campanha
+
+A mesma estrutura (Lena narra → quebra de quadro → ela assume), duas dores:
+
+- **Eixo A — "Hora errada" (disponibilidade).** O cliente quer, mas é fora do
+  horário e ninguém responde. Ex.: Roteiro 1 (Carla / agendamento).
+- **Eixo B — "Match invisível" (a oferta existia, o cliente nunca soube).**
+  O cliente tem uma dúvida específica ("vocês atendem meu caso?") e desiste sem
+  resposta. A virada cruel: o negócio TINHA exatamente o que ele procurava. A
+  revelação final mostra o "tesouro" parado (logo da marca, estoque lotado).
+  Aversão à perda + especificidade = a abordagem de maior conversão.
+
+## Roteiro 2 — "O carro do João" (Eixo B · oficina)
+
+**Voz: a Lena, 1ª pessoa. Legenda sempre.**
+
+> LENA: O João tava com um problema no câmbio. Carro importado, desses que nem
+> toda oficina mexe.
+> **[imagem: homem na garagem, capô aberto, celular na mão, testa franzida]**
+> Ele achou uma oficina perto de casa e mandou: "vocês atendem [marca]?"
+> 14h32. "Nosso atendimento é de segunda a sexta, das 8h às 18h." (automática)
+> Ele esperou. Ninguém respondeu a pergunta.
+> 14h50, foi pro Google. Achou outra. Levou o carro pra lá.
+>
+> **[beat]**
+>
+> LENA: E o que o João nunca soube?
+> **[REVELAÇÃO: a parede daquela primeira oficina, coberta de logos das marcas
+> que eles atendem — a marca EXATA do carro do João em destaque]**
+> Aquela oficina era especialista na marca dele. Tinha a peça. Tinha o mecânico
+> certo. Só não tinha quem respondesse.
+> **[vira: avatar da Lena]**
+> Eu teria respondido na hora: "Atendemos sim, somos especialistas nessa marca.
+> Quer trazer hoje?"
+>
+> **[tela final]**
+> LENA: Seu cliente está perguntando se você resolve o problema dele. Deixa eu
+> responder. lena.ia.br
+
+## Roteiro 3 — "O vestido da Renata" (Eixo B · loja)
+
+> LENA: A Renata procurava um vestido pra um casamento. Tamanho 46, cor
+> terracota. Difícil de achar.
+> **[imagem: mulher no sofá rolando o feed, meio sem esperança]**
+> Viu uma loja no Instagram e mandou direct: "vocês têm 46?"
+> Sábado, 21h. Sem resposta. Domingo ela comprou em outra.
+>
+> **[beat]**
+>
+> LENA: E o que a loja perdeu?
+> **[REVELAÇÃO: a arara da loja, três vestidos terracota tamanho 46, etiqueta
+> visível, pendurados, parados]**
+> Tinha. Três, na cor exata. Esperando. Ninguém respondeu o direct.
+> **[vira: avatar da Lena]**
+> Eu respondo todo direct na hora, até de madrugada: "Temos sim, 46 terracota.
+> Quer que eu separe pra você?"
+>
+> **[tela final]**
+> LENA: Seu estoque não vende parado. E não devia morrer por falta de resposta.
+> lena.ia.br
+
+## Formatos no Instagram (a campanha vira série)
+
+A mesma história roda em três formatos, do mais barato ao mais caro:
+
+1. **Carrossel** (mais barato, ótimo de salvar/compartilhar): cada slide é um
+   momento da cadeia (21h40… 21h42… sem resposta…), o penúltimo é a REVELAÇÃO
+   (estoque/logo) e o último é a Lena + frase. Não precisa de voz nem edição de
+   vídeo. É o formato para PRODUZIR EM VOLUME (1 por dor/segmento).
+2. **Reel** (o principal): o roteiro narrado pela Lena (voz TTS) + frames +
+   legenda. Mais trabalho, mais alcance. 1-2 por mês, fixados.
+3. **Story com enquete**: "Seu negócio responde direct fora do horário?
+   sim / não" → quem responde "não" recebe o card da Lena. Gera interação e
+   qualifica lead.
+
+Sugestão de calendário: 1 Reel/mês (a história forte) + 2-3 carrosséis/mês
+(variações por segmento) + stories de enquete intercalados. Tudo apontando pra
+bio → lena.ia.br.
+
 ## Frases curtas (a do Roberto + variações por dor)
 
 - **"Seus clientes não têm hora para querer agendar. A Lena também não."** (a original, lapidada)
