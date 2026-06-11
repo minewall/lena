@@ -1,6 +1,5 @@
 import { type FormEvent, useEffect, useState } from "react";
-import type { TenantBrainRow } from "@lena/shared/db";
-import { loadBrain, updateBrain } from "../../lib/brain";
+import { loadBrain, updateBrain, type TenantBrainRow } from "../../lib/brain";
 import { SEGMENTS } from "../../lib/segments";
 import { useAuth } from "../../store/auth";
 import { Button, Card, Field, Select, StatusPill, TextInput, Textarea } from "../../components/ui";
@@ -45,6 +44,8 @@ export function CerebroDados() {
         segment: brain.segment,
         hours: brain.hours,
         address: brain.address,
+        parking: brain.parking,
+        landmark: brain.landmark,
         promo: brain.promo,
         extras: brain.extras,
       });
@@ -95,6 +96,28 @@ export function CerebroDados() {
             value={brain.address ?? ""}
             onChange={(e) => set("address", e.target.value)}
             placeholder="Rua, número, bairro, cidade"
+          />
+        </Field>
+
+        <Field
+          label="Estacionamento"
+          hint="A Lena usa quando perguntam como chegar. Ex.: próprio e gratuito; manobrista R$ 25; sem estacionamento, Estapar na esquina."
+        >
+          <TextInput
+            value={brain.parking ?? ""}
+            onChange={(e) => set("parking", e.target.value)}
+            placeholder="Tem? É pago? Manobrista? Conveniado?"
+          />
+        </Field>
+
+        <Field
+          label="Ponto de referência"
+          hint="Como a Lena explica onde fica. Ex.: ao lado do Pão de Açúcar, prédio azul."
+        >
+          <TextInput
+            value={brain.landmark ?? ""}
+            onChange={(e) => set("landmark", e.target.value)}
+            placeholder="Referência que todo mundo conhece"
           />
         </Field>
 

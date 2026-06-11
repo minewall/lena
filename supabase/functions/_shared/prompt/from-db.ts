@@ -25,6 +25,8 @@ function formatPriceBRL(cents: number | null | undefined): string {
  */
 // Campos adicionados por migration que ainda não estão nos tipos gerados.
 type BrainExtra = TenantBrainRow & {
+  parking?: string | null;
+  landmark?: string | null;
   restrictions?: string | null;
   escalation_triggers?: string[] | null;
   team_public?: unknown;
@@ -56,6 +58,9 @@ export function brainRecordToPrompt(
     name: brain.business_name,
     segment: brain.segment,
     hours: brain.hours ?? "",
+    address: brain.address ?? "",
+    parking: b.parking ?? "",
+    landmark: b.landmark ?? "",
     tone: brain.tone,
     promo: brain.promo ?? "",
     extras: brain.extras ?? "",

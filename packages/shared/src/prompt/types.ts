@@ -14,6 +14,12 @@ export interface TenantBrain {
   name?: string;
   segment?: string;
   hours?: string;
+  /** Endereço completo (rua, número, bairro, cidade). */
+  address?: string;
+  /** Estacionamento: tem/não tem, manobrista, conveniado etc. */
+  parking?: string;
+  /** Ponto de referência para chegar. */
+  landmark?: string;
   services?: BrainService[];
   promo?: string;
   extras?: string;

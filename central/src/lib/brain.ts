@@ -17,6 +17,8 @@ export interface TeamMemberRow {
 
 export type TenantBrainRow = BaseTenantBrainRow & {
   ai_model: string;
+  parking: string | null;
+  landmark: string | null;
   restrictions: string | null;
   escalation_triggers: string[];
   team_public: TeamMemberRow[];
@@ -25,6 +27,8 @@ export type TenantBrainRow = BaseTenantBrainRow & {
 
 export type TenantBrainUpdate = BaseTenantBrainUpdate & {
   ai_model?: string;
+  parking?: string | null;
+  landmark?: string | null;
   restrictions?: string | null;
   escalation_triggers?: string[];
   team_public?: TeamMemberRow[];

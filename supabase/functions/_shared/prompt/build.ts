@@ -72,6 +72,30 @@ function buildTeamBlock(cfg: TenantBrain): string {
   return parts.join("\n");
 }
 
+function buildLocationBlock(cfg: TenantBrain): string {
+  const address = String(cfg.address || "").trim();
+  if (!address) return "";
+  const parking = String(cfg.parking || "").trim();
+  const landmark = String(cfg.landmark || "").trim();
+  const encoded = encodeURIComponent(address);
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encoded}`;
+  const wazeUrl = `https://waze.com/ul?q=${encoded}&navigate=yes`;
+
+  const parts: string[] = ["\n\nLOCALIZAÇÃO."];
+  parts.push(`Endereço: ${address}.`);
+  if (parking) parts.push(`Estacionamento: ${parking}.`);
+  if (landmark) parts.push(`Ponto de referência: ${landmark}.`);
+  parts.push(
+    `Quando perguntarem onde fica, como chegar ou sobre estacionamento: responda objetivo em uma frase com endereço${landmark ? ", referência" : ""}${parking ? " e estacionamento" : ""}, e em seguida envie os dois links de navegação, cada um em sua própria linha:`,
+  );
+  parts.push(`Google Maps: ${mapsUrl}`);
+  parts.push(`Waze: ${wazeUrl}`);
+  parts.push(
+    "Depois de CONFIRMAR um agendamento, envie também uma mensagem curta com a localização e esses dois links, para a pessoa já salvar o caminho. Não reenvie os links se já mandou nesta conversa.",
+  );
+  return parts.join("\n");
+}
+
 /**
  * System prompt da Lena.
  *
@@ -87,6 +111,7 @@ export function buildDemoSystem(cfg: TenantBrain): string {
   const svc = formatServices(cfg.services);
   const restrictionsBlock = buildRestrictionsBlock(cfg);
   const teamBlock = buildTeamBlock(cfg);
+  const locationBlock = buildLocationBlock(cfg);
   return `Você é a Lena, a recepcionista virtual com IA do negócio "${cfg.name || "o negócio"}" (${cfg.segment || "negócio de serviço"}). Você atende clientes pelo WhatsApp e é ótima no que faz. Resolve, não enrola.
 
 Seu tom é ${tone}. Responda em português do Brasil, breve e natural (1 a 3 frases curtas).
@@ -109,5 +134,5 @@ COMO VOCÊ AGE
 • Seja proativa e resolvedora, como recepcionista experiente. Cite preço, horário e benefício quando o cliente perguntar. Não fique vaga.
 • Conduza para agendar ou para o próximo passo natural sempre que fizer sentido.
 • Se for sua primeira fala nesta conversa, apresente-se em uma frase curta antes de responder. Quando fizer sentido, ofereça caminhos curtos para o cliente escolher (por exemplo: "posso te contar sobre planos, agendar uma visita ou tirar uma dúvida específica, o que te ajuda mais?"). Sem listas longas.
-• Só envolva um humano em casos fora do alcance (reclamações sérias, situações sensíveis, questões médicas ou clínicas, pagamentos com problema).${restrictionsBlock}${teamBlock}`;
+• Só envolva um humano em casos fora do alcance (reclamações sérias, situações sensíveis, questões médicas ou clínicas, pagamentos com problema).${locationBlock}${restrictionsBlock}${teamBlock}`;
 }
