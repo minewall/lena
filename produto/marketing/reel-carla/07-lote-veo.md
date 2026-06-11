@@ -16,6 +16,12 @@ Frame 1 já está pronto (`assets/frames/frame-1.mp4`). Faltam **4 clipes**:
 
 Ordem sugerida: **5 → 3 → 6 → 4** (faça o 5 logo, ele é o gêmeo do 1).
 
+> ⚠️ **REGRA DE OURO (não pule o still).** A emoção mora no **still**, não no
+> movimento. NÃO anime a `frame-1` (preocupada) tentando virar alívio — o modelo
+> só amplifica a tensão e **arregala o olho**. Gere o still com a emoção-alvo já
+> pronta, e deixe o motion prompt quase sem movimento facial. Para pessoas,
+> prefira **Veo 3.1** (o Kling "video-edit" exagera).
+
 ---
 
 ## Frame 5 — A VIRADA (o mais sensível: gêmeo do Frame 1, alívio)
@@ -24,21 +30,25 @@ Ordem sugerida: **5 → 3 → 6 → 4** (faça o 5 logo, ele é o gêmeo do 1).
 > luz, enquadramento. Só a EMOÇÃO muda: aflição → alívio. É o que faz o "e se"
 > bater no corte.
 
-**Still (aba Imagem — anexe `frame-1.png` como referência):**
+**Still (aba Imagem — anexe `frame-1.png` como referência). O still TEM que já
+parecer aliviado:**
 ```
-Using the exact same woman from the reference image — same face, same dark hair
-in a messy low bun, same dark olive-green knit sweater, same kitchen at night,
-same warm overhead light and same framing — but now she is looking at her phone
-with a small relieved smile, a tiny exhale of relief, shoulders softening.
-Change ONLY her emotion, from worry to relief. Same photoreal 35mm film look,
-shallow depth of field, muted warm palette. Vertical 9:16. No text.
+Using the exact same woman from the reference — same face, same dark hair in a
+messy low bun, same dark olive-green knit sweater, same kitchen at night, same
+warm light and same framing. Change ONLY her expression to calm RELIEF: eyes
+relaxed and soft, NOT wide, no surprise, no shock. A gentle small closed-mouth
+smile, eyebrows relaxed, shoulders lowered, the tension gone from her face. She
+looks reassured, at peace. Photoreal 35mm film look, shallow depth of field,
+muted warm palette. Vertical 9:16. No text.
 ```
-**Motion (aba Vídeo — Quadro inicial = `frame-5.png`):**
+**Motion (aba Vídeo — Quadro inicial = `frame-5.png`, o still JÁ aliviado).
+Movimento quase zero:**
 ```
-Same framing and lighting as the opening shot. Her face softens into a small
-relieved smile, a tiny exhale of relief, shoulders releasing. Gentle, almost
-imperceptible slow push-in matching the opening. Photoreal 35mm, muted warm
-palette. No text. 4 seconds.
+Minimal movement. She gives a small, slow exhale of relief and her shoulders
+settle; the gentle closed-mouth smile stays. Calm and soft the entire time. She
+does NOT widen her eyes, NO surprise, NO shock, NO raised eyebrows — eyes stay
+relaxed and half-lidded throughout. Almost imperceptible slow push-in. Photoreal
+35mm. No text. 4 seconds.
 ```
 
 ---
