@@ -52,9 +52,9 @@ depois. Horário 21h42. Montar no CapCut/Figma com a fonte real do WhatsApp.
 > of frustration. She gives up. [BLOCO ESTILO]
 
 ### Frame 4 — A perda consumada (o horário vazio)
-> An empty treatment room / studio reception at 7am, soft early light, one empty
-> chair, nobody there, quiet and still — the 7am slot that stayed empty. No people.
-> [BLOCO ESTILO]
+> An empty treatment room / studio reception in the morning, just opened, soft
+> daylight through the window, one empty chair, nobody there, quiet and still —
+> the first slot of the day that stayed empty. No people. [BLOCO ESTILO]
 
 ### Frame 5 — A VIRADA (mesma cozinha, 21h42, resolvido)
 > [BLOCO PERSONAGEM] same apartment kitchen, same night, same mustard sweater,
@@ -85,7 +85,7 @@ virada). No fecho, sorriso na voz.**
 | 0:00–0:04 | F1 | "Deixa eu te contar uma história. Acontece toda noite, em algum negócio." | íntima, convidativa |
 | 0:04–0:12 | F1→F2 | "Nove e quarenta da noite. A Carla lembrou que precisava marcar a sessão. Achou o número. Mandou mensagem." | ritmo de inventário, sobe leve |
 | 0:12–0:18 | F2 | "Nosso atendimento é das nove às seis. Ela esperou. Ninguém respondeu." | mais seca, a frustração |
-| 0:18–0:23 | F3→F4 | "De manhã, ela desistiu e foi trabalhar. O horário das sete ficou vazio." | desce, melancólica · beat no fim |
+| 0:18–0:23 | F3→F4 | "De manhã, ela desistiu e foi trabalhar. O horário das nove ficou vazio." | desce, melancólica · beat no fim |
 | 0:23–0:27 | F4→F5 | "A recepcionista tem hora pra chegar. **Eu não.**" | PAUSA antes. "Eu não" firme, baixo |
 | 0:27–0:33 | F5→F6 | "Eu sou a Lena. Não durmo, não tiro folga. Nove e quarenta e dois, eu teria respondido na hora. E estava agendado." | assume, confiante, quente |
 | 0:33–0:37 | F7 | "Seus clientes não têm hora pra querer agendar. Eu também não." | sorriso na voz, fecho |
