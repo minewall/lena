@@ -102,21 +102,6 @@ virada). No fecho, sorriso na voz.**
 
 ---
 
-## MONTAGEM (CapCut, ~30 min)
-
-1. Importe os 7 frames na ordem; cada um ~4–6s conforme a tabela.
-2. **Ken Burns**: keyframe de escala 100%→108% em cada frame de pessoa (zoom
-   lento) — dá vida sem vídeo generativo.
-3. **Cortes secos** nos timecodes do relógio (sem transição "fancy").
-4. Cole a locução; alinhe os cortes à fala.
-5. **Legenda automática** (CapCut faz) — fonte branca, peso bold, embaixo.
-   Destaque "Eu não." em terracota.
-6. Beat de silêncio em 0:23 (deixe ~0,5s de respiro antes de "A recepcionista…").
-7. Trilha discreta, volume −18dB sob a voz.
-8. Exporte 1080×1920, 30fps.
-
----
-
 ## Reaproveitamento
 
 - Os BLOCOS PERSONAGEM/ESTILO viram **template**: troque só a Carla e a cena
