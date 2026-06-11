@@ -10,6 +10,7 @@ import { loadConversations, type ConversationListItem } from "../lib/conversatio
 import { relativeTime } from "../lib/time";
 import { useAuth } from "../store/auth";
 import { Card } from "../components/ui";
+import { LenaInline } from "../components/LenaInline";
 
 const PERIODS = [
   { days: 1, label: "Hoje" },
@@ -123,7 +124,7 @@ export function Dashboard() {
 
       {/* Lena inline — insight contextual do dia */}
       {!insightDismissed && stats && todayAppts ? (
-        <LenaInline
+        <DashboardInsight
           stats={stats}
           todayAppts={todayAppts}
           onDismiss={() => setInsightDismissed(true)}
@@ -276,9 +277,9 @@ export function Dashboard() {
   );
 }
 
-/* ── Lena inline: 1 insight contextual + 1 ação, dispensável ───────────── */
+/* ── Insight da Lena no Hoje: 1 leitura contextual do dia + 1 ação ─────── */
 
-function LenaInline({
+function DashboardInsight({
   stats,
   todayAppts,
   onDismiss,
@@ -307,30 +308,9 @@ function LenaInline({
   }
 
   return (
-    <div className="flex items-center gap-3 rounded-[14px] border border-creme-edge border-l-[3px] border-l-terracota bg-creme-soft px-4 py-3">
-      <img
-        src="/lena-avatar.png"
-        alt="Lena"
-        className="h-9 w-9 shrink-0 rounded-full object-cover"
-      />
-      <p className="min-w-0 flex-1 text-[13.5px] text-cafe-soft">
-        <b className="text-cafe">{greeting}</b> {text}
-      </p>
-      <Link
-        to={action.to}
-        className="shrink-0 rounded-[9px] bg-terracota-soft px-3.5 py-1.5 text-[12.5px] font-semibold text-terracota-dark transition hover:bg-terracota hover:text-white"
-      >
-        {action.label}
-      </Link>
-      <button
-        type="button"
-        onClick={onDismiss}
-        title="Dispensar"
-        className="shrink-0 text-cafe-muted transition hover:text-cafe"
-      >
-        ✕
-      </button>
-    </div>
+    <LenaInline action={action} onDismiss={onDismiss}>
+      <b className="text-cafe">{greeting}</b> {text}
+    </LenaInline>
   );
 }
 

@@ -9,6 +9,7 @@ import {
 import { useAuth } from "../../store/auth";
 import { Card, Select, StatusPill, TextInput } from "../../components/ui";
 import { EmptyState } from "../../components/EmptyState";
+import { LenaInline } from "../../components/LenaInline";
 import { IconUsers } from "../../components/icons";
 
 function fmtDate(iso: string | null): string {
@@ -43,6 +44,7 @@ export function ClientesPage() {
   const [statusFiltro, setStatusFiltro] = useState<
     "" | "ativo" | "inativo" | "optout"
   >("");
+  const [insightDismissed, setInsightDismissed] = useState(false);
 
   const reload = useCallback(async () => {
     if (!tenantId) return;
@@ -84,6 +86,17 @@ export function ClientesPage() {
       );
     });
   }, [clientes, busca, tagFiltro, statusFiltro]);
+
+  // Inativos reativáveis: sem contato há +30 dias e que não pediram opt-out.
+  const inativos = useMemo(
+    () =>
+      clientes.filter((c) => {
+        if (c.opted_out) return false;
+        const d = diasDesde(c.last_message_at);
+        return d !== null && d > 30;
+      }).length,
+    [clientes],
+  );
 
   if (!tenantId) return null;
 
@@ -129,6 +142,20 @@ export function ClientesPage() {
       </header>
 
       {error ? <StatusPill kind="error">{error}</StatusPill> : null}
+
+      {!loading && !insightDismissed && inativos >= 3 && statusFiltro !== "inativo" ? (
+        <LenaInline
+          action={{
+            label: "Ver inativos",
+            onClick: () => setStatusFiltro("inativo"),
+          }}
+          onDismiss={() => setInsightDismissed(true)}
+        >
+          <b className="text-cafe">{inativos} clientes</b> sem falar com você há
+          mais de 30 dias. Posso preparar uma mensagem de reativação para trazer
+          parte deles de volta.
+        </LenaInline>
+      ) : null}
 
       {loading ? (
         <p className="text-cafe-soft animate-pulse-soft">carregando…</p>

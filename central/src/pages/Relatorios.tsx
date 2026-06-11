@@ -5,6 +5,7 @@ import {
   type FunnelRow,
 } from "../lib/relatorios";
 import { useAuth } from "../store/auth";
+import { LenaInline } from "../components/LenaInline";
 
 const PERIODS = [
   { days: 7, label: "7 dias" },
@@ -41,6 +42,7 @@ export function Relatorios() {
   const [report, setReport] = useState<AttendanceReport | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [insightDismissed, setInsightDismissed] = useState(false);
 
   useEffect(() => {
     if (!tenantId) return;
@@ -55,6 +57,18 @@ export function Relatorios() {
   if (!tenantId) return null;
 
   const totalSent = report?.sentiment.reduce((s, r) => s + r.n, 0) ?? 0;
+
+  // Conversas que chegaram fora do horário comercial (antes das 8h ou a
+  // partir das 19h) — quando a Lena atendeu sozinha. É o argumento de venda.
+  const offHours = (() => {
+    if (!report) return null;
+    const total = report.funnel.reduce((s, r) => s + r.n, 0);
+    if (total === 0) return null;
+    const off = report.funnel
+      .filter((r) => r.hora < 8 || r.hora >= 19)
+      .reduce((s, r) => s + r.n, 0);
+    return { off, total, pct: Math.round((off / total) * 100) };
+  })();
 
   return (
     <div className="flex flex-col gap-5">
@@ -98,6 +112,15 @@ export function Relatorios() {
         </Card>
       ) : (
         <>
+          {!insightDismissed && offHours && offHours.pct >= 15 ? (
+            <LenaInline onDismiss={() => setInsightDismissed(true)}>
+              <b className="text-cafe">{offHours.pct}% das conversas</b> (
+              {offHours.off} de {offHours.total}) chegaram fora do horário
+              comercial. Foi quando eu atendi sozinha — sem ninguém perder a
+              mensagem.
+            </LenaInline>
+          ) : null}
+
           {/* Sentimento + Esforço lado a lado */}
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <Panel
