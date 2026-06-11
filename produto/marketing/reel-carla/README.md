@@ -15,7 +15,11 @@ disponibilidade 24h). Conceito da campanha: `../campanha-e-se.md`.
 4. **Frame 4** — cenário sem pessoa (recepção vazia).
 5. **Telas de WhatsApp** (`03-telas-whatsapp.md`) — Frames 2 e 7. NÃO gerar por
    IA; montar (mockup/print). IA erra texto e UI.
-6. **Montagem** (`05-montagem-capcut.md`) — junte tudo no CapCut.
+6. **Montagem** — duas opções:
+   - **CapCut** (`05-montagem-capcut.md`) — junte tudo no CapCut.
+   - **ElevenLabs Image & Video + Studio** (`06-elevenlabs-studio.md`) — gera os
+     clipes por referência e monta com a locução no mesmo lugar. Tem um teste
+     rápido de 10 min para validar antes de produzir os 7.
 7. **Legenda do post** (`04-legenda-post.md`) — já está pronta para colar.
 8. **Me avise** quando os assets estiverem na pasta → eu reviso e finalizo antes
    de postar.
