@@ -94,6 +94,16 @@ export const IconPlus = ({ size = 16, className }: IconProps) =>
 export const IconChevrons = ({ size = 16, className }: IconProps) =>
   base(size, className, <path d="m7 15 5 5 5-5M7 9l5-5 5 5" />);
 
+export const IconChart = ({ size = 16, className }: IconProps) =>
+  base(size, className, (
+    <>
+      <path d="M3 3v16a2 2 0 0 0 2 2h16" />
+      <rect x="7" y="10" width="3" height="7" rx="0.5" />
+      <rect x="12" y="6" width="3" height="11" rx="0.5" />
+      <rect x="17" y="13" width="3" height="4" rx="0.5" />
+    </>
+  ));
+
 export const IconLogout = ({ size = 16, className }: IconProps) =>
   base(size, className, (
     <>

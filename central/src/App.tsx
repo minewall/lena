@@ -19,6 +19,7 @@ import { CreateTenant } from "./pages/CreateTenant";
 import { Dashboard } from "./pages/Dashboard";
 import { Login } from "./pages/Login";
 import { Prospeccao } from "./pages/Prospeccao";
+import { Relatorios } from "./pages/Relatorios";
 import { ClientesPage } from "./pages/Clientes";
 import { ClientePerfil } from "./pages/Clientes/Perfil";
 import { AverseTenants } from "./pages/Averse/Tenants";
@@ -58,6 +59,7 @@ export function App() {
           <Route path="/clientes/:id" element={<ClientePerfil />} />
           <Route path="/conversas" element={<ConversasPage />} />
           <Route path="/agenda" element={<Agenda />} />
+          <Route path="/relatorios" element={<Relatorios />} />
           <Route path="/prospeccao" element={<Prospeccao />} />
           <Route path="/averse/tenants" element={<AverseTenants />} />
           <Route path="/averse/tenants/:id" element={<AverseTenantPerfil />} />

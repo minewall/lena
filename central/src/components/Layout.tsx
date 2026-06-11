@@ -5,6 +5,7 @@ import {
   IconBrain,
   IconBuilding,
   IconCalendar,
+  IconChart,
   IconChevrons,
   IconDashboard,
   IconLogout,
@@ -51,6 +52,7 @@ const NAV_GROUPS: NavGroup[] = [
       { to: "/conversas", label: "Conversas", icon: IconMessage },
       { to: "/agenda", label: "Agenda", icon: IconCalendar },
       { to: "/clientes", label: "Clientes", icon: IconUsers },
+      { to: "/relatorios", label: "Relatórios", icon: IconChart },
     ],
   },
   {
