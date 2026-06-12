@@ -1,37 +1,48 @@
 # Legenda do post (Instagram)
 
+> O hook são as 2 primeiras linhas — é o que aparece antes do "...mais". Tem
+> que prender ali.
+
 ## Legenda (cole no post)
 
 > 21h40. Sua cliente lembrou que precisava marcar.
-> 21h42. "Nosso atendimento é das 9h às 18h."
+> 21h42. Recebeu só uma resposta automática: "atendemos das 9h às 18h".
+>
 > No dia seguinte, ela marcou em outro lugar.
 >
-> O problema nunca foi o horário. Foi não ter ninguém pra responder.
+> Não foi o preço. Não foi o horário. Foi não ter ninguém pra responder na hora.
 >
-> Eu atendo no WhatsApp 24 horas, respondo na hora e agendo sozinha — até quando
-> você está dormindo. Seu cliente não fica no vácuo, e o horário não fica vazio.
+> Eu sou a Lena. Atendo no seu WhatsApp 24 horas, respondo na hora e já deixo
+> agendado — até quando você está dormindo. Seu cliente não fica no vácuo, e o
+> horário não fica vazio.
 >
 > Seus clientes não têm hora pra querer agendar. Eu também não.
 >
-> Conheça a Lena → lena.ia.br (link na bio)
+> → Conheça a Lena: lena.ia.br (link na bio)
 
 *(Voz em 1ª pessoa, como no vídeo. Posicionamento: a dor e o resultado primeiro;
 o WhatsApp é o "onde", não o "quê".)*
+
+### Hook alternativo (pra testar A/B)
+> Toda noite, um negócio perde um cliente sem nem perceber.
+> Aconteceu com a Carla às 21h42. (continua…)
 
 ## Hashtags (negócio e segmento, não "tech")
 
 ```
 #pequenosnegocios #empreendedorismo #atendimentoaocliente #agendaonline
 #gestaodenegocios #salaodebeleza #clinica #esteticaavancada #petshop
-#donodenegocio #whatsappbusiness #recepcao #naopercacliente
+#donodenegocio #whatsappbusiness #naopercacliente #recepcao
 ```
 
-Ajuste as 2-3 últimas ao segmento do público de cada conta/impulsionamento.
+Troque as 2-3 últimas pelo segmento do público de cada conta/impulsionamento
+(ex.: #odontologia, #fisioterapia, #estudiopilates).
 
-## CTA / primeiro comentário (opcional, fixar)
+## Primeiro comentário (fixar)
 
-> Quantos clientes te mandam mensagem fora do horário e ficam sem resposta?
-> Faz a conta de quanto isso custa por mês. A Lena resolve isso: lena.ia.br
+> Quantas mensagens chegam pro seu negócio fora do horário e ficam sem resposta?
+> Cada uma dessas é um cliente que vai pro concorrente. A Lena responde e agenda
+> na hora, 24h: lena.ia.br
 
 ## Medição
 
