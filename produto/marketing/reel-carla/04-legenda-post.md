@@ -1,6 +1,6 @@
 # Legenda do post (Instagram)
 
-> O hook são as 2 primeiras linhas — é o que aparece antes do "...mais". Tem
+> O hook são as 2 primeiras linhas, é o que aparece antes do "...mais". Tem
 > que prender ali.
 
 ## Legenda (cole no post)
@@ -13,7 +13,7 @@
 > Não foi o preço. Não foi o horário. Foi não ter ninguém pra responder na hora.
 >
 > Eu sou a Lena. Atendo no seu WhatsApp 24 horas, respondo na hora e já deixo
-> agendado — até quando você está dormindo. Seu cliente não fica no vácuo, e o
+> agendado, até quando você está dormindo. Seu cliente não fica no vácuo, e o
 > horário não fica vazio.
 >
 > Seus clientes não têm hora pra querer agendar. Eu também não.
