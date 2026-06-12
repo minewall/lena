@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #1c1c1c; }
+  .card { width: 540px; height: 540px; position: relative; display: flex; flex-direction: column; justify-content: center; padding: 50px 48px; font-family: 'Bricolage Grotesque', sans-serif; overflow: hidden; }
+  .cream { background: #FBF3E7; } .terra { background: #CD5A32; }
+  .num { font-weight: 800; font-size: 96px; line-height: .9; opacity: .22; margin-bottom: 4px; }
+  .kicker { font-family: 'Hanken Grotesk', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: .6px; text-transform: uppercase; margin-bottom: 14px; }
+  .title { font-weight: 800; font-size: 52px; line-height: 1.04; letter-spacing: -1px; }
+  .hl { font-weight: 800; font-size: 62px; line-height: 1.02; letter-spacing: -1.5px; margin-top: 12px; }
+  .sub { font-family: 'Hanken Grotesk', sans-serif; font-weight: 500; font-size: 22px; line-height: 1.42; margin-top: 18px; }
+  .foot { position: absolute; left: 48px; right: 48px; bottom: 40px; display: flex; align-items: center; justify-content: space-between; font-family: 'Hanken Grotesk', sans-serif; }
+  .wm { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 30px; }
+  .url { font-size: 17px; }
+  .cream .num{color:#CD5A32} .cream .kicker{color:#C2410C} .cream .title,.cream .hl{color:#2e2218} .cream .sub{color:#6b5640} .cream .wm{color:#2e2218} .cream .wm i{color:#E35B2E} .cream .url{color:#998a78}
+  .terra .num{color:#fff} .terra .kicker{color:#FBD9C9} .terra .title,.terra .hl{color:#fff} .terra .sub{color:rgba(255,255,255,.92)} .terra .wm{color:#fff} .terra .wm i{color:#FBF3E7} .terra .url{color:rgba(255,255,255,.82)}
+</style>
+</head>
+<body>
+<div id="root" class="card"></div>
+<script>
+  var cards = [
+    { bg:'cream', title:'Oi, eu sou a Lena 👋', sub:'Recepcionista com IA pro WhatsApp do seu negócio. Respondo, agendo e confirmo — 24 horas.' },
+    { bg:'terra', title:'3 dores que estão te custando caro', sub:'(e que eu resolvo, 24h)' },
+    { bg:'cream', num:'1', title:'Cliente perdido por demora', sub:'Quem não é respondido na hora vai pro concorrente. Eu respondo na hora.' },
+    { bg:'cream', num:'2', title:'Faturamento perdido por falta', sub:'Lembro e confirmo cada agendamento. Menos no-show, agenda cheia.' },
+    { bg:'cream', num:'3', title:'Você refém do celular', sub:'Eu atendo. Você toca o negócio — e dorme tranquilo.' },
+    { bg:'terra', kicker:'Funciono pro seu negócio?', title:'Clínica, salão, escola, petshop, escritório.', sub:'Eu aprendo o jeito de cada um. Não respondo por árvore.' },
+    { bg:'terra', title:'Seus clientes não têm hora pra querer agendar.', hl:'Eu também não.' }
+  ];
+  var i = parseInt(new URLSearchParams(location.search).get('i') || '0', 10);
+  var c = cards[i] || cards[0];
+  var root = document.getElementById('root');
+  root.className = 'card ' + c.bg;
+  var h = '';
+  if (c.num) h += '<div class="num">' + c.num + '</div>';
+  if (c.kicker) h += '<div class="kicker">' + c.kicker + '</div>';
+  if (c.title) h += '<div class="title">' + c.title + '</div>';
+  if (c.hl) h += '<div class="hl">' + c.hl + '</div>';
+  if (c.sub) h += '<div class="sub">' + c.sub + '</div>';
+  h += '<div class="foot"><span class="wm">lena<i>.</i></span><span class="url">lena.ia.br</span></div>';
+  root.innerHTML = h;
+</script>
+</body>
+</html>
