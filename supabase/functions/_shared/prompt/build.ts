@@ -99,17 +99,27 @@ function buildTeamBlock(cfg: TenantBrain): string {
   if (publicTeam.length === 0 && !privateInfo) return "";
 
   const parts: string[] = ["\n\nEQUIPE E IDENTIFICAÇÃO."];
+  const anySpec = publicTeam.some((m) => String(m.spec || "").trim());
   if (publicTeam.length > 0) {
     const list = publicTeam
       .map((m) => {
         const name = String(m.name || "").trim();
         const role = String(m.role || "").trim();
-        return role ? `${name} (${role})` : name;
+        const spec = String(m.spec || "").trim();
+        const tag = [role, spec ? `especialista em ${spec}` : ""]
+          .filter(Boolean)
+          .join(", ");
+        return tag ? `${name} (${tag})` : name;
       })
       .join("; ");
     parts.push(
       `Você PODE citar pelo nome apenas estas pessoas, quando fizer sentido: ${list}.`,
     );
+    if (anySpec) {
+      parts.push(
+        "Quando o cliente perguntar quem faz um serviço, ou pedir alguém de uma área, indique a pessoa certa pela especialidade.",
+      );
+    }
   } else {
     parts.push(
       "Não cite nomes de profissionais do negócio. Fale de forma geral (por exemplo: nossa equipe, o profissional responsável).",
@@ -167,6 +177,31 @@ function buildLocationBlock(cfg: TenantBrain): string {
   return parts.join("\n");
 }
 
+function buildPaymentsBlock(cfg: TenantBrain): string {
+  const p = cfg.payments;
+  if (!p) return "";
+  const lines: string[] = [];
+  if (p.methods && p.methods.length > 0) {
+    lines.push(`Formas aceitas: ${p.methods.join(", ")}.`);
+  }
+  if (p.pixKey && p.pixKey.trim()) {
+    lines.push(`Chave Pix${p.pixKeyType ? ` (${p.pixKeyType})` : ""}: ${p.pixKey.trim()}.`);
+  }
+  const bankline = [
+    p.bank,
+    p.agency ? `ag. ${p.agency}` : "",
+    p.account ? `conta ${p.account}` : "",
+    p.holder ? `titular ${p.holder}` : "",
+  ]
+    .map((x) => String(x || "").trim())
+    .filter(Boolean)
+    .join(", ");
+  if (bankline) lines.push(`Dados bancários: ${bankline}.`);
+  if (p.note && p.note.trim()) lines.push(String(p.note).trim());
+  if (lines.length === 0) return "";
+  return `\n\nPAGAMENTO.\nQuando perguntarem como pagar, informe com clareza:\n${lines.join("\n")}\nNão invente formas de pagamento além destas. Nunca peça dados de cartão pelo WhatsApp.`;
+}
+
 /**
  * System prompt da Lena.
  *
@@ -186,9 +221,14 @@ export function buildDemoSystem(cfg: TenantBrain): string {
   const prepBlock = buildPrepBlock(cfg);
   const sessionsBlock = buildSessionsBlock(cfg);
   const combosBlock = buildCombosBlock(cfg);
+  const paymentsBlock = buildPaymentsBlock(cfg);
+  const personaLine =
+    cfg.personaAge && cfg.personaAge >= 18
+      ? ` Você soa como uma mulher brasileira de cerca de ${cfg.personaAge} anos (não diga sua idade ao cliente, a menos que perguntem).`
+      : "";
   return `Você é a Lena, a recepcionista virtual com IA do negócio "${cfg.name || "o negócio"}" (${cfg.segment || "negócio de serviço"}). Você atende clientes pelo WhatsApp e é ótima no que faz. Resolve, não enrola.
 
-Seu tom é ${tone}. Responda em português do Brasil, breve e natural (1 a 3 frases curtas).
+Seu tom é ${tone}.${personaLine} Responda em português do Brasil, breve e natural (1 a 3 frases curtas).
 
 REGRAS FIRMES DE ESCRITA. NÃO QUEBRE.
 1. Nunca use o sinal de hífen em frases. Nunca use travessão (nem o longo nem o curto). No lugar, use ponto, vírgula, parênteses ou reformule a frase.
@@ -208,5 +248,5 @@ COMO VOCÊ AGE
 • Seja proativa e resolvedora, como recepcionista experiente. Cite preço, horário e benefício quando o cliente perguntar. Não fique vaga.
 • Conduza para agendar ou para o próximo passo natural sempre que fizer sentido.
 • Se for sua primeira fala nesta conversa, apresente-se em uma frase curta antes de responder. Quando fizer sentido, ofereça caminhos curtos para o cliente escolher (por exemplo: "posso te contar sobre planos, agendar uma visita ou tirar uma dúvida específica, o que te ajuda mais?"). Sem listas longas.
-• Só envolva um humano em casos fora do alcance (reclamações sérias, situações sensíveis, questões médicas ou clínicas, pagamentos com problema).${prepBlock}${sessionsBlock}${combosBlock}${locationBlock}${restrictionsBlock}${teamBlock}`;
+• Só envolva um humano em casos fora do alcance (reclamações sérias, situações sensíveis, questões médicas ou clínicas, pagamentos com problema).${prepBlock}${sessionsBlock}${combosBlock}${paymentsBlock}${locationBlock}${restrictionsBlock}${teamBlock}`;
 }

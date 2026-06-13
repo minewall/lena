@@ -38,6 +38,19 @@ export interface BrainCombo {
 export interface TeamMember {
   name?: string;
   role?: string;
+  /** especialidades, texto livre (ex.: "botox, preenchimento, laser") */
+  spec?: string;
+}
+
+export interface BrainPayments {
+  methods?: string[];
+  pixKeyType?: string;
+  pixKey?: string;
+  bank?: string;
+  agency?: string;
+  account?: string;
+  holder?: string;
+  note?: string;
 }
 
 export interface TenantBrain {
@@ -62,6 +75,10 @@ export interface TenantBrain {
   promo?: string;
   extras?: string;
   tone?: Tone | string;
+  /** Idade/persona da Lena (anos). Molda sutilmente o jeito de falar. */
+  personaAge?: number;
+  /** Formas de pagamento que a Lena pode informar. */
+  payments?: BrainPayments;
   /** Temas/condutas proibidas para a Lena. */
   restrictions?: string;
   /** Palavras-gatilho que disparam transferência imediata para humano. */

@@ -78,6 +78,8 @@ type BrainExtra = TenantBrainRow & {
   escalation_triggers?: string[] | null;
   team_public?: unknown;
   team_private?: string | null;
+  persona_age?: number | null;
+  payments?: unknown;
 };
 
 function parseTeamPublic(value: unknown): TeamMember[] {
@@ -85,15 +87,38 @@ function parseTeamPublic(value: unknown): TeamMember[] {
   return value
     .map((m) => {
       if (m && typeof m === "object") {
-        const obj = m as { name?: unknown; role?: unknown };
+        const obj = m as { name?: unknown; role?: unknown; spec?: unknown };
         return {
           name: typeof obj.name === "string" ? obj.name : undefined,
           role: typeof obj.role === "string" ? obj.role : undefined,
+          spec: typeof obj.spec === "string" ? obj.spec : undefined,
         };
       }
       return {};
     })
     .filter((m) => m.name && m.name.trim().length > 0);
+}
+
+function parsePayments(value: unknown): TenantBrain["payments"] {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+  const p = value as Record<string, unknown>;
+  const str = (v: unknown) => (typeof v === "string" && v.trim() ? v.trim() : undefined);
+  const methods = Array.isArray(p.methods)
+    ? (p.methods.filter((m) => typeof m === "string") as string[])
+    : [];
+  const out = {
+    methods,
+    pixKeyType: str(p.pix_key_type),
+    pixKey: str(p.pix_key),
+    bank: str(p.bank),
+    agency: str(p.agency),
+    account: str(p.account),
+    holder: str(p.holder),
+    note: str(p.note),
+  };
+  const hasAny =
+    methods.length > 0 || out.pixKey || out.bank || out.note || out.holder;
+  return hasAny ? out : undefined;
 }
 
 /** id da categoria → rótulo "Categoria › Subcategoria". */
@@ -167,6 +192,8 @@ export function brainRecordToPrompt(
     amenities: amenityLabels(primary?.amenities ?? null),
     otherUnits: others,
     tone: brain.tone,
+    personaAge: b.persona_age ?? undefined,
+    payments: parsePayments(b.payments),
     promo: brain.promo ?? "",
     extras: brain.extras ?? "",
     restrictions: b.restrictions ?? "",
