@@ -73,7 +73,11 @@ export function CerebroLimites() {
         .map((t) => t.trim())
         .filter(Boolean);
       const cleanedTeam = teamPublic
-        .map((m) => ({ name: m.name.trim(), role: m.role.trim() }))
+        .map((m) => ({
+          name: m.name.trim(),
+          role: m.role.trim(),
+          spec: (m.spec ?? "").trim() || undefined,
+        }))
         .filter((m) => m.name.length > 0);
       const updated = await updateBrain(tenantId, {
         restrictions: restrictions.trim() || null,
@@ -151,25 +155,40 @@ export function CerebroLimites() {
             </p>
           ) : (
             teamPublic.map((m, i) => (
-              <div key={i} className="flex items-end gap-3">
-                <Field label="Nome">
+              <div
+                key={i}
+                className="flex flex-col gap-3 rounded-[12px] border border-creme-edge bg-creme-soft/50 p-3"
+              >
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <Field label="Nome">
+                    <TextInput
+                      value={m.name}
+                      onChange={(e) => updateMember(i, { name: e.target.value })}
+                      placeholder="Dra. Helena"
+                    />
+                  </Field>
+                  <Field label="Função (opcional)">
+                    <TextInput
+                      value={m.role}
+                      onChange={(e) => updateMember(i, { role: e.target.value })}
+                      placeholder="dermatologista"
+                    />
+                  </Field>
+                </div>
+                <Field
+                  label="Especialidades (opcional)"
+                  hint="A Lena usa para indicar a pessoa certa. Separe por vírgula. Ex.: botox, preenchimento, laser."
+                >
                   <TextInput
-                    value={m.name}
-                    onChange={(e) => updateMember(i, { name: e.target.value })}
-                    placeholder="Dra. Helena"
-                  />
-                </Field>
-                <Field label="Função (opcional)">
-                  <TextInput
-                    value={m.role}
-                    onChange={(e) => updateMember(i, { role: e.target.value })}
-                    placeholder="dermatologista"
+                    value={m.spec ?? ""}
+                    onChange={(e) => updateMember(i, { spec: e.target.value })}
+                    placeholder="botox, preenchimento, laser"
                   />
                 </Field>
                 <Button
                   variant="danger"
                   onClick={() => removeMember(i)}
-                  className="mb-1"
+                  className="self-start"
                 >
                   Remover
                 </Button>

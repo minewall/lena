@@ -10,6 +10,7 @@ import { CerebroLimites } from "./pages/Cerebro/Limites";
 import { CerebroServicos } from "./pages/Cerebro/Servicos";
 import { CerebroCombos } from "./pages/Cerebro/Combos";
 import { CerebroLocal } from "./pages/Cerebro/Local";
+import { CerebroPagamentos } from "./pages/Cerebro/Pagamentos";
 import { CerebroTom } from "./pages/Cerebro/Tom";
 import { ConfiguracoesEquipe } from "./pages/Configuracoes/Equipe";
 import { ConfiguracoesGeral } from "./pages/Configuracoes/Geral";
@@ -56,6 +57,7 @@ export function App() {
             <Route path="servicos" element={<CerebroServicos />} />
             <Route path="combos" element={<CerebroCombos />} />
             <Route path="local" element={<CerebroLocal />} />
+            <Route path="pagamentos" element={<CerebroPagamentos />} />
             <Route path="faq" element={<CerebroFaq />} />
             <Route path="limites" element={<CerebroLimites />} />
           </Route>

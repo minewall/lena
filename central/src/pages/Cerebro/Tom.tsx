@@ -27,6 +27,17 @@ const MODELS: {
   },
 ];
 
+const AGE_STOPS = [18, 22, 26, 30, 34, 38, 42, 46, 48];
+const ageLabel = (age: number) => (age >= 48 ? "48+" : String(age));
+function nearestAgeIdx(age: number | null): number {
+  if (age == null) return 3; // 30, posição neutra
+  let best = 0;
+  for (let i = 1; i < AGE_STOPS.length; i++) {
+    if (Math.abs(AGE_STOPS[i] - age) < Math.abs(AGE_STOPS[best] - age)) best = i;
+  }
+  return best;
+}
+
 const TONE_DESCRIPTIONS: Record<TenantTone, { headline: string; detail: string }> = {
   Acolhedor: {
     headline: "Calorosa, próxima e simpática.",
@@ -67,6 +78,20 @@ export function CerebroTom() {
     setError(null);
     try {
       const updated = await updateBrain(tenantId!, { tone });
+      setBrain(updated);
+      setState("saved");
+    } catch (e) {
+      setError((e as Error).message);
+      setState("error");
+    }
+  }
+
+  async function saveAge(age: number) {
+    if (!brain) return;
+    setState("saving");
+    setError(null);
+    try {
+      const updated = await updateBrain(tenantId!, { persona_age: age });
       setBrain(updated);
       setState("saved");
     } catch (e) {
@@ -117,6 +142,37 @@ export function CerebroTom() {
             </button>
           );
         })}
+      </div>
+
+      <div className="mt-4 flex flex-col gap-3 border-t border-creme-edge pt-6">
+        <div>
+          <h2 className="font-display text-lg text-cafe">Idade da Lena</h2>
+          <p className="text-sm text-cafe-soft">
+            A faixa etária que combina com a sua marca. Influencia sutilmente o
+            jeito de falar.
+          </p>
+        </div>
+        <div className="flex max-w-md items-center gap-4">
+          <input
+            type="range"
+            min={0}
+            max={AGE_STOPS.length - 1}
+            step={1}
+            value={nearestAgeIdx(brain.persona_age)}
+            onChange={(e) => saveAge(AGE_STOPS[Number(e.target.value)])}
+            className="h-2 flex-1 cursor-pointer accent-terracota"
+          />
+          <span className="w-24 text-right font-display text-lg text-cafe tabular-nums">
+            {brain.persona_age == null
+              ? "não definida"
+              : `${ageLabel(brain.persona_age)} anos`}
+          </span>
+        </div>
+        <div className="flex max-w-md justify-between px-0.5 text-[10px] text-cafe-muted">
+          <span>18</span>
+          <span>30</span>
+          <span>48+</span>
+        </div>
       </div>
 
       <div className="mt-4 flex flex-col gap-3 border-t border-creme-edge pt-6">

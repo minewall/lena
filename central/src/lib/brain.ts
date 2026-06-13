@@ -13,9 +13,23 @@ import { supabase } from "./supabase";
 export interface TeamMemberRow {
   name: string;
   role: string;
+  /** especialidades, texto livre separado por vírgula (ex.: "ortodontia, clareamento") */
+  spec?: string;
 }
 
-export type TenantBrainRow = BaseTenantBrainRow & {
+/** Formas de pagamento (jsonb tenant_brains.payments). */
+export interface PaymentsConfig {
+  pix_key_type?: string; // CPF/CNPJ, e-mail, telefone, aleatória
+  pix_key?: string;
+  bank?: string;
+  agency?: string;
+  account?: string;
+  holder?: string;
+  methods?: string[]; // dinheiro, crédito, débito, etc.
+  note?: string;
+}
+
+export type TenantBrainRow = Omit<BaseTenantBrainRow, "payments"> & {
   ai_model: string;
   parking: string | null;
   landmark: string | null;
@@ -23,9 +37,11 @@ export type TenantBrainRow = BaseTenantBrainRow & {
   escalation_triggers: string[];
   team_public: TeamMemberRow[];
   team_private: string | null;
+  persona_age: number | null;
+  payments: PaymentsConfig;
 };
 
-export type TenantBrainUpdate = BaseTenantBrainUpdate & {
+export type TenantBrainUpdate = Omit<BaseTenantBrainUpdate, "payments"> & {
   ai_model?: string;
   parking?: string | null;
   landmark?: string | null;
@@ -33,6 +49,8 @@ export type TenantBrainUpdate = BaseTenantBrainUpdate & {
   escalation_triggers?: string[];
   team_public?: TeamMemberRow[];
   team_private?: string | null;
+  persona_age?: number | null;
+  payments?: PaymentsConfig;
 };
 
 export async function loadBrain(tenantId: string) {
