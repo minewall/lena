@@ -91,3 +91,27 @@ Implicações:
    pré-preenchimento; coletar nomes/disponibilidade dos 8 profissionais).
 3. Número do piloto: e-chip dedicado (já comprado) ou número atual da clínica
    (decisão do Felipe — recomendo dedicado para o piloto).
+
+---
+
+## Demo na Central (criada 2026-06-12)
+
+Tenant **"Clínica FWG · Medicina e Performance"** (slug `clinica-fwg`) no lena-uno,
+pré-configurado para demonstrar pra Jessica:
+- **Cérebro**: segmento Clínica, horários (placeholder), endereço (Jardins), tom
+  Profissional, **limites de saúde** (Lena nunca dá orientação médica), gatilhos
+  de transferência. Unidade primária cadastrada.
+- **7 serviços** (medicina esportiva, avaliação física, bioimpedância, nutrológica,
+  nutricionista, retorno, estética) com duração; **preço a confirmar** (null).
+- **8 profissionais** (3 nutrólogos, 2 nutri, preparador, biomédica, fisio) =
+  agenda de 8 colunas, o argumento de venda.
+- **8 agendamentos** amanhã (8h–16h), **origem Lena**, espalhados pelos profissionais.
+- **1 conversa** demo resolvida (Lena agenda uma avaliação) + 3 contatos.
+
+**Acesso:** Roberto (bobcloud27@gmail.com) é admin do tenant → no seletor de
+negócio da Central, troque para "Clínica FWG" e demonstre. Para a Jessica ter
+login próprio, convide o **e-mail real dela** em Configurações → Equipe (login é
+magic-link; e-mail fictício não recebe o link).
+
+**A validar com a Jessica na sessão de 1h** (hoje é placeholder): preços, horários
+reais, nomes dos 8 profissionais e disponibilidade, estacionamento, FAQ.
