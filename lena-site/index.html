@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Lena · Recepcionista virtual com IA no WhatsApp</title>
-<meta name="description" content="A recepcionista virtual com IA do seu negócio: atende no WhatsApp 24h por dia, marca na sua agenda e confirma os horários. Funciona em poucos dias, sem fidelidade." />
+<meta name="description" content="A recepcionista virtual com IA do seu negócio: atende no WhatsApp 24h por dia, marca na sua agenda e confirma os horários. Menos cliente perdido, mais agenda cheia." />
 
 <!-- Open Graph -->
 <meta property="og:type" content="website" />
@@ -79,22 +79,40 @@
   .phone-wrap { display: flex; justify-content: center; position: relative; }
   .phone { width: 330px; border-radius: 44px; background: var(--cafe); padding: 12px; box-shadow: 0 40px 80px -28px rgba(36,27,21,0.5); position: relative; }
   .phone::before { content:""; position:absolute; top:16px; left:50%; transform:translateX(-50%); width:112px; height:22px; background:var(--cafe); border-radius:0 0 15px 15px; z-index:3; }
-  .phone .screen { background: #ECE5DD; border-radius: 34px; overflow: hidden; height: 600px; display: flex; flex-direction: column; }
-  .wa-head { background: #075E54; color: #fff; padding: 46px 14px 12px; display: flex; align-items: center; gap: 11px; }
-  .wa-head .av { width: 38px; height: 38px; border-radius: 50%; overflow: hidden; flex: 0 0 auto; background:#fff; }
+  .phone .screen { background: #E5DDD5; border-radius: 34px; overflow: hidden; height: 600px; display: flex; flex-direction: column; }
+  /* iOS status bar */
+  .wa-status { background: #075E54; color: #fff; padding: 14px 24px 4px; display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; font-weight: 700; letter-spacing: .02em; }
+  .wa-status .ssr { display: flex; align-items: center; gap: 6px; }
+  .wa-status svg { display: block; }
+  /* header */
+  .wa-head { background: #075E54; color: #fff; padding: 6px 13px 9px; display: flex; align-items: center; gap: 9px; }
+  .wa-head .bk { width: 10px; height: 18px; flex: 0 0 auto; stroke: #fff; stroke-width: 2.4; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .wa-head .av { width: 37px; height: 37px; border-radius: 50%; overflow: hidden; flex: 0 0 auto; background:#fff; }
   .wa-head .av img { width: 100%; height: 100%; display: block; }
-  .wa-head .nm { font-weight: 600; font-size: 14.5px; line-height: 1.15; white-space: nowrap; }
-  .wa-head .st { font-size: 12px; opacity: 0.85; margin-top: 2px; display:flex; align-items:center; gap:5px; white-space: nowrap; }
+  .wa-head .who { flex: 1; min-width: 0; }
+  .wa-head .nm { font-weight: 600; font-size: 15px; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .wa-head .st { font-size: 12px; opacity: 0.85; margin-top: 1px; display:flex; align-items:center; gap:5px; white-space: nowrap; }
   .wa-head .st .g { width: 7px; height: 7px; border-radius: 50%; background: #6EE7A8; }
+  .wa-head .hicons { display: flex; align-items: center; gap: 18px; flex: 0 0 auto; padding-left: 4px; }
+  .wa-head .hicons svg { width: 19px; height: 19px; stroke: #fff; stroke-width: 1.9; fill: none; stroke-linecap: round; stroke-linejoin: round; display: block; }
+  .wa-head .hicons svg.fill { fill: #fff; stroke: none; }
+  /* body / wallpaper autêntico */
   .wa-body {
-    flex: 1; padding: 16px 14px 18px; overflow-y: auto; overflow-x: hidden;
-    display: flex; flex-direction: column; gap: 9px; justify-content: flex-start;
-    background-color: #ECE5DD;
-    background-image: radial-gradient(rgba(0,0,0,0.025) 1px, transparent 1px);
-    background-size: 18px 18px;
+    flex: 1; padding: 14px 13px 14px; overflow-y: auto; overflow-x: hidden;
+    display: flex; flex-direction: column; gap: 7px; justify-content: flex-start;
+    background-color: #E5DDD5;
+    background-image: url("assets/wa-doodle.svg");
+    background-size: 360px;
     scrollbar-width: none;
   }
   .wa-body::-webkit-scrollbar { display: none; }
+  /* input bar */
+  .wa-input { background: #F0F2F0; padding: 8px 9px; display: flex; align-items: center; gap: 7px; }
+  .wa-input .field { flex: 1; min-width: 0; background: #fff; border-radius: 999px; padding: 9px 12px; font-size: 13.5px; color: #9aa0a0; display: flex; align-items: center; gap: 9px; box-shadow: 0 1px 1px rgba(0,0,0,.05); }
+  .wa-input .field .ph { flex: 1; }
+  .wa-input .field svg { width: 20px; height: 20px; stroke: #8b9396; stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; display: block; flex: 0 0 auto; }
+  .wa-input .send { width: 41px; height: 41px; flex: 0 0 auto; border-radius: 50%; background: #00A884; display: flex; align-items: center; justify-content: center; }
+  .wa-input .send svg { width: 20px; height: 20px; stroke: #fff; stroke-width: 1.9; fill: none; stroke-linecap: round; stroke-linejoin: round; display: block; }
   .msg { max-width: 80%; padding: 8px 11px 7px; border-radius: 14px; font-size: 14.5px; line-height: 1.38; position: relative; box-shadow: 0 1px 1px rgba(0,0,0,0.06); animation: pop .26s cubic-bezier(.2,.7,.3,1.2) both; }
   .msg .t { font-size: 10.5px; color: rgba(0,0,0,0.4); float: right; margin: 6px 0 -2px 10px; }
   .msg.in { align-self: flex-start; background: #fff; border-top-left-radius: 4px; color: #1f2c33; }
@@ -127,11 +145,55 @@
   .seg-card p { font-size: 13.5px; color: var(--soft); margin: 8px 0 0; line-height: 1.45; }
 
   /* ============ stat strip ============ */
-  .stripe { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; border-top: 1px solid var(--hairline); padding-top: 32px; }
+  .stripe { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; padding-top: 32px; }
   .stripe .cell { padding: 0; }
-  .stripe .big { font-family: var(--display); font-weight: 800; font-size: 46px; letter-spacing: -0.03em; color: var(--terra); line-height: 1; }
+  .stripe .big { font-family: var(--display); font-weight: 800; font-size: 46px; letter-spacing: -0.03em; color: var(--cafe); line-height: 1; }
   .stripe .lab2 { font-size: 14px; color: var(--soft); margin-top: 10px; line-height: 1.4; }
   @media (max-width: 720px){ .stripe { grid-template-columns: 1fr 1fr; gap: 24px; } }
+
+  /* ============ pain hero (abertura · a dor · cinema escuro) ============ */
+  .pain-hero { padding: 60px 0 56px; position: relative; overflow: hidden; background: var(--cafe-dk); color: var(--cream); }
+  .pain-hero::before { content:""; position:absolute; width:760px; height:760px; left:-280px; top:-300px; border-radius:50%;
+    background:radial-gradient(circle at center, rgba(232,120,78,.22), rgba(242,169,60,.06) 48%, transparent 70%); z-index:0; pointer-events:none; }
+  .pain-hero::after { content:""; position:absolute; inset:0; background:radial-gradient(120% 90% at 78% 50%, rgba(217,97,58,.10), transparent 60%); z-index:0; pointer-events:none; }
+  .pain-hero .wrap { position: relative; z-index: 1; }
+  .ph-grid { display: grid; grid-template-columns: 1.02fr 0.98fr; gap: 54px; align-items: center; }
+  .ph-kick { display: inline-flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; color: rgba(251,243,231,0.72); }
+  .ph-kick .pdot { width: 9px; height: 9px; border-radius: 50%; background: var(--terra-up); box-shadow: 0 0 0 0 rgba(232,120,78,.6); animation: pulse 2.2s infinite; }
+  .pain-hero h1 { font-size: clamp(36px, 5.2vw, 60px); margin: 18px 0 0; letter-spacing: -0.03em; color: var(--cream); }
+  .pain-hero h1 .hl { color: var(--terra-up); }
+  .pain-hero .lede { margin-top: 20px; max-width: 540px; color: rgba(251,243,231,0.74); }
+  .pain-hero .ph-cta { display: flex; gap: 14px; margin-top: 30px; flex-wrap: wrap; align-items: center; }
+  .pain-hero .scrollcue { display: inline-flex; align-items: center; gap: 8px; font-size: 14.5px; font-weight: 600; color: var(--cream); text-decoration: none; opacity: .82; }
+  .pain-hero .scrollcue:hover { opacity: 1; }
+  .pain-hero .scrollcue svg { width: 18px; height: 18px; stroke: var(--terra-up); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; animation: bob 1.8s ease-in-out infinite; }
+  @keyframes bob { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(4px);} }
+  .ph-fig { position: relative; margin: 0; border-radius: 24px; overflow: hidden; aspect-ratio: 5 / 6; box-shadow: 0 50px 90px -30px rgba(0,0,0,0.7); border: 1px solid rgba(251,243,231,0.10); }
+  .ph-fig img { width: 100%; height: 100%; object-fit: cover; object-position: center 24%; display: block; filter: saturate(0.96); }
+  .ph-fig::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg, transparent 55%, rgba(20,13,8,0.5)); pointer-events:none; }
+  .ph-fig .miss { position: absolute; left: 18px; bottom: 18px; right: 18px; z-index: 1; display: flex; align-items: flex-start; gap: 10px; max-width: 300px; background: #fff; border: 1px solid var(--hairline); color: var(--cafe); font-size: 13.5px; font-weight: 600; line-height: 1.32; padding: 11px 14px; border-radius: 16px 16px 16px 5px; box-shadow: 0 10px 28px -12px rgba(0,0,0,0.55); }
+  .ph-fig .miss .bd { width: 22px; height: 22px; border-radius: 50%; background: #f1e3cf; color: var(--terra); display: flex; align-items: center; justify-content: center; flex: 0 0 auto; margin-top: 1px; }
+  .ph-fig .miss .bd svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .ph-fig .miss i { display: block; margin-top: 3px; font-style: normal; font-weight: 600; font-size: 11.5px; color: var(--soft); }
+  @media (max-width: 900px){ .ph-grid { grid-template-columns: 1fr; gap: 30px; } .pain-hero { padding: 40px 0 34px; } .ph-fig { aspect-ratio: 16 / 11; } .ph-fig img { object-position: center 26%; } }
+
+  /* ============ resultado (cena real · o depois) ============ */
+  #resultado { background: var(--areia); }
+  #resultado .hl { color: var(--terra); }
+  #resultado .r-grid { display: grid; grid-template-columns: 0.82fr 1.18fr; gap: 48px; align-items: center; }
+  #resultado .r-fig { position: relative; margin: 0; border-radius: 24px; overflow: hidden; aspect-ratio: 4 / 5; box-shadow: 0 36px 72px -34px rgba(36,27,21,0.55); border: 1px solid var(--hairline); }
+  #resultado .r-fig img { width: 100%; height: 100%; object-fit: cover; object-position: center 32%; display: block; }
+  #resultado .r-fig .tag { position: absolute; left: 16px; top: 16px; display: inline-flex; align-items: center; gap: 8px; background: var(--terra); color: #fff; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 6px 13px; border-radius: 999px; z-index: 2; }
+  #resultado .r-fig::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg, transparent 58%, rgba(20,13,8,0.42)); pointer-events:none; }
+  #resultado .r-fig .reply { position: absolute; left: 16px; right: 16px; bottom: 16px; z-index: 1; display: flex; align-items: flex-start; gap: 10px; max-width: 308px; background: #fff; border: 1px solid var(--hairline); color: var(--cafe); font-size: 13.5px; font-weight: 600; line-height: 1.32; padding: 11px 14px; border-radius: 16px 16px 16px 5px; box-shadow: 0 14px 32px -14px rgba(20,13,8,0.6); }
+  #resultado .r-fig .reply .av { width: 22px; height: 22px; border-radius: 50%; background: var(--salvia); color: #fff; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex: 0 0 auto; margin-top: 1px; }
+  #resultado .r-fig .reply i { display: block; margin-top: 3px; font-style: normal; font-weight: 600; font-size: 11.5px; color: var(--soft); }
+  #resultado .r-copy h2 { font-size: clamp(30px, 4.2vw, 46px); }
+  #resultado .r-copy .lede { margin-top: 18px; }
+  #resultado .r-list { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 13px; }
+  #resultado .r-list li { display: flex; gap: 11px; align-items: flex-start; font-size: 16px; line-height: 1.4; color: var(--cafe-2); }
+  #resultado .r-list .ck { color: var(--salvia); flex: 0 0 auto; font-weight: 800; margin-top: 1px; }
+  @media (max-width: 820px){ #resultado .r-grid { grid-template-columns: 1fr; gap: 24px; } #resultado .r-fig { aspect-ratio: 16 / 11; } }
 
   /* ============ lena hub (capacidades) ============ */
   .lena-hub { position: relative; overflow: hidden; background: var(--areia); }
@@ -234,7 +296,42 @@
   .step h3 { font-size: 19px; }
   .step p { font-size: 15px; color: var(--soft); margin: 8px 0 0; line-height: 1.5; }
 
+  /* ph trust (micro prova sob o CTA da dor) */
+  .ph-trust { margin: 16px 0 0; font-size: 13.5px; color: rgba(251,243,231,0.6); display: inline-flex; align-items: center; gap: 8px; }
+  .ph-trust svg { width: 16px; height: 16px; stroke: var(--salvia-up); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; }
+
+  /* central · linha de tranquilidade */
+  .central-trust { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 22px; margin: 16px auto 0; max-width: 760px; }
+  .central-trust span { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: rgba(251,243,231,0.82); }
+  .central-trust svg { width: 17px; height: 17px; stroke: var(--salvia-up); fill: none; stroke-width: 2.3; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; }
+
+  /* capacidades · ver funcionando */
+  .hub-cta { text-align: center; margin-top: 8px; }
+
+  /* ============ calculadora de ROI ============ */
+  .roi { margin-top: 40px; background: var(--cafe); color: var(--cream); border-radius: 22px; padding: 34px 34px 26px; box-shadow: 0 30px 60px -34px rgba(36,27,21,.5); }
+  .roi .roi-head { text-align: center; max-width: 620px; margin: 0 auto 26px; }
+  .roi .roi-head .eyebrow { color: var(--terra-up); }
+  .roi .roi-head h3 { font-family: var(--display); font-weight: 800; font-size: clamp(22px, 3vw, 30px); letter-spacing: -0.02em; margin: 8px 0 0; color: var(--cream); }
+  .roi .roi-head p { color: rgba(251,243,231,.62); font-size: 15px; margin: 10px 0 0; line-height: 1.5; }
+  .roi-grid { display: grid; grid-template-columns: 1fr 0.9fr; gap: 30px; align-items: stretch; }
+  .roi-controls { display: flex; flex-direction: column; gap: 22px; justify-content: center; }
+  .roi-ctl { display: block; }
+  .roi-ctl .rl { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 14.5px; color: rgba(251,243,231,.78); margin-bottom: 11px; }
+  .roi-ctl .rl b { font-family: var(--display); font-weight: 800; font-size: 21px; color: var(--cream); letter-spacing: -0.01em; }
+  .roi-ctl input[type=range] { width: 100%; accent-color: var(--terra-up); height: 22px; cursor: pointer; }
+  .roi-note { font-size: 12.5px; color: rgba(251,243,231,.5); line-height: 1.45; margin: 0; }
+  .roi-out { background: rgba(251,243,231,.05); border: 1px solid rgba(251,243,231,.12); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .roi-out .roi-lab { font-size: 13.5px; color: rgba(251,243,231,.6); }
+  .roi-out .roi-big { font-family: var(--display); font-weight: 800; font-size: clamp(38px, 6vw, 54px); letter-spacing: -0.03em; line-height: 1; color: var(--terra-up); margin: 8px 0 6px; }
+  .roi-out .roi-sub { font-size: 13.5px; color: rgba(251,243,231,.6); }
+  .roi-out .roi-cmp { font-size: 14.5px; color: rgba(251,243,231,.82); line-height: 1.5; margin: 18px 0 16px; }
+  .roi-out .roi-cmp b { color: var(--cream); }
+  .roi-disc { text-align: center; font-size: 12px; color: rgba(251,243,231,.42); margin: 18px 0 0; line-height: 1.5; }
+  @media (max-width: 720px){ .roi { padding: 26px 20px 22px; } .roi-grid { grid-template-columns: 1fr; gap: 24px; } }
+
   /* ============ pricing ============ */
+  .price-anchor { font-size: 14.5px; color: rgba(251,243,231,.6); line-height: 1.5; margin: 0 0 16px; max-width: 360px; }
   .price-card { background: var(--cafe); color: var(--cream); border-radius: 24px; padding: 44px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
   .price-card .amt { font-family: var(--display); font-weight: 800; font-size: 60px; letter-spacing: -0.03em; line-height: 1; color: var(--cream); }
   .price-card .amt small { font-size: 19px; font-weight: 600; color: rgba(251,243,231,0.6); letter-spacing: 0; }
@@ -243,6 +340,11 @@
   .price-card li { display: flex; gap: 11px; align-items: flex-start; font-size: 15.5px; line-height: 1.4; }
   .price-card li .ck { color: var(--salvia-up); flex: 0 0 auto; font-weight: 700; margin-top: 1px; }
   @media (max-width: 760px){ .price-card { grid-template-columns: 1fr; gap: 28px; padding: 32px 26px; } }
+  .risco { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
+  .risco .ri { display: flex; align-items: flex-start; gap: 11px; background: #fff; border: 1px solid var(--hairline); border-radius: 14px; padding: 16px 18px; font-size: 14.5px; line-height: 1.42; color: var(--cafe-2); }
+  .risco .ri svg { width: 21px; height: 21px; stroke: var(--salvia); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 auto; margin-top: 1px; }
+  .risco .ri b { color: var(--cafe); font-weight: 700; }
+  @media (max-width: 760px){ .risco { grid-template-columns: 1fr; gap: 12px; } }
 
   /* ============ faq ============ */
   .faq-item { border-bottom: 1px solid var(--hairline); }
@@ -301,12 +403,36 @@
   </div>
 </nav>
 
+<!-- ============ PAIN HERO (abertura · a dor) ============ -->
+<section class="pain-hero" data-screen-label="A dor">
+  <div class="wrap">
+    <div class="ph-grid">
+      <div class="ph-copy">
+        <span class="ph-kick"><span class="pdot" aria-hidden="true"></span> Clínicas, salões, petshops, escolas e escritórios</span>
+        <h1>Cada mensagem parada é <span class="hl">um cliente indo embora</span>.</h1>
+        <p class="lede">Você não dá conta de responder na hora, o dia todo, todo dia. E quem demora perde pro concorrente que respondeu primeiro. A agenda segue com buracos e você, refém do celular.</p>
+        <div class="ph-cta">
+          <a class="btn btn-wa" href="https://wa.me/5511939615168?text=Oi%2C%20queria%20parar%20de%20perder%20cliente%20por%20demora" target="_blank" rel="noopener">
+            <svg class="wa-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 018.413 3.488 11.82 11.82 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.215zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            Quero resolver isso
+          </a>
+          <a class="scrollcue" href="#demo">Veja como eu resolvo <svg viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+        </div>
+      </div>
+      <figure class="ph-fig">
+        <img src="assets/cenas/dona-ansiosa.jpg" width="680" height="816" loading="eager" fetchpriority="high" alt="Dona de negócio à noite, preocupada, olhando o celular sem conseguir responder os clientes a tempo" />
+        <span class="miss"><span class="bd"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span>Agradecemos seu contato. Nosso atendimento funciona de Seg a Sex, das 9h às 18h. Obrigado.<i>resposta automática · 21h47</i></span></span>
+      </figure>
+    </div>
+  </div>
+</section>
+
 <!-- ============ HERO ============ -->
 <section class="hero" data-screen-label="Hero">
   <div class="wrap">
     <div class="hero-grid">
       <div class="hero-copy">
-        <span class="badge"><span class="live" aria-hidden="true"></span> Atende no WhatsApp 24h. Implantação em poucos dias.</span>
+        <span class="badge"><span class="live" aria-hidden="true"></span> Atende no WhatsApp 24h, todo dia.</span>
         <h1>Sua recepcionista <span class="hl">virtual</span>, atendendo no WhatsApp 24h por dia.</h1>
         <p class="lede">Treinada com as <b>suas</b> informações, eu marco na sua agenda, confirmo os horários e ainda ofereço seus serviços, trazendo venda extra. Nada de robô genérico.</p>
         <div class="hero-cta">
@@ -316,11 +442,6 @@
           </a>
           <a class="btn btn-ghost" href="#planos">Ver planos</a>
         </div>
-        <div class="hero-trust">
-          <span>Funciona em poucos dias</span><span class="dotsep" aria-hidden="true"></span>
-          <span>Sem fidelidade</span><span class="dotsep" aria-hidden="true"></span>
-          <span>Você não toca em código</span>
-        </div>
       </div>
 
       <!-- DEMO COLUMN: auto-rotating segments -->
@@ -328,14 +449,38 @@
         <div class="phone-wrap">
           <div class="phone">
             <div class="screen">
+              <div class="wa-status" aria-hidden="true">
+                <span>9:41</span>
+                <span class="ssr">
+                  <svg width="18" height="11" viewBox="0 0 18 11" fill="#fff"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="6" rx="1"/><rect x="10" y="2.5" width="3" height="8.5" rx="1"/><rect x="15" y="0" width="3" height="11" rx="1"/></svg>
+                  <svg width="16" height="12" viewBox="0 0 16 12" fill="#fff"><path d="M8 11.4 9.9 9.1c-1.1-1-2.7-1-3.8 0L8 11.4Z"/><path d="M8 4.2c2.1 0 4 .8 5.4 2.2l1.4-1.6C13.1 2.9 10.7 1.9 8 1.9S2.9 2.9 1.2 4.8l1.4 1.6C4 5 5.9 4.2 8 4.2Z"/></svg>
+                  <svg width="26" height="12" viewBox="0 0 26 12"><rect x="0.6" y="0.6" width="22" height="10.8" rx="2.6" fill="none" stroke="#fff" stroke-opacity=".5"/><rect x="2.2" y="2.2" width="17.5" height="7.6" rx="1.4" fill="#fff"/><rect x="23.6" y="3.8" width="1.8" height="4.4" rx="0.9" fill="#fff" fill-opacity=".5"/></svg>
+                </span>
+              </div>
               <div class="wa-head">
+                <svg class="bk" viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 2 10l8 8"/></svg>
                 <div class="av"><img src="assets/lena-avatar.png" alt="Avatar da Lena" /></div>
-                <div>
+                <div class="who">
                   <div class="nm" id="bizName">Clínica Vida</div>
                   <div class="st"><span class="g" aria-hidden="true"></span> online agora</div>
                 </div>
+                <div class="hicons" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><rect x="2" y="6" width="13" height="12" rx="2.5"/><path d="M15 10.5l6-3v9l-6-3z"/></svg>
+                  <svg class="fill" viewBox="0 0 24 24"><path d="M6.6 10.8a13 13 0 0 0 6.6 6.6l2.1-2.1a1 1 0 0 1 1-.25 11 11 0 0 0 3.4.55 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.3a1 1 0 0 1 1 1 11 11 0 0 0 .55 3.4 1 1 0 0 1-.25 1l-2.1 2.1Z"/></svg>
+                </div>
               </div>
               <div class="wa-body" id="chat" aria-live="polite" aria-label="Demonstração de conversa"></div>
+              <div class="wa-input" aria-hidden="true">
+                <div class="field">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5s1.3 1.8 3.5 1.8 3.5-1.8 3.5-1.8"/><circle cx="9" cy="10" r=".7" fill="#8b9396" stroke="none"/><circle cx="15" cy="10" r=".7" fill="#8b9396" stroke="none"/></svg>
+                  <span class="ph">Mensagem</span>
+                  <svg viewBox="0 0 24 24"><path d="M21.4 11.05 12.25 20.2a6 6 0 0 1-8.49-8.49l9.2-9.19a4 4 0 1 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                  <svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="3"/><circle cx="12" cy="13.5" r="3.3"/><path d="M8 7l1.6-2.4h4.8L16 7"/></svg>
+                </div>
+                <div class="send">
+                  <svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -348,14 +493,31 @@
   </div>
 </section>
 
-<!-- ============ STAT STRIP ============ -->
-<section style="padding-top:0;padding-bottom:64px" data-screen-label="Numbers">
+<!-- ============ RESULTADO (cena real · o depois) ============ -->
+<section id="resultado" data-screen-label="O resultado">
   <div class="wrap">
+    <div class="r-grid">
+      <figure class="r-fig">
+        <span class="tag">Com a Lena</span>
+        <img src="assets/cenas/dona-tranquila.jpg" width="680" height="850" loading="lazy" alt="A mesma dona de negócio tranquila, tomando café, com o atendimento resolvido pela Lena" />
+        <span class="reply"><span class="av">L</span><span>Oi! Posso marcar seu horário agora mesmo. Tenho amanhã às 10h ou às 15h, qual fica melhor?<i>Lena respondeu na hora · 21h47</i></span></span>
+      </figure>
+      <div class="r-copy">
+        <span class="eyebrow">O resultado</span>
+        <h2>Você deixa de ser refém do celular. A agenda <span class="hl">enche sozinha</span>.</h2>
+        <p class="lede">Eu assumo o WhatsApp, respondo na hora e agendo sozinha, de dia ou de madrugada. Você acompanha tudo pela Central e assume a conversa quando quiser.</p>
+        <ul class="r-list">
+          <li><span class="ck" aria-hidden="true">✓</span> Resposta na hora, 24h por dia, inclusive no fim de semana.</li>
+          <li><span class="ck" aria-hidden="true">✓</span> Menos falta, com lembrete e confirmação automáticos.</li>
+          <li><span class="ck" aria-hidden="true">✓</span> Você dorme tranquila. O atendimento não para.</li>
+        </ul>
+      </div>
+    </div>
     <div class="stripe">
-      <div class="cell"><div class="big">24h</div><div class="lab2">atendendo todo dia, inclusive fim de semana</div></div>
-      <div class="cell"><div class="big">segundos</div><div class="lab2">pra responder, antes do concorrente</div></div>
-      <div class="cell"><div class="big">100%</div><div class="lab2">das mensagens respondidas</div></div>
-      <div class="cell"><div class="big">0</div><div class="lab2">dupla marcação na agenda</div></div>
+      <div class="cell"><div class="big">24Hrs</div><div class="lab2">atende inclusive domingos e de madrugada</div></div>
+      <div class="cell"><div class="big">menos de 3s</div><div class="lab2">pra responder antes do cliente chamar o concorrente</div></div>
+      <div class="cell"><div class="big">100%</div><div class="lab2">das mensagens respondidas, nenhuma perdida</div></div>
+      <div class="cell"><div class="big">zero</div><div class="lab2">cliente esquecido e dupla marcação na agenda</div></div>
     </div>
   </div>
 </section>
@@ -394,6 +556,9 @@
         <div class="node" style="left:254px; top:120px;"><div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg></div><div><b>Mostra os números</b><span>painel do gestor</span></div></div>
       </div>
     </div>
+    <div class="hub-cta">
+      <a class="btn btn-ghost" href="#demo"><svg class="wa-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z"/></svg> Ver a Lena funcionando ao vivo</a>
+    </div>
   </div>
 </section>
 
@@ -401,9 +566,14 @@
 <section class="lena-central" id="central" data-screen-label="Central">
   <div class="wrap">
     <div class="section-head">
-      <span class="eyebrow">Você no controle</span>
-      <h2>Conheça a <span class="hl">Central da Lena</span>.</h2>
-      <p class="lede">Tudo o que a Lena faz vira informação pra você decidir. Veja por funcionalidade:</p>
+      <span class="eyebrow">Você no controle, sem esforço</span>
+      <h2>A <span class="hl">Central da Lena</span>: sua agenda crescendo, sem complicação.</h2>
+      <p class="lede">Você não configura nada, a gente entrega tudo pronto. Aqui você acompanha os agendamentos confirmados e quantos clientes a Lena trouxe de volta, em tempo real.</p>
+      <div class="central-trust">
+        <span><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Entregamos pronto, sem configuração</span>
+        <span><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Acompanhe em tempo real</span>
+        <span><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Clientes recuperados, num olhar</span>
+      </div>
     </div>
     <div class="split">
       <div>
@@ -635,6 +805,38 @@
         <p>O retorno aparece já nas primeiras semanas.</p>
       </div>
     </div>
+
+    <div class="roi" id="roi">
+      <div class="roi-head">
+        <span class="eyebrow">Faça a conta</span>
+        <h3>Quanto fica na mesa quando ninguém responde a tempo?</h3>
+        <p>Mexa nos controles com os números do seu negócio e veja o tamanho da oportunidade por mês.</p>
+      </div>
+      <div class="roi-grid">
+        <div class="roi-controls">
+          <label class="roi-ctl">
+            <span class="rl">Seu ticket médio <b id="roiTicketV">R$ 150</b></span>
+            <input type="range" id="roiTicket" min="50" max="1000" step="10" value="150" aria-label="Ticket médio" />
+          </label>
+          <label class="roi-ctl">
+            <span class="rl">Mensagens sem resposta por semana <b id="roiMsgV">6</b></span>
+            <input type="range" id="roiMsg" min="1" max="40" step="1" value="6" aria-label="Mensagens sem resposta por semana" />
+          </label>
+          <p class="roi-note">Contas que chegam fora do horário, no fim de semana ou quando você está ocupada atendendo.</p>
+        </div>
+        <div class="roi-out">
+          <span class="roi-lab">Você deixa passar até</span>
+          <div class="roi-big" id="roiLost">R$ 3.600</div>
+          <span class="roi-sub">por mês em oportunidades sem resposta</span>
+          <div class="roi-cmp">Eu cubro esse atendimento <b>a partir de R$ 333/mês</b>, menos de R$ 12 por dia.</div>
+          <a class="btn btn-wa" href="https://wa.me/5511939615168?text=Oi%2C%20fiz%20a%20conta%20no%20site%20e%20queria%20recuperar%20esse%20faturamento" target="_blank" rel="noopener">
+            <svg class="wa-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 018.413 3.488 11.82 11.82 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.215zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            Quero recuperar isso
+          </a>
+        </div>
+      </div>
+      <p class="roi-disc">Estimativa simples pra você visualizar o tamanho da oportunidade. Não é promessa de resultado.</p>
+    </div>
   </div>
 </section>
 
@@ -643,8 +845,8 @@
   <div class="wrap">
     <div class="section-head" style="text-align:center;max-width:680px;margin:0 auto">
       <span class="eyebrow">Como funciona</span>
-      <h2>Pronta em poucos dias. <span class="hl">Você não toca em nada técnico.</span></h2>
-      <p class="lede" style="margin:15px auto 0">O setup é com a gente. Você só acompanha os agendamentos chegando.</p>
+      <h2>A configuração é toda <span class="hl">com a gente</span>.</h2>
+      <p class="lede" style="margin:15px auto 0">A gente cuida de tudo pra você. Você só acompanha os agendamentos chegando.</p>
     </div>
     <div class="flow">
       <div class="step">
@@ -673,12 +875,13 @@
     <div class="section-head" style="max-width:640px">
       <span class="eyebrow">Planos</span>
       <h2>Preço justo. Sem letras miúdas.</h2>
-      <p class="lede">Customizado para o seu negócio. Sem fidelidade, cancela quando quiser.</p>
+      <p class="lede">Customizado para o seu negócio. Você escolhe o plano que cabe no seu momento.</p>
     </div>
     <div class="price-card">
       <div>
+        <div class="price-anchor">Uma recepcionista contratada passa de R$ 2.000 por mês, com encargos, e ainda vai embora às 18h.</div>
         <div class="amt">R$ 333<small> /mês</small></div>
-        <div class="sub">A partir de, no plano anual. Os primeiros contratantes entram com condição especial de implantação.</div>
+        <div class="sub">A partir de, no plano anual. Eu fico de plantão 24 horas por menos de R$ 12 por dia. Os primeiros contratantes entram com condição especial de implantação.</div>
         <a class="btn btn-wa" href="https://wa.me/5511939615168?text=Oi%2C%20vim%20dos%20planos%20do%20site%20e%20queria%20saber%20mais" target="_blank" rel="noopener" style="margin-top:26px">
           <svg class="wa-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 018.413 3.488 11.82 11.82 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.215zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
           Falar com a Lena
@@ -690,7 +893,7 @@
         <li><span class="ck" aria-hidden="true">✓</span> Agenda própria inclusa, ou integração com a sua</li>
         <li><span class="ck" aria-hidden="true">✓</span> Sinal via Pix e confirmação automática</li>
         <li><span class="ck" aria-hidden="true">✓</span> Lista de espera e reativação de clientes</li>
-        <li><span class="ck" aria-hidden="true">✓</span> Setup, treinamento e manutenção por nossa conta</li>
+        <li><span class="ck" aria-hidden="true">✓</span> Configuração, treinamento e manutenção com a nossa equipe</li>
       </ul>
     </div>
   </div>
@@ -707,7 +910,6 @@
       <details class="faq-item"><summary>Não tenho sistema de agenda. Funciona mesmo assim?<span class="plus" aria-hidden="true"></span></summary><div class="ans">Funciona. Eu já trago uma agenda própria, sem custo extra. Se você usa Google Calendar ou outro sistema, integramos com o seu.</div></details>
       <details class="faq-item"><summary>Como funciona o sinal via Pix?<span class="plus" aria-hidden="true"></span></summary><div class="ans">Quando você quiser, peço um sinal no Pix para confirmar o horário. Quem paga não falta, e o valor abate do atendimento. É opcional e você define o valor.</div></details>
       <details class="faq-item"><summary>E a LGPD? Os dados do meu cliente estão seguros?<span class="plus" aria-hidden="true"></span></summary><div class="ans">Sim. Trabalhamos com a API oficial do WhatsApp e seguimos a LGPD: dados criptografados, retenção mínima, você é o controlador da informação.</div></details>
-      <details class="faq-item"><summary>Posso cancelar quando quiser?<span class="plus" aria-hidden="true"></span></summary><div class="ans">Sim. Sem fidelidade e sem multa. Encerramos no fim do ciclo vigente.</div></details>
     </div>
   </div>
 </section>
@@ -909,5 +1111,22 @@
 <!-- Cloudflare Web Analytics (sem cookies). TODO: trocar TOKEN_CLOUDFLARE pelo token real (painel Cloudflare > Analytics & Logs > Web Analytics > seu site). Conversão = visualizações de /obrigado.html (página de sucesso do formulário). -->
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "TOKEN_CLOUDFLARE"}'></script>
   <script src="assets/wa-fab.js" defer></script>
+<script>
+(function(){
+  var t = document.getElementById('roiTicket'), m = document.getElementById('roiMsg');
+  if (!t || !m) return;
+  var tv = document.getElementById('roiTicketV'), mv = document.getElementById('roiMsgV'), out = document.getElementById('roiLost');
+  function brl(n){ return 'R$ ' + Math.round(n).toLocaleString('pt-BR'); }
+  function upd(){
+    var ticket = +t.value, msg = +m.value;
+    tv.textContent = brl(ticket);
+    mv.textContent = msg;
+    out.textContent = brl(ticket * msg * 4);
+  }
+  t.addEventListener('input', upd);
+  m.addEventListener('input', upd);
+  upd();
+})();
+</script>
 </body>
 </html>
