@@ -41,6 +41,11 @@ function priceToInput(cents: number | null): string {
   });
 }
 
+function priceLabel(cents: number | null): string {
+  if (cents == null) return "sob consulta";
+  return `R$ ${priceToInput(cents)}`;
+}
+
 /** Opções de categoria com rótulo hierárquico "Categoria › Subcategoria". */
 function categoryOptions(cats: TenantServiceCategory[]) {
   const level1 = cats
@@ -63,6 +68,7 @@ export function CerebroServicos() {
   const [cats, setCats] = useState<TenantServiceCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [openId, setOpenId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!tenantId) return;
@@ -79,6 +85,8 @@ export function CerebroServicos() {
   if (!tenantId) return null;
 
   const opts = categoryOptions(cats);
+  const labelFor = (id: string | null) =>
+    id ? (opts.find((o) => o.id === id)?.label ?? "Sem categoria") : "Sem categoria";
 
   async function addService() {
     if (!tenantId) return;
@@ -89,13 +97,13 @@ export function CerebroServicos() {
         position: items.length,
       });
       setItems([...items, created]);
+      setOpenId(created.id); // já abre o editor do novo
     } catch (e) {
       setError((e as Error).message);
     }
   }
 
-  // ordena por categoria (na ordem das opções) e depois por posição, para dar
-  // sensação de agrupamento sem quebrar a lista plana de cards.
+  // ordena por categoria (na ordem das opções) e depois por posição.
   const ordered = useMemo(() => {
     const rank = new Map(opts.map((o, i) => [o.id, i]));
     return [...items].sort((a, b) => {
@@ -115,10 +123,10 @@ export function CerebroServicos() {
         onError={setError}
       />
 
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-cafe-soft">
-          Cada serviço entra na agenda e nas respostas da Lena — com tempo,
-          preparo e sessões. Organize por categoria para ela navegar melhor.
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="max-w-xl text-sm text-cafe-soft">
+          Cada serviço entra na agenda e nas respostas da Lena. Toque numa linha
+          para editar.
         </p>
         <Button onClick={addService}>+ Adicionar serviço</Button>
       </div>
@@ -137,22 +145,107 @@ export function CerebroServicos() {
           />
         </Card>
       ) : (
-        ordered.map((service) => (
-          <ServiceRow
-            key={service.id}
-            service={service}
-            options={opts}
-            onUpdated={(updated) =>
-              setItems((current) =>
-                current.map((s) => (s.id === updated.id ? updated : s)),
-              )
-            }
-            onDeleted={(id) =>
-              setItems((current) => current.filter((s) => s.id !== id))
-            }
-          />
-        ))
+        <Card className="overflow-hidden p-0">
+          <div className="flex flex-col divide-y divide-creme-edge">
+            {ordered.map((service, i) => {
+              const prevCat = i > 0 ? ordered[i - 1].category_id : "__none__";
+              const showHeader = service.category_id !== prevCat;
+              return (
+                <div key={service.id}>
+                  {showHeader ? (
+                    <div className="bg-creme-soft px-4 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-cafe-muted">
+                      {labelFor(service.category_id)}
+                    </div>
+                  ) : null}
+                  <ServiceListItem
+                    service={service}
+                    open={openId === service.id}
+                    onToggle={() =>
+                      setOpenId((cur) => (cur === service.id ? null : service.id))
+                    }
+                    options={opts}
+                    onUpdated={(u) =>
+                      setItems((cur) => cur.map((s) => (s.id === u.id ? u : s)))
+                    }
+                    onDeleted={(id) => {
+                      setItems((cur) => cur.filter((s) => s.id !== id));
+                      setOpenId(null);
+                    }}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </Card>
       )}
+    </div>
+  );
+}
+
+/* ── Linha de serviço (compacta, clicável) + editor inline ─────────────── */
+
+function ServiceListItem({
+  service,
+  open,
+  onToggle,
+  options,
+  onUpdated,
+  onDeleted,
+}: {
+  service: TenantService;
+  open: boolean;
+  onToggle: () => void;
+  options: { id: string; label: string }[];
+  onUpdated: (s: TenantService) => void;
+  onDeleted: (id: string) => void;
+}) {
+  const meta = [
+    service.duration_min ? `${service.duration_min} min` : null,
+    (service.default_sessions ?? 1) > 1 ? `${service.default_sessions} sessões` : null,
+    service.is_upsell ? "upsell" : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
+  return (
+    <div className={open ? "bg-creme-soft/40" : ""}>
+      <button
+        type="button"
+        onClick={onToggle}
+        className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-creme-soft/60"
+      >
+        <span
+          className={`h-2 w-2 shrink-0 rounded-full ${service.active ? "bg-salvia" : "bg-creme-edge"}`}
+          title={service.active ? "ativo" : "inativo"}
+        />
+        <span className="min-w-0 flex-1">
+          <span className="block truncate font-semibold text-cafe">
+            {service.name || "Sem nome"}
+          </span>
+          {meta ? (
+            <span className="block truncate text-[12px] text-cafe-muted">{meta}</span>
+          ) : null}
+        </span>
+        <span className="shrink-0 text-sm tabular-nums text-cafe-soft">
+          {priceLabel(service.price_cents)}
+        </span>
+        <span
+          className={`shrink-0 text-cafe-muted transition-transform ${open ? "rotate-90" : ""}`}
+          aria-hidden
+        >
+          ›
+        </span>
+      </button>
+      {open ? (
+        <div className="border-t border-creme-edge px-4 py-4">
+          <ServiceEditor
+            service={service}
+            options={options}
+            onUpdated={onUpdated}
+            onDeleted={onDeleted}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -303,9 +396,9 @@ function CategoryLine({
   );
 }
 
-/* ── Serviço: card rico ────────────────────────────────────────────────── */
+/* ── Editor de serviço (formulário rico) ───────────────────────────────── */
 
-function ServiceRow({
+function ServiceEditor({
   service,
   options,
   onUpdated,
@@ -372,7 +465,7 @@ function ServiceRow({
   }
 
   return (
-    <Card className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3">
       <div className="grid gap-3 sm:grid-cols-[1.6fr_1fr]">
         <Field label="Nome">
           <TextInput value={local.name} onChange={(e) => set("name", e.target.value)} />
@@ -471,7 +564,7 @@ function ServiceRow({
         <div className="grid gap-3 sm:grid-cols-2 rounded-[12px] border border-creme-edge bg-creme-soft/60 p-3">
           <Field
             label="Preparo / pré-requisito"
-            hint="antes do atendimento — ex.: não secar o cabelo, sem álcool 24h"
+            hint="antes do atendimento. ex.: não secar o cabelo, sem álcool 24h"
           >
             <Textarea
               value={local.prep_instructions ?? ""}
@@ -479,7 +572,7 @@ function ServiceRow({
               rows={2}
             />
           </Field>
-          <Field label="Cuidados depois" hint="pós-atendimento — ex.: não lavar por 48h">
+          <Field label="Cuidados depois" hint="pós-atendimento. ex.: não lavar por 48h">
             <Textarea
               value={local.aftercare_instructions ?? ""}
               onChange={(e) => set("aftercare_instructions", e.target.value || null)}
@@ -526,6 +619,6 @@ function ServiceRow({
         {state === "saved" ? <StatusPill kind="saved">salvo</StatusPill> : null}
         {error ? <StatusPill kind="error">{error}</StatusPill> : null}
       </div>
-    </Card>
+    </div>
   );
 }
