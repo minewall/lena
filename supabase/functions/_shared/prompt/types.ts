@@ -21,6 +21,16 @@ export interface BrainService {
   interval?: number;
 }
 
+export interface BrainProduct {
+  name?: string;
+  /** preço formatado (R$ ...) */
+  price?: string;
+  /** controla estoque? */
+  tracked?: boolean;
+  /** unidades em estoque (quando tracked) */
+  stock?: number | null;
+}
+
 export interface BrainCombo {
   name?: string;
   kind?: "pacote" | "condicional";
@@ -38,6 +48,19 @@ export interface BrainCombo {
 export interface TeamMember {
   name?: string;
   role?: string;
+  /** especialidades, texto livre (ex.: "botox, preenchimento, laser") */
+  spec?: string;
+}
+
+export interface BrainPayments {
+  methods?: string[];
+  pixKeyType?: string;
+  pixKey?: string;
+  bank?: string;
+  agency?: string;
+  account?: string;
+  holder?: string;
+  note?: string;
 }
 
 export interface TenantBrain {
@@ -57,11 +80,17 @@ export interface TenantBrain {
   /** Outras unidades ativas, para a Lena citar quando perguntarem. */
   otherUnits?: { name: string; address?: string }[];
   services?: BrainService[];
+  /** produtos à venda (com estoque) */
+  products?: BrainProduct[];
   /** combos: pacotes fechados e ofertas condicionais */
   combos?: BrainCombo[];
   promo?: string;
   extras?: string;
   tone?: Tone | string;
+  /** Idade/persona da Lena (anos). Molda sutilmente o jeito de falar. */
+  personaAge?: number;
+  /** Formas de pagamento que a Lena pode informar. */
+  payments?: BrainPayments;
   /** Temas/condutas proibidas para a Lena. */
   restrictions?: string;
   /** Palavras-gatilho que disparam transferência imediata para humano. */
